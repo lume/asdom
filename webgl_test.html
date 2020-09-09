@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>WebGL Test</title>
+</head>
+
+<body>
+  <h1>test</h1>
+  <canvas id="cnvs" width="1024" height="1024"></canvas>
+  <script type="module" src='./src/ASWebGLue.js'></script>
+  <script type="module">
+    import { initASWebGLue, ASWebGLReady } from './src/ASWebGLue.js';
+    const memory = new WebAssembly.Memory({ initial: 100 }); // linear memory
+
+    const canvas = document.getElementById('cnvs');
+    //    const gl = canvas.getContext('webgl2');
+    var exports = {};
+    var importObject = {
+      env: {
+        memory: memory,
+        //        gl: gl
+      }
+    };
+
+    initASWebGLue(importObject, exports);
+
+    function render_frame() {
+      exports.animation_frame();
+      requestAnimationFrame(render_frame);
+    }
+
+    (async () => {
+      // use WebAssembly.instantiateStreaming in combination with
+      // fetch instead of WebAssembly.instantiate and fs.readFileSync
+      let obj = await WebAssembly.instantiateStreaming(
+        fetch('render_lines.wasm'),
+        importObject);
+      console.log("obj");
+      console.log(obj);
+      exports = obj.instance.exports;
+      ASWebGLReady(obj, importObject);
+      exports.init();
+      requestAnimationFrame(render_frame);
+    })();
+  </script>
+</body>
+
+</html>
