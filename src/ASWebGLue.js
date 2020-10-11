@@ -32,6 +32,7 @@ export function initASWebGLue(importObject) {
 
   importObject.webgl.contextArray = [];
   importObject.webgl.textureArray = [];
+  importObject.webgl.imageArray = [];
   importObject.webgl.programArray = [];
   importObject.webgl.shaderArray = [];
   importObject.webgl.bufferArray = [];
@@ -100,6 +101,26 @@ export function initASWebGLue(importObject) {
   /** Key type is managed. */
   importObject.webgl.KEY_MANAGED = 0x800000;
 
+  //imageArray
+  importObject.webgl.createImage = (image_location) => {
+    let image = new Image();
+    image.ready = false;
+    image.onload = function () {
+      image.ready = true;
+    }
+    image.src = webgl.getString(image_location);
+    let image_id = webgl.imageArray.length;
+    webgl.imageArray.push(image);
+    return image_id;
+  }
+
+  importObject.webgl.imageReady = (image_id) => {
+    if (webgl.imageArray.length >= image_id) {
+      return false;
+    }
+    return webgl.imageArray[image_id].ready;
+  }
+
   importObject.webgl.getView = (alignLog2, signed, float) => {
     const buffer = webgl.memory.buffer;
 
@@ -164,10 +185,6 @@ export function initASWebGLue(importObject) {
 
   importObject.webgl.createContextFromCanvas = (canvas_id, context_type) => {
     try {
-      console.log(canvas_id);
-      console.log(context_type);
-      console.log('getting canvas id string');
-      console.log(webgl.getString(canvas_id));
       const canvas = document.getElementById(webgl.getString(canvas_id));
       const gl = canvas.getContext(webgl.getString(context_type));
       let id = webgl.contextArray.findIndex((element) => element == null);
@@ -312,6 +329,7 @@ export function initASWebGLue(importObject) {
       webgl.contextArray[ctx].bufferData(target, webgl.getArrayView(data), usage);
     } catch (err) {
       console.log("bufferData error");
+      console.log(webgl.getArrayView(data));
       console.error(err);
     } // end catch
   }
@@ -393,6 +411,8 @@ export function initASWebGLue(importObject) {
   importObject.webgl.compileShader = (ctx, shader) => {
     try {
       webgl.contextArray[ctx].compileShader(webgl.shaderArray[shader]);
+      var compilationLog = webgl.contextArray[ctx].getShaderInfoLog(webgl.shaderArray[shader]);
+      console.log(compilationLog)
     } catch (err) {
       console.log("compileShader error");
       console.error(err);
@@ -1030,7 +1050,7 @@ export function initASWebGLue(importObject) {
 
       if (!webgl.contextArray[ctx].getProgramParameter(webgl.programArray[program],
         webgl.contextArray[ctx].LINK_STATUS)) {
-        console.log(arg[0].getProgramInfoLog(webgl.programArray[program]));
+        console.log(webgl.contextArray[ctx].getProgramInfoLog(webgl.programArray[program]));
       }
     } catch (err) {
       console.log("linkProgram error");
@@ -1044,7 +1064,7 @@ export function initASWebGLue(importObject) {
       webgl.contextArray[ctx].pixelStorei(pname, param);
     } catch (err) {
       console.log("pixelStorei error");
-      console.error(err);
+      console.log(err);
     } // end catch
   }
 
