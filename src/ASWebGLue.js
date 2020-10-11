@@ -115,7 +115,8 @@ export function initASWebGLue(importObject) {
   }
 
   importObject.webgl.imageReady = (image_id) => {
-    if (webgl.imageArray.length >= image_id) {
+    console.log("image ready check! image_id=" + image_id);
+    if (webgl.imageArray.length <= image_id) {
       return false;
     }
     return webgl.imageArray[image_id].ready;
@@ -202,6 +203,11 @@ export function initASWebGLue(importObject) {
       console.error(err);
     } // end catch
   }
+  /*
+  importObject.webgl.activateTexture = (ctx, texture) => {
+    webgl.contextArray[ctx].activateTexture(webgl.textureArray[texture]);
+  }
+  */
 
   importObject.webgl.getSupportedExtensions = (ctx) => {
     alert('getSupportedExtensions is not currently supported');
@@ -218,7 +224,7 @@ export function initASWebGLue(importObject) {
 
   importObject.webgl.activeTexture = (ctx, texture) => {
     try {
-      webgl.contextArray[ctx].activeTexture(webgl.textureArray[texture]);
+      webgl.contextArray[ctx].activeTexture(texture);
     } catch (err) {
       console.log("activeTexture error");
       console.error(err);
@@ -412,7 +418,7 @@ export function initASWebGLue(importObject) {
     try {
       webgl.contextArray[ctx].compileShader(webgl.shaderArray[shader]);
       var compilationLog = webgl.contextArray[ctx].getShaderInfoLog(webgl.shaderArray[shader]);
-      console.log(compilationLog)
+      console.log(compilationLog);
     } catch (err) {
       console.log("compileShader error");
       console.error(err);
@@ -424,6 +430,7 @@ export function initASWebGLue(importObject) {
   // Secifies a 2D texture image in a compressed format
   importObject.webgl.compressedTexImage2D = (ctx, target, level, internalformat, width, height, border, data) => {
     try {
+      // THIS DOES NOT LOOK RIGHT TO ME
       webgl.contextArray[ctx].compileShader(target, level, internalformat,
         width, height, border, webgl.getArrayView(data));
     } catch (err) {
@@ -553,7 +560,7 @@ export function initASWebGLue(importObject) {
   // Creates a texture object 
   importObject.webgl.createTexture = (ctx) => {
     try {
-      let id = webgl.shaderArray.findIndex((element) => element == null);
+      let id = webgl.textureArray.findIndex((element) => element == null);
       let texture = webgl.contextArray[ctx].createTexture();
 
       if (id == -1) {
@@ -563,6 +570,7 @@ export function initASWebGLue(importObject) {
       else {
         webgl.textureArray[id] = texture;
       }
+      console.log('createTexture id=' + id);
       return id;
     } catch (err) {
       console.log("createTexture error");
@@ -1173,11 +1181,14 @@ export function initASWebGLue(importObject) {
   }
 
   // specify a two-dimensional texture image
-  importObject.webgl.texImage2D = (ctx, target, level, internalformat,
-    width, height, border, format, typ, pixels) => {
+  importObject.webgl.texImage2D = (ctx, target, level, internalformat, format, typ, image_id) => {
     try {
+      console.log(`
+      image_id=${image_id}
+      webgl.imageArray.length=${webgl.imageArray.length}
+      `);
       webgl.contextArray[ctx].texImage2D(target, level, internalformat,
-        width, height, border, format, typ, webgl.getArrayView(pixels));
+        format, typ, webgl.imageArray[image_id]);//webgl.getArrayView(pixels));
     } catch (err) {
       console.log("texImage2D error");
       console.error(err);
