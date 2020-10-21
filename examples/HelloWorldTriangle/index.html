@@ -16,7 +16,6 @@
   import { initASWebGLue, ASWebGLReady } from '../../src/ASWebGLue.js';
   const wasm_file = 'triangle.wasm';
   var exports;
-  var last_time = 0;
   var w = window.innerWidth * 0.99;
   var h = window.innerHeight * 0.99;
   var cnvs = document.getElementById("cnvs");
@@ -30,14 +29,8 @@
   }
 
   function renderFrame() {
-    let delta = 0;
-    if (last_time !== 0) {
-      delta = (new Date().getTime() - last_time);
-    }
-    last_time = new Date().getTime();
-
     // call the displayLoop function in the WASM module
-    exports.displayLoop(delta);
+    exports.displayLoop();
 
     // requestAnimationFrame calls renderFrame the next time a frame is rendered
     requestAnimationFrame(renderFrame);
