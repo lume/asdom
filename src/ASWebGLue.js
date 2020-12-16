@@ -114,6 +114,14 @@ export function initASWebGLue(importObject) {
     return image_id;
   }
 
+  // DEBUG STUFF  -----------
+
+  importObject.webgl.logi32 = (arg) => {
+    console.log(`logi32=${arg}`);
+  }
+
+  // END DEBUG STUFF --------
+
   importObject.webgl.imageReady = (image_id) => {
     console.log("image ready check! image_id=" + image_id);
     if (webgl.imageArray.length <= image_id) {
