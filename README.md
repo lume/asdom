@@ -8,3 +8,7 @@ asc render_lines.asc --extension asc --runtime stub --importMemory -o render_lin
 ```
 asc triangle.asc --extension asc --runtime stub --importMemory -o triangle.wasm
 ```
+
+```
+asc obj_tex.asc --extension asc --runtime stub --importMemory -o obj_tex.wasm
+```
