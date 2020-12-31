@@ -1,7 +1,7 @@
 # Blender v2.90.1 OBJ File: 'robot_texture.blend'
 # www.blender.org
 mtllib robot_texture.mtl
-o RobotTex_Cube
+o RobotTex_Mesh
 v 0.100000 0.100000 -0.100000
 v 0.100000 -0.100000 -0.100000
 v 0.100000 0.100000 0.100000

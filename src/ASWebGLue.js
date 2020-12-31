@@ -27,6 +27,7 @@ export function initASWebGLue(importObject) {
     console.log(webgl.getString(args[0]));
   }
 
+
   importObject.webgl.WEBGL_READY = false;
   importObject.webgl.memory = importObject.env.memory;
 
@@ -103,12 +104,14 @@ export function initASWebGLue(importObject) {
 
   //imageArray
   importObject.webgl.createImage = (image_location) => {
+    console.log(`createImage(${image_location})`);
     let image = new Image();
     image.ready = false;
     image.onload = function () {
       image.ready = true;
     }
     image.src = webgl.getString(image_location);
+    console.log(`image.src=${image.src}`);
     let image_id = webgl.imageArray.length;
     webgl.imageArray.push(image);
     return image_id;
