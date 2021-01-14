@@ -1,0 +1,22 @@
+{
+  "name": "aswebglue",
+  "ascMain": "webgl.ts",
+  "// scripts": "TODO: update the following script section as an index of what people can/should run (this standard in the JS/TS world). 'build' is a conventional script to have, along with 'dev' which usually has a watch mode to recompile when files change.",
+  "scripts": {
+    "build": "npm run build:lines -- --target release && npm run build:triangle -- --target release",
+    "build:lines": "npm run asc -- -o render_lines.wasm render_lines.ts",
+    "build:triangle": "npm run asc -- -o examples/HelloWorldTriangle/triangle.wasm examples/HelloWorldTriangle/triangle.ts",
+    "build:all": "for FILE in $(glob \"./render_lines.ts\" && glob \"./examples/**/*.ts\"); do npm run asc -- -o ${FILE%.ts}.wasm $FILE; done",
+    "asc": "asc --runtime stub --importMemory",
+    "clean": "rimraf $(glob './*.wasm') && rimraf $(glob './examples/**/*.wasm')",
+    "serve": "serve .",
+    "// ^ clean": "rimraf is a cross-platform 'rm -rf' command, and 'glob' is a cross-platform globbing command. So that differences between shells don't get in the way. Still gotta use WSL Bash in Windows though."
+  },
+  "devDependencies": {
+    "@assemblyscript/loader": "^0.17.7",
+    "assemblyscript": "^0.17.7",
+    "glob-cmd": "0.0.7",
+    "rimraf": "^3.0.2",
+    "serve": "^11.3.2"
+  }
+}
