@@ -1,4 +1,6 @@
 node_modules
+package-lock.json
+*.wasm
 images
 src/extended
 src/old

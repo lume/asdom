@@ -3,28 +3,28 @@
  */
 
 import {
-  WebGLShader, shaderSource, createShader, compileShader, 
+  WebGLShader, shaderSource, createShader, compileShader,
   VERTEX_SHADER, FRAGMENT_SHADER, createProgram, WebGLProgram,
   attachShader, useProgram, WebGLUniformLocation, getUniformLocation,
   linkProgram, clearColor, clear, WebGLBuffer,
   createBuffer, ARRAY_BUFFER, GLint,
   STATIC_DRAW, FLOAT, COLOR_BUFFER_BIT,
   enableVertexAttribArray, bindBuffer, createContextFromCanvas,
-  bufferData, getAttribLocation, drawArrays, 
+  bufferData, getAttribLocation, drawArrays,
   vertexAttribPointer, TRIANGLE_STRIP,
 } from '../../webgl'
 
-const VERTEX_SHADER_CODE:string = `#version 300 es
+const VERTEX_SHADER_CODE:string = /*glsl*/ `#version 300 es
   precision highp float;
 
   in vec2 position;
-  
+
   void main() {
     gl_Position = vec4( position, 0.0, 1.0 );
   }
 `;
 
-const FRAGMENT_SHADER_CODE:string = `#version 300 es
+const FRAGMENT_SHADER_CODE:string = /*glsl*/ `#version 300 es
   precision highp float;
   out vec4 color;
 

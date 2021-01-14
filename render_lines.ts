@@ -11,7 +11,7 @@ import {
   vertexAttribPointer, GLuint,
 } from './webgl'
 
-const V_COLOR_LINE_SHADER:string = `#version 300 es
+const V_COLOR_LINE_SHADER:string = /*glsl*/ `#version 300 es
   precision highp float;
 
   uniform vec4 u_color;
@@ -26,7 +26,7 @@ const V_COLOR_LINE_SHADER:string = `#version 300 es
 `;
 
 // THIS IS THE FRAGMENT SHADER
-const F_SHADER:string = `#version 300 es
+const F_SHADER:string = /*glsl*/ `#version 300 es
   precision highp float;
 
   in vec4 c;
