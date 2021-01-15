@@ -1,7 +1,3 @@
-#Hello World Triangle
+# Cube
 
-The triangle is the most basic of graphical programs.  When I have read a books on OpenGL / WebGL / DirectX, they always begin with a program that draws a simple triangle.
-
-```
-asc triangle.asc --extension asc --runtime stub --importMemory -o triangle.wasm
-```
+This example renderes a multicolor spinning cube.  There is no lighting on this cube, so the faces had to each be a different color to make it obvious that you are looking at a cube.

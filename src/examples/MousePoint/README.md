@@ -1,7 +1,4 @@
-#Hello World Triangle
+# Mouse Point
 
-The triangle is the most basic of graphical programs.  When I have read a books on OpenGL / WebGL / DirectX, they always begin with a program that draws a simple triangle.
-
-```
-asc triangle.asc --extension asc --runtime stub --importMemory -o triangle.wasm
-```
+This example renders points that fade away as the mouse moves away from them.  It does this with a point class and an array of those points.  The point gets activated and the alpha value is set to full opacity.
+The point then fades out by altering the alpha value as it moves.  The active point data is copied into the array buffer to be rendered on the canvas.
