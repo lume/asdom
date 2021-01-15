@@ -26,18 +26,18 @@ The fragment shader uses the uv coordinates to get the pixel value from the samp
 
 Here's the fragment shader code:
 ```
-  precision highp float;
+precision highp float;
 
-  in vec2 position;
-  in vec2 tex_coord;
+in vec2 position;
+in vec2 tex_coord;
 
-  out vec2 tc;
+out vec2 tc;
   
-  void main() {
-    gl_Position = vec4(position, 0.0, 1.0);
-    tc = tex_coord;
-  }
-	```
+void main() {
+  gl_Position = vec4(position, 0.0, 1.0);
+  tc = tex_coord;
+}
+```
 ## Creating the ImageData object
 
 When the Wasm module loads, I have to load an image.  I do so with the following call:
