@@ -8,17 +8,17 @@ The vertex shader is pretty striaght forward.  I'm passing in 2D coordinates so 
 
 Here's the code for the vertex shader:
 ```
-  precision highp float;
+precision highp float;
 
-  in vec2 position;
-  in vec2 tex_coord;
+in vec2 position;
+in vec2 tex_coord;
 
-  out vec2 tc;
+out vec2 tc;
   
-  void main() {
-    gl_Position = vec4(position, 0.0, 1.0);
-    tc = tex_coord;
-  }
+void main() {
+  gl_Position = vec4(position, 0.0, 1.0);
+  tc = tex_coord;
+}
 ```
 ## The Fragment Shader
 
