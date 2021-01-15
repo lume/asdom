@@ -172,7 +172,7 @@ export function displayLoop(delta: i32): void {
 
 
   bufferData<f32>(gl, ARRAY_BUFFER, cube_data, DYNAMIC_DRAW);
-  //                                   dimensions | data_type | normalize | stride | offset
+  // dimensions | data_type | normalize | stride | offset
   vertexAttribPointer(gl, position_al, 3, FLOAT, false, 24, 0);
   vertexAttribPointer(gl, normal_al, 3, FLOAT, false, 24, 12);
   drawArrays(gl, TRIANGLES, 0, cube_data.length / 6);

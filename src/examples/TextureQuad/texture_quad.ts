@@ -86,9 +86,10 @@ enableVertexAttribArray(gl, tex_coord_al);
 enable(gl, BLEND);
 blendFunc(gl, SRC_ALPHA, ONE_MINUS_SRC_ALPHA);
 
-//  x    y        u    v
-let quad_data: StaticArray<f32> = [-0.15, -0.2, 0.0, 0.0,
--0.15, 0.2, 0.0, 0.99,
+let quad_data: StaticArray<f32> = [
+  //  x     y     u     v
+  -0.15, -0.2, 0.0, 0.0,
+  -0.15, 0.2, 0.0, 0.99,
   0.15, -0.2, 0.95, 0.0,
   0.15, 0.2, 0.95, 0.99,];
 
