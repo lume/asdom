@@ -1,0 +1,59 @@
+# Blender MTL File: 'robot.blend'
+# Material Count: 3
+
+newmtl Material
+# Ns Specular Exponent
+Ns 323.999994
+# Ka Ambient Reflectivity
+Ka 1.000000 1.000000 1.000000
+# Kd Diffuse Reflectivity
+Kd 0.800000 0.314507 0.070683
+# Ks Specular Reflectivity
+Ks 0.500000 0.500000 0.500000
+# Ke Emission
+Ke 0.000000 0.000000 0.000000
+# Ni Optical Density
+Ni 1.450000
+# d dissolve factor
+d 1.000000
+# illum illumination model
+#  Illumination    Properties that are turned on in the 
+#  model           Property Editor
+#  0		Color on and Ambient off
+#  1		Color on and Ambient on
+#  2		Highlight on
+#  3		Reflection on and Ray trace on
+#  4		Transparency: Glass on
+#  	    Reflection: Ray trace on
+#  5		Reflection: Fresnel on and Ray trace on
+#  6		Transparency: Refraction on
+#  	    Reflection: Fresnel off and Ray trace on
+#  7		Transparency: Refraction on
+#  	    Reflection: Fresnel on and Ray trace on
+#  8		Reflection on and Ray trace off
+#  9		Transparency: Glass on
+#  	    Reflection: Ray trace off
+#  10		Casts shadows onto invisible surfaces
+ 
+illum 2
+
+
+newmtl Material.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Material.002
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2

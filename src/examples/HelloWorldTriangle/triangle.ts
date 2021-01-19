@@ -1,0 +1,78 @@
+/**
+ * @author Rick Battagline / https://embed.com/wasm
+ */
+
+import {
+  WebGLShader, shaderSource, createShader, compileShader,
+  VERTEX_SHADER, FRAGMENT_SHADER, createProgram, WebGLProgram,
+  attachShader, useProgram, WebGLUniformLocation, getUniformLocation,
+  linkProgram, clearColor, clear, WebGLBuffer,
+  createBuffer, ARRAY_BUFFER, GLint,
+  STATIC_DRAW, FLOAT, COLOR_BUFFER_BIT,
+  enableVertexAttribArray, bindBuffer, createContextFromCanvas,
+  bufferData, getAttribLocation, drawArrays,
+  vertexAttribPointer, TRIANGLE_STRIP,
+} from '../../webgl'
+
+const VERTEX_SHADER_CODE:string = /*glsl*/ `#version 300 es
+  precision highp float;
+
+  in vec2 position;
+
+  void main() {
+    gl_Position = vec4( position, 0.0, 1.0 );
+  }
+`;
+
+const FRAGMENT_SHADER_CODE:string = /*glsl*/ `#version 300 es
+  precision highp float;
+  out vec4 color;
+
+  void main() {
+    color = vec4( 1.0, 0.0, 0.0, 1.0 );
+  }
+`;
+
+  // initialize webgl
+  var gl = createContextFromCanvas('cnvs', 'webgl2');
+
+  let vertex_shader: WebGLShader = createShader(gl, VERTEX_SHADER);
+  shaderSource(gl, vertex_shader, VERTEX_SHADER_CODE);
+  compileShader(gl, vertex_shader);
+
+  let fragment_shader: WebGLShader = createShader(gl, FRAGMENT_SHADER);
+  shaderSource( gl, fragment_shader, FRAGMENT_SHADER_CODE);
+  compileShader( gl, fragment_shader );
+
+  let program:WebGLProgram = createProgram(gl);
+
+  attachShader(gl, program, vertex_shader);
+  attachShader(gl, program, fragment_shader);
+
+  linkProgram( gl, program );
+
+  useProgram( gl, program );
+
+  let buffer:WebGLBuffer = createBuffer(gl);
+  bindBuffer(gl, ARRAY_BUFFER, buffer);
+
+  let position_al:GLint = getAttribLocation(gl, program, 'position');
+  enableVertexAttribArray(gl, position_al);
+
+  let triangle_data: StaticArray<f32> = [0.0,0.5,
+                                    -0.5,-0.5,
+                                    0.5,-0.5,];
+
+  export function displayLoop():void {
+    //             R    G    B    A
+    clearColor(gl, 0.0, 0.0, 0.0, 1.0);
+    clear(gl, COLOR_BUFFER_BIT);
+
+    bufferData<f32>(gl, ARRAY_BUFFER, triangle_data, STATIC_DRAW);
+
+    //                      attribute | dimensions | data_type | normalize | stride | offset
+    vertexAttribPointer(gl, position_al, 2,          FLOAT,      false,      0,       0 );
+
+    //                      mode | first vertex | count
+    drawArrays(gl, TRIANGLE_STRIP, 0,             3 );
+  }
