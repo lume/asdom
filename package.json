@@ -1,6 +1,12 @@
 {
   "name": "aswebglue",
+  "version": "0.0.1",
   "ascMain": "webgl.ts",
+  "main": "ASWebGLue.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ZoeDreams/ASWebGLue"
+  },
   "// scripts": "TODO: update the following script section as an index of what people can/should run (this standard in the JS/TS world). 'build' is a conventional script to have, along with 'dev' which usually has a watch mode to recompile when files change.",
   "scripts": {
     "build:all": "node buildall.js",
