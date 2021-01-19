@@ -1,0 +1,1 @@
+export declare function print(str: string): void

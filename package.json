@@ -2,7 +2,9 @@
   "name": "aswebglue",
   "version": "0.0.1",
   "ascMain": "webgl.ts",
-  "main": "ASWebGLue.js",
+  "main": "index.js",
+  "type": "module",
+  "types": "index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/ZoeDreams/ASWebGLue"
