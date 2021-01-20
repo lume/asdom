@@ -1,6 +1,6 @@
 {
   "name": "aswebglue",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "ascMain": "webgl.ts",
   "main": "src/ASWebGLue.js",
   "type": "module",
