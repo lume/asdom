@@ -2,35 +2,32 @@
   "name": "aswebglue",
   "version": "0.0.1",
   "ascMain": "webgl.ts",
-  "main": "index.js",
+  "main": "src/ASWebGLue.js",
   "type": "module",
-  "types": "index.d.ts",
+  "types": "src/ASWebGLue.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/ZoeDreams/ASWebGLue"
   },
   "// scripts": "TODO: update the following script section as an index of what people can/should run (this standard in the JS/TS world). 'build' is a conventional script to have, along with 'dev' which usually has a watch mode to recompile when files change.",
   "scripts": {
-    "build:all": "node buildall.js",
     "asc": "asc --runtime stub --importMemory",
-    "clean": "rimraf $(glob './*.wasm') && rimraf $(glob './examples/**/*.wasm')",
-    "serve": "serve .",
-    "// ^ clean": "rimraf is a cross-platform 'rm -rf' command, and 'glob' is a cross-platform globbing command. So that differences between shells don't get in the way. Still gotta use WSL Bash in Windows though."
+    "clean": "rimraf build && rimraf dist",
+    "prebuild": "npm run clean",
+    "build": "node scripts/build.js",
+    "start": "live-server --verbose --watch=build ./build"
   },
   "devDependencies": {
     "@assemblyscript/loader": "^0.17.7",
     "assemblyscript": "^0.17.7",
-    "glob-cmd": "0.0.7",
     "imagemin": "^7.0.1",
     "imagemin-pngquant": "^9.0.1",
+    "live-server": "^1.2.1",
+    "make-dir-cli": "^2.0.0",
     "node-minify": "^3.6.0",
-    "rimraf": "^3.0.2",
-    "serve": "^11.3.2"
+    "rimraf": "^3.0.2"
   },
   "author": "Rick Battagline <rick@battagline.com>",
   "license": "MIT",
-  "dependencies": {
-    "connect": "^3.7.0",
-    "serve-static": "^1.14.1"
-  }
+  "dependencies": {}
 }

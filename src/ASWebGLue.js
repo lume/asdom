@@ -1,3 +1,7 @@
+export function print(str) {
+  console.log(str)
+}
+
 export function ASWebGLReady(wasm_obj, importObject) {
   if (wasm_obj == null) {
     console.error("ASWebGLReady requires the WebAssembly Instance as 1st parameter");
