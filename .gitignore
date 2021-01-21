@@ -1,7 +1,10 @@
 node_modules
+build
+dist
 package-lock.json
 *.wasm
+*.wat
 images
 src/extended
 src/old
-gitrun.sh
+*.sh
