@@ -1,13 +1,12 @@
 {
   "name": "aswebglue",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "ascMain": "webgl.ts",
   "main": "src/ASWebGLue.js",
-  "type": "module",
   "types": "src/ASWebGLue.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ZoeDreams/ASWebGLue"
+    "url": "https://github.com/battlelinegames/ASWebGLue"
   },
   "// scripts": "TODO: update the following script section as an index of what people can/should run (this standard in the JS/TS world). 'build' is a conventional script to have, along with 'dev' which usually has a watch mode to recompile when files change.",
   "scripts": {
@@ -20,6 +19,7 @@
   "devDependencies": {
     "@assemblyscript/loader": "^0.17.7",
     "assemblyscript": "^0.17.7",
+    "child-process": "^1.0.2",
     "imagemin": "^7.0.1",
     "imagemin-pngquant": "^9.0.1",
     "live-server": "^1.2.1",

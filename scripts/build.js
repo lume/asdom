@@ -1,48 +1,38 @@
-import { exec } from "child_process"
-import fs from "fs"
-import path from "path"
-import makeDir from "make-dir"
-import min from "node-minify"
-import imagemin from "imagemin"
-import imageminPngQuant from "imagemin-pngquant"
+const { exec } = require("child_process");
+const fs = require('fs');
+const path = require('path');
+const min = require('node-minify');
+const imagemin = require('imagemin');
+const imageminPngQuant = require('imagemin-pngquant');
+const ASWebGLueWasm = './src/webgl.ts';
+const ASWebGLueWasmOut = './dist/webgl.wasm';
+const distDir = './dist';
 
-const srcDir = './src/';
-const buildDir = './build/'
-const examplesDir = 'examples/'
-const srcExamplesDir = srcDir + examplesDir;
-const buildExamplesDir = buildDir + examplesDir;
-const ascFile = 'webgl.ts'
-const wasmFile = 'webgl.wasm'
-const ascSrcFile = srcDir + ascFile;
-const ascOutFile = buildDir + wasmFile;
-const ascCmd = `asc ${ascSrcFile} --runtime stub -O3 --importMemory -o ${ascOutFile}`;
+if (!fs.existsSync(distDir)) {
+	fs.mkdirSync(distDir, 0744);
+}
 
-console.log("|-> create build dir");
-makeDir.sync(buildDir);
+let ascRun = `asc ${ASWebGLueWasm} --runtime stub -O3 --importMemory -o ${ASWebGLueWasmOut}`;
+exec(ascRun);
 
-console.log("|-> compile assembly script");
-exec(ascCmd);
-
-console.log("|-> copying aswebglue files");
-fs.copyFile('./src/ASWebGLue.d.ts', './build/ASWebGLue.d.ts', (err) => {
-	if (err) throw err;
-});
-fs.copyFile('./src/ASWebGLue.js', './build/ASWebGLue.js', (err) => {
+fs.copyFile('./src/ASWebGLue.js', './dist/ASWebGLue.js', (err) => {
+	console.log(err);
 	if (err) throw err;
 });
 
-console.log("|_> building ...");
-fs.readdir(srcExamplesDir, (err, files) => {
+const exampleDirectory = './src/examples/';
+const distDirectory = './dist/examples/';
+
+fs.readdir(exampleDirectory, (err, files) => {
 
 	files.forEach(file => {
-		if (fs.lstatSync(path.resolve(srcExamplesDir, file)).isDirectory()) {
+		if (fs.lstatSync(path.resolve(exampleDirectory, file)).isDirectory()) {
 			let subDir = file;
-			fs.readdir(srcExamplesDir + file, (err, exampleFiles) => {
+			fs.readdir(exampleDirectory + file, (err, exampleFiles) => {
 				exampleFiles.forEach(exampleFile => {
-
 					if (exampleFile.indexOf('.ts') >= 0) {
-						let fi = `${srcExamplesDir}${subDir}/${exampleFile}`;
-						let fo = `${buildExamplesDir}${subDir}/${exampleFile.replace('.ts', '.wasm')}`;
+						let fi = `${exampleDirectory}${subDir}/${exampleFile}`;
+						let fo = `${distDirectory}${subDir}/${exampleFile.replace('.ts', '.wasm')}`;
 						let ascRun = `asc ${fi} --runtime stub -O3 --importMemory -o ${fo}`;
 
 						exec(ascRun);
@@ -50,8 +40,8 @@ fs.readdir(srcExamplesDir, (err, files) => {
 					else if (exampleFile.indexOf('.html') >= 0) {
 						min.minify({
 							compressor: 'html-minifier',
-							input: `${srcExamplesDir}${subDir}/${exampleFile}`,
-							output: `${buildExamplesDir}${subDir}/${exampleFile}`,
+							input: `${exampleDirectory}${subDir}/${exampleFile}`,
+							output: `${distDirectory}${subDir}/${exampleFile}`,
 							callback: function (err, min) {
 								if (err != null) console.log(err);
 							}
@@ -59,8 +49,8 @@ fs.readdir(srcExamplesDir, (err, files) => {
 					}
 					else if (exampleFile.indexOf('.png') >= 0) {
 						(async () => {
-							let fi = `${srcExamplesDir}${subDir}/${exampleFile}`;
-							let fo = `${buildExamplesDir}${subDir}`;
+							let fi = `${exampleDirectory}${subDir}/${exampleFile}`;
+							let fo = `${distDirectory}${subDir}`;
 
 							await imagemin([fi], {
 								destination: fo,
