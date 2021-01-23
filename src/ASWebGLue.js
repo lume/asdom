@@ -127,6 +127,10 @@ export function initASWebGLue(importObject) {
     console.log(`logi32=${arg}`);
   }
 
+  importObject.webgl.logf32 = (arg) => {
+    console.log(`logf32=${arg}`);
+  }
+
   // END DEBUG STUFF --------
 
   importObject.webgl.imageReady = (image_id) => {

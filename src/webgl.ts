@@ -34,6 +34,7 @@ export type WebGLVertexArrayObject = i32;
 
 // == debug function not part of WebGL
 export declare function logi32(arg: i32): void;
+export declare function logf32(arg: f32): void;
 // == Not a part of WebGL, but there must be a way to create and load images
 // export type ImageData = i32;
 export declare function createImage(image_location: string): ImageData;
