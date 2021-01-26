@@ -3,17 +3,9 @@
  */
 
 import {
-  WebGLShader, shaderSource, createShader, compileShader,
-  VERTEX_SHADER, FRAGMENT_SHADER, createProgram, WebGLProgram,
-  attachShader, useProgram, WebGLUniformLocation, getUniformLocation,
-  linkProgram, clearColor, clear,
-  createBuffer, ARRAY_BUFFER,
-  STATIC_DRAW, DYNAMIC_DRAW, FLOAT, COLOR_BUFFER_BIT,
-  enableVertexAttribArray, bindBuffer, createContextFromCanvas,
-  bufferData, getAttribLocation, drawArrays,
-  vertexAttribPointer, POINTS, enable, blendFunc,
-  SRC_ALPHA, ONE_MINUS_SRC_ALPHA, BLEND,
-} from '../../webgl'
+  WebGLRenderingContext, WebGLShader, WebGLProgram,
+  WebGLBuffer, GLint, WebGLUniformLocation,
+} from '../../WebGL'
 
 // SRC_ALPHA
 // ONE_MINUS_SRC_ALPHA
@@ -92,35 +84,35 @@ const FRAGMENT_SHADER_CODE: string = `#version 300 es
 
 // initialize webgl
 var second_delta: f32 = 0.0;
-var gl = createContextFromCanvas('cnvs', 'webgl2');
+var gl = new WebGLRenderingContext('cnvs', 'webgl2');
 
-let vertex_shader: WebGLShader = createShader(gl, VERTEX_SHADER);
-shaderSource(gl, vertex_shader, VERTEX_SHADER_CODE);
-compileShader(gl, vertex_shader);
+let vertex_shader: WebGLShader = gl.createShader(gl.VERTEX_SHADER);
+gl.shaderSource(vertex_shader, VERTEX_SHADER_CODE);
+gl.compileShader(vertex_shader);
 
-let fragment_shader: WebGLShader = createShader(gl, FRAGMENT_SHADER);
-shaderSource(gl, fragment_shader, FRAGMENT_SHADER_CODE);
-compileShader(gl, fragment_shader);
+let fragment_shader: WebGLShader = gl.createShader(gl.FRAGMENT_SHADER);
+gl.shaderSource(fragment_shader, FRAGMENT_SHADER_CODE);
+gl.compileShader(fragment_shader);
 
-let program = createProgram(gl);
+let program: WebGLProgram = gl.createProgram();
 
-attachShader(gl, program, vertex_shader);
-attachShader(gl, program, fragment_shader);
+gl.attachShader(program, vertex_shader);
+gl.attachShader(program, fragment_shader);
 
-linkProgram(gl, program);
+gl.linkProgram(program);
 
-useProgram(gl, program);
+gl.useProgram(program);
 
-let buffer = createBuffer(gl);
-bindBuffer(gl, ARRAY_BUFFER, buffer);
+let buffer: WebGLBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 
-let position_al = getAttribLocation(gl, program, 'position');
-enableVertexAttribArray(gl, position_al);
-let alpha_al = getAttribLocation(gl, program, 'alpha');
-enableVertexAttribArray(gl, alpha_al);
+let position_al: GLint = gl.getAttribLocation(program, 'position');
+gl.enableVertexAttribArray(position_al);
+let alpha_al: GLint = gl.getAttribLocation(program, 'alpha');
+gl.enableVertexAttribArray(alpha_al);
 
-enable(gl, BLEND);
-blendFunc(gl, SRC_ALPHA, ONE_MINUS_SRC_ALPHA);
+gl.enable(gl.BLEND);
+gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
 let point_index: i32 = 0;
 
@@ -159,15 +151,15 @@ export function displayLoop(delta: i32, mouse_x: f32, mouse_y: f32): void {
     prev_y = mouse_y;
   }
 
-  clearColor(gl, 0.0, 0.0, 0.0, 1.0);
-  clear(gl, COLOR_BUFFER_BIT);
+  gl.clearColor(0.0, 0.0, 0.0, 1.0);
+  gl.clear(gl.COLOR_BUFFER_BIT);
 
-  bufferData<f32>(gl, ARRAY_BUFFER, point_data, DYNAMIC_DRAW);
+  gl.bufferData<f32>(gl.ARRAY_BUFFER, point_data, gl.DYNAMIC_DRAW);
 
   //vertexAttribPointer     attribute |  dimensions | data type | normalize | stride bytes | offset bytes
-  vertexAttribPointer(gl, position_al, 2, FLOAT, false, 12, 0);
-  vertexAttribPointer(gl, alpha_al, 1, FLOAT, false, 12, 8);
+  gl.vertexAttribPointer(position_al, 2, gl.FLOAT, false, 12, 0);
+  gl.vertexAttribPointer(alpha_al, 1, gl.FLOAT, false, 12, 8);
 
-  drawArrays(gl, POINTS, 0, point_list.length);
+  gl.drawArrays(gl.POINTS, 0, point_list.length);
 
 }

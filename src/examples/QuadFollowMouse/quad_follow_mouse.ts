@@ -1,16 +1,10 @@
 import {
-  WebGLShader, shaderSource, createShader, compileShader, 
-  VERTEX_SHADER, FRAGMENT_SHADER, createProgram, WebGLProgram,
-  attachShader, useProgram, WebGLUniformLocation, getUniformLocation,
-  linkProgram, clearColor, clear,
-  createBuffer, ARRAY_BUFFER, uniform2f,
-  STATIC_DRAW, FLOAT, COLOR_BUFFER_BIT,
-  enableVertexAttribArray, bindBuffer, createContextFromCanvas,
-  bufferData, getAttribLocation, drawArrays, 
-  vertexAttribPointer, TRIANGLE_STRIP, 
-} from '../../webgl'
+  WebGLRenderingContext, WebGLShader, WebGLProgram, ImageData,
+  WebGLBuffer, GLint, WebGLUniformLocation,
+} from '../../WebGL'
 
-const VERTEX_SHADER_CODE:string = `#version 300 es
+
+const VERTEX_SHADER_CODE: string = `#version 300 es
   precision highp float;
 
   uniform vec2 quad_pos;
@@ -22,7 +16,7 @@ const VERTEX_SHADER_CODE:string = `#version 300 es
   }
 `;
 // THIS IS THE FRAGMENT SHADER
-const FRAGMENT_SHADER_CODE:string = `#version 300 es
+const FRAGMENT_SHADER_CODE: string = `#version 300 es
   precision highp float;
   out vec4 color;
 
@@ -31,53 +25,53 @@ const FRAGMENT_SHADER_CODE:string = `#version 300 es
   }
 `;
 
-  // initialize webgl
-  var gl = createContextFromCanvas('cnvs', 'webgl2');
+// initialize webgl
+var gl: WebGLRenderingContext = new WebGLRenderingContext('cnvs', 'webgl2');
 
-  let vertex_shader: WebGLShader = createShader(this.gl, VERTEX_SHADER);
-  shaderSource(gl, vertex_shader, VERTEX_SHADER_CODE);
-  compileShader(gl, vertex_shader);
+let vertex_shader: WebGLShader = gl.createShader(gl.VERTEX_SHADER);
+gl.shaderSource(vertex_shader, VERTEX_SHADER_CODE);
+gl.compileShader(vertex_shader);
 
-  let fragment_shader: WebGLShader = createShader(gl, FRAGMENT_SHADER);
-  shaderSource( gl, fragment_shader, FRAGMENT_SHADER_CODE);
-  compileShader( gl, fragment_shader );
+let fragment_shader: WebGLShader = gl.createShader(gl.FRAGMENT_SHADER);
+gl.shaderSource(fragment_shader, FRAGMENT_SHADER_CODE);
+gl.compileShader(fragment_shader);
 
-  let program = createProgram(gl);
+let program: WebGLProgram = gl.createProgram();
 
-  attachShader(gl, program, vertex_shader);
-  attachShader(gl, program, fragment_shader);
+gl.attachShader(program, vertex_shader);
+gl.attachShader(program, fragment_shader);
 
-  linkProgram( gl, program );
+gl.linkProgram(program);
 
-  useProgram( gl, program );
+gl.useProgram(program);
 
-  let buffer = createBuffer(gl);
-  bindBuffer(gl, ARRAY_BUFFER, buffer);
+let buffer: WebGLBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 
-  let position_al = getAttribLocation(gl, program, 'position');
-  enableVertexAttribArray(gl, position_al);
+let position_al = gl.getAttribLocation(program, 'position');
+gl.enableVertexAttribArray(position_al);
 
-  let quad_data: StaticArray<f32> = [-0.2,-0.2,
-                                     -0.2, 0.2,
-                                      0.2,-0.2,
-                                      0.2, 0.2,];
+let quad_data: StaticArray<f32> = [-0.2, -0.2,
+-0.2, 0.2,
+  0.2, -0.2,
+  0.2, 0.2,];
 
-  let quad_pos:WebGLUniformLocation = getUniformLocation(gl, program, "quad_pos");
+let quad_pos: WebGLUniformLocation = gl.getUniformLocation(program, "quad_pos");
 
-  export function moveMouse(mouse_x: f32, mouse_y: f32 ):void {
-    clearColor(gl, 0.0, 0.0, 0.0, 1.0);
-    clear(gl, COLOR_BUFFER_BIT);
+export function moveMouse(mouse_x: f32, mouse_y: f32): void {
+  gl.clearColor(0.0, 0.0, 0.0, 1.0);
+  gl.clear(gl.COLOR_BUFFER_BIT);
 
-    bufferData<f32>(gl, ARRAY_BUFFER, quad_data, STATIC_DRAW);
+  gl.bufferData<f32>(gl.ARRAY_BUFFER, quad_data, gl.STATIC_DRAW);
 
-    const dimensions:i32 = 2;
-    const data_type: i32 = FLOAT;
-    const normalize: i32 = false;
-    const stride:i32 = 0;
-    const offset:i32 = 0;
+  const dimensions: i32 = 2;
+  const data_type: i32 = gl.FLOAT;
+  const normalize: i32 = false;
+  const stride: i32 = 0;
+  const offset: i32 = 0;
 
-    vertexAttribPointer(gl, position_al, dimensions, data_type, normalize, stride, offset);
-    uniform2f(gl, quad_pos, mouse_x, mouse_y);
+  gl.vertexAttribPointer(position_al, dimensions, data_type, normalize, stride, offset);
+  gl.uniform2f(quad_pos, mouse_x, mouse_y);
 
-    drawArrays(gl, TRIANGLE_STRIP, 0, quad_data.length/2);
-  }
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, quad_data.length / 2);
+}

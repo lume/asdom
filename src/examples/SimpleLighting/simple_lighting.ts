@@ -3,16 +3,9 @@
  */
 
 import {
-  WebGLShader, shaderSource, createShader, compileShader,
-  VERTEX_SHADER, FRAGMENT_SHADER, createProgram, WebGLProgram,
-  attachShader, useProgram, WebGLUniformLocation, getUniformLocation,
-  linkProgram, clearColor, clear,
-  createBuffer, ARRAY_BUFFER,
-  DYNAMIC_DRAW, FLOAT, COLOR_BUFFER_BIT, DEPTH_TEST, DEPTH_BUFFER_BIT,
-  enableVertexAttribArray, bindBuffer, createContextFromCanvas,
-  bufferData, getAttribLocation, drawArrays, enable, depthFunc,
-  vertexAttribPointer, TRIANGLES, GREATER
-} from '../../webgl'
+  WebGLRenderingContext, WebGLShader,
+  WebGLBuffer, GLint, WebGLProgram,
+} from '../../WebGL'
 
 const VERTEX_SHADER_CODE: string = `#version 300 es
   precision mediump float;
@@ -50,35 +43,35 @@ const FRAGMENT_SHADER_CODE: string = `#version 300 es
 `;
 
 // initialize webgl
-var gl = createContextFromCanvas('cnvs', 'webgl2');
+var gl: WebGLRenderingContext = new WebGLRenderingContext('cnvs', 'webgl2');
 
-let vertex_shader: WebGLShader = createShader(gl, VERTEX_SHADER);
-shaderSource(gl, vertex_shader, VERTEX_SHADER_CODE);
-compileShader(gl, vertex_shader);
+let vertex_shader: WebGLShader = gl.createShader(gl.VERTEX_SHADER);
+gl.shaderSource(vertex_shader, VERTEX_SHADER_CODE);
+gl.compileShader(vertex_shader);
 
-let fragment_shader: WebGLShader = createShader(gl, FRAGMENT_SHADER);
-shaderSource(gl, fragment_shader, FRAGMENT_SHADER_CODE);
-compileShader(gl, fragment_shader);
+let fragment_shader: WebGLShader = gl.createShader(gl.FRAGMENT_SHADER);
+gl.shaderSource(fragment_shader, FRAGMENT_SHADER_CODE);
+gl.compileShader(fragment_shader);
 
-let program = createProgram(gl);
+let program: WebGLProgram = gl.createProgram();
 
-attachShader(gl, program, vertex_shader);
-attachShader(gl, program, fragment_shader);
+gl.attachShader(program, vertex_shader);
+gl.attachShader(program, fragment_shader);
 
-linkProgram(gl, program);
+gl.linkProgram(program);
 
-useProgram(gl, program);
+gl.useProgram(program);
 
-let buffer = createBuffer(gl);
-bindBuffer(gl, ARRAY_BUFFER, buffer);
+let buffer: WebGLBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 
-let position_al = getAttribLocation(gl, program, 'position');
-enableVertexAttribArray(gl, position_al);
+let position_al: GLint = gl.getAttribLocation(program, 'position');
+gl.enableVertexAttribArray(position_al);
 
-let normal_al = getAttribLocation(gl, program, 'normal');
-enableVertexAttribArray(gl, normal_al);
+let normal_al: GLint = gl.getAttribLocation(program, 'normal');
+gl.enableVertexAttribArray(normal_al);
 
-enable(gl, DEPTH_TEST);
+gl.enable(gl.DEPTH_TEST);
 
 // I'M DUPLICATING A LOT OF VERTICES HERE.
 // INDEXES WOULD BE BETTER
@@ -167,14 +160,14 @@ export function displayLoop(delta: i32): void {
   let r: f32 = <f32>delta / 10000.0;
   rotate(r);
 
-  clearColor(gl, 0.0, 0.0, 0.0, 1.0);
-  clear(gl, COLOR_BUFFER_BIT | DEPTH_BUFFER_BIT);
+  gl.clearColor(0.0, 0.0, 0.0, 1.0);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
 
-  bufferData<f32>(gl, ARRAY_BUFFER, cube_data, DYNAMIC_DRAW);
+  gl.bufferData<f32>(gl.ARRAY_BUFFER, cube_data, gl.DYNAMIC_DRAW);
   // dimensions | data_type | normalize | stride | offset
-  vertexAttribPointer(gl, position_al, 3, FLOAT, false, 24, 0);
-  vertexAttribPointer(gl, normal_al, 3, FLOAT, false, 24, 12);
-  drawArrays(gl, TRIANGLES, 0, cube_data.length / 6);
+  gl.vertexAttribPointer(position_al, 3, gl.FLOAT, false, 24, 0);
+  gl.vertexAttribPointer(normal_al, 3, gl.FLOAT, false, 24, 12);
+  gl.drawArrays(gl.TRIANGLES, 0, cube_data.length / 6);
 
 }

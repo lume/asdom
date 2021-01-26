@@ -3,16 +3,9 @@
  */
 
 import {
-  WebGLShader, shaderSource, createShader, compileShader,
-  VERTEX_SHADER, FRAGMENT_SHADER, createProgram, WebGLProgram,
-  attachShader, useProgram, WebGLUniformLocation, getUniformLocation,
-  linkProgram, clearColor, clear,
-  createBuffer, ARRAY_BUFFER,
-  STATIC_DRAW, FLOAT, COLOR_BUFFER_BIT,
-  enableVertexAttribArray, bindBuffer, createContextFromCanvas,
-  bufferData, getAttribLocation, drawArrays,
-  vertexAttribPointer, POINTS,
-} from '../../webgl'
+  WebGLRenderingContext, WebGLShader, ImageData, WebGLUniformLocation,
+  WebGLBuffer, GLint, WebGLProgram, WebGLTexture,
+} from '../../WebGL'
 
 class Point {
   public x: f32 = 0.0;
@@ -69,30 +62,30 @@ const FRAGMENT_SHADER_CODE: string = `#version 300 es
 `;
 
 // initialize webgl
-var gl = createContextFromCanvas('cnvs', 'webgl2');
+var gl: WebGLRenderingContext = new WebGLRenderingContext('cnvs', 'webgl2');
 
-let vertex_shader: WebGLShader = createShader(gl, VERTEX_SHADER);
-shaderSource(gl, vertex_shader, VERTEX_SHADER_CODE);
-compileShader(gl, vertex_shader);
+let vertex_shader: WebGLShader = gl.createShader(gl.VERTEX_SHADER);
+gl.shaderSource(vertex_shader, VERTEX_SHADER_CODE);
+gl.compileShader(vertex_shader);
 
-let fragment_shader: WebGLShader = createShader(gl, FRAGMENT_SHADER);
-shaderSource(gl, fragment_shader, FRAGMENT_SHADER_CODE);
-compileShader(gl, fragment_shader);
+let fragment_shader: WebGLShader = gl.createShader(gl.FRAGMENT_SHADER);
+gl.shaderSource(fragment_shader, FRAGMENT_SHADER_CODE);
+gl.compileShader(fragment_shader);
 
-let program = createProgram(gl);
+let program: WebGLProgram = gl.createProgram();
 
-attachShader(gl, program, vertex_shader);
-attachShader(gl, program, fragment_shader);
+gl.attachShader(program, vertex_shader);
+gl.attachShader(program, fragment_shader);
 
-linkProgram(gl, program);
+gl.linkProgram(program);
 
-useProgram(gl, program);
+gl.useProgram(program);
 
-let buffer = createBuffer(gl);
-bindBuffer(gl, ARRAY_BUFFER, buffer);
+let buffer: WebGLBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 
-let position_al = getAttribLocation(gl, program, 'position');
-enableVertexAttribArray(gl, position_al);
+let position_al: GLint = gl.getAttribLocation(program, 'position');
+gl.enableVertexAttribArray(position_al);
 
 let point_list: StaticArray<Point> = [new Point(), new Point(), new Point(), new Point(), new Point(),
 new Point(), new Point(), new Point(), new Point(), new Point(),
@@ -187,8 +180,8 @@ let point_data: StaticArray<f32> = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
   0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,];
 
 export function displayLoop(delta: i32): void {
-  clearColor(gl, 0.0, 0.0, 0.0, 1.0);
-  clear(gl, COLOR_BUFFER_BIT);
+  gl.clearColor(0.0, 0.0, 0.0, 1.0);
+  gl.clear(gl.COLOR_BUFFER_BIT);
 
   for (let i: i32 = 0; i < point_list.length; i++) {
     point_list[i].move();
@@ -196,16 +189,16 @@ export function displayLoop(delta: i32): void {
     point_data[i * 2 + 1] = point_list[i].y;
   }
 
-  bufferData<f32>(gl, ARRAY_BUFFER, point_data, STATIC_DRAW);
+  gl.bufferData<f32>(gl.ARRAY_BUFFER, point_data, gl.STATIC_DRAW);
 
   const dimensions: i32 = 2;
-  const data_type: i32 = FLOAT;
+  const data_type: i32 = gl.FLOAT;
   const normalize: i32 = false;
   const stride: i32 = 0;
   const offset: i32 = 0;
 
-  vertexAttribPointer(gl, position_al, dimensions, data_type, normalize, stride, offset);
+  gl.vertexAttribPointer(position_al, dimensions, data_type, normalize, stride, offset);
 
-  drawArrays(gl, POINTS, 0, point_list.length);
+  gl.drawArrays(gl.POINTS, 0, point_list.length);
 
 }

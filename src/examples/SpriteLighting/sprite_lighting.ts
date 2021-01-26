@@ -3,25 +3,9 @@
  */
 
 import {
-  WebGLShader, shaderSource, createShader, compileShader,
-  VERTEX_SHADER, FRAGMENT_SHADER, createProgram, WebGLProgram,
-  attachShader, useProgram, WebGLUniformLocation, getUniformLocation,
-  linkProgram, clearColor, clear, uniform1i, uniform3f,
-  createTexture, createBuffer, ARRAY_BUFFER,
-  STATIC_DRAW, FLOAT, COLOR_BUFFER_BIT,
-  enableVertexAttribArray, bindBuffer, createContextFromCanvas,
-  bufferData, getAttribLocation, drawArrays,
-  vertexAttribPointer, TRIANGLE_STRIP,
-  ImageData, createImage, imageReady,
-  pixelStorei, activeTexture, bindTexture,
-  texParameteri, texImage2D, TEXTURE0, TEXTURE1, TEXTURE_2D,
-  SRC_ALPHA, ONE_MINUS_SRC_ALPHA, BLEND, DEPTH_TEST,
-  enable, blendFunc,
-  TEXTURE_MIN_FILTER, TEXTURE_MAG_FILTER, NEAREST, RGB,
-  UNSIGNED_BYTE, UNPACK_FLIP_Y_WEBGL, UNPACK_PREMULTIPLY_ALPHA_WEBGL,
-  POINTS,
-  logi32, logf32,
-} from '../../webgl'
+  WebGLRenderingContext, WebGLShader, ImageData, WebGLUniformLocation,
+  WebGLBuffer, GLint, WebGLProgram, WebGLTexture,
+} from '../../WebGL'
 
 const VS_POINT_CODE: string = `#version 300 es
   in vec2 position;
@@ -87,65 +71,65 @@ var light_y: f32 = 0.0;
 var light_z: f32 = 0.5;
 
 // initialize webgl
-var gl = createContextFromCanvas('cnvs', 'webgl2');
+var gl: WebGLRenderingContext = new WebGLRenderingContext('cnvs', 'webgl2');
 
 
 //  ImageData, createImage, imageReady,
-var image_id: ImageData = createImage('SpaceShip.png');
-var normal_image_id: ImageData = createImage('SpaceShipN.png');
+var image_id: ImageData = gl.createImage('SpaceShip.png');
+var normal_image_id: ImageData = gl.createImage('SpaceShipN.png');
 var image_ready: bool = false;
 
-let vertex_shader: WebGLShader = createShader(gl, VERTEX_SHADER);
-shaderSource(gl, vertex_shader, VERTEX_SHADER_CODE);
-compileShader(gl, vertex_shader);
+let vertex_shader: WebGLShader = gl.createShader(gl.VERTEX_SHADER);
+gl.shaderSource(vertex_shader, VERTEX_SHADER_CODE);
+gl.compileShader(vertex_shader);
 
-let fragment_shader: WebGLShader = createShader(gl, FRAGMENT_SHADER);
-shaderSource(gl, fragment_shader, FRAGMENT_SHADER_CODE);
-compileShader(gl, fragment_shader);
+let fragment_shader: WebGLShader = gl.createShader(gl.FRAGMENT_SHADER);
+gl.shaderSource(fragment_shader, FRAGMENT_SHADER_CODE);
+gl.compileShader(fragment_shader);
 
-let program = createProgram(gl);
+let program: WebGLProgram = gl.createProgram();
 
-attachShader(gl, program, vertex_shader);
-attachShader(gl, program, fragment_shader);
+gl.attachShader(program, vertex_shader);
+gl.attachShader(program, fragment_shader);
 
-linkProgram(gl, program);
+gl.linkProgram(program);
 
-useProgram(gl, program);
+gl.useProgram(program);
 
-let buffer = createBuffer(gl);
-bindBuffer(gl, ARRAY_BUFFER, buffer);
+let buffer: WebGLBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 
-let position_al = getAttribLocation(gl, program, 'position');
-enableVertexAttribArray(gl, position_al);
+let position_al: GLint = gl.getAttribLocation(program, 'position');
+gl.enableVertexAttribArray(position_al);
 
-let tex_coord_al = getAttribLocation(gl, program, 'tex_coord');
-enableVertexAttribArray(gl, tex_coord_al);
+let tex_coord_al: GLint = gl.getAttribLocation(program, 'tex_coord');
+gl.enableVertexAttribArray(tex_coord_al);
 
-enable(gl, BLEND);
-blendFunc(gl, SRC_ALPHA, ONE_MINUS_SRC_ALPHA);
+gl.enable(gl.BLEND);
+gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-let vertex_shader2: WebGLShader = createShader(gl, VERTEX_SHADER);
-shaderSource(gl, vertex_shader2, VS_POINT_CODE);
-compileShader(gl, vertex_shader2);
+let vertex_shader2: WebGLShader = gl.createShader(gl.VERTEX_SHADER);
+gl.shaderSource(vertex_shader2, VS_POINT_CODE);
+gl.compileShader(vertex_shader2);
 
-let fragment_shader2: WebGLShader = createShader(gl, FRAGMENT_SHADER);
-shaderSource(gl, fragment_shader2, FS_POINT_CODE);
-compileShader(gl, fragment_shader2);
+let fragment_shader2: WebGLShader = gl.createShader(gl.FRAGMENT_SHADER);
+gl.shaderSource(fragment_shader2, FS_POINT_CODE);
+gl.compileShader(fragment_shader2);
 
-let program2 = createProgram(gl);
+let program2: WebGLProgram = gl.createProgram();
 
-attachShader(gl, program2, vertex_shader2);
-attachShader(gl, program2, fragment_shader2);
+gl.attachShader(program2, vertex_shader2);
+gl.attachShader(program2, fragment_shader2);
 
-linkProgram(gl, program2);
+gl.linkProgram(program2);
 
-useProgram(gl, program2);
+gl.useProgram(program2);
 
-let buffer2 = createBuffer(gl);
-bindBuffer(gl, ARRAY_BUFFER, buffer2);
+let buffer2: WebGLBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, buffer2);
 
-let position2_al = getAttribLocation(gl, program2, 'position');
-enableVertexAttribArray(gl, position2_al);
+let position2_al: GLint = gl.getAttribLocation(program2, 'position');
+gl.enableVertexAttribArray(position2_al);
 
 
 let quad_data: StaticArray<f32> = [
@@ -159,11 +143,11 @@ let light_point: StaticArray<f32> = [
   0.0, 0.0,
 ];
 
-let texture = createTexture(gl);
-let normal_texture = createTexture(gl);
-let sampler = getUniformLocation(gl, program, 'sampler');
-let normal_map = getUniformLocation(gl, program, 'normal_map');
-let light_source = getUniformLocation(gl, program, 'light_source');
+let texture: WebGLTexture = gl.createTexture();
+let normal_texture: WebGLTexture = gl.createTexture();
+let sampler: WebGLUniformLocation = gl.getUniformLocation(program, 'sampler');
+let normal_map: WebGLUniformLocation = gl.getUniformLocation(program, 'normal_map');
+let light_source: WebGLUniformLocation = gl.getUniformLocation(program, 'light_source');
 
 
 function rotateLight(theta: f32): void { //u32 {
@@ -183,56 +167,49 @@ export function displayLoop(delta: i32): void {
   let r: f32 = <f32>delta / 1000.0;
   rotateLight(r);
 
-  clearColor(gl, 0.0, 0.0, 0.0, 1.0);
-  clear(gl, COLOR_BUFFER_BIT);
+  gl.clearColor(0.0, 0.0, 0.0, 1.0);
+  gl.clear(gl.COLOR_BUFFER_BIT);
 
   if (image_ready == false) {
-    if (imageReady(image_id) == false ||
-      imageReady(normal_image_id) == false) {
+    if (gl.imageReady(image_id) == false ||
+      gl.imageReady(normal_image_id) == false) {
       return;
     }
-    useProgram(gl, program);
+    gl.useProgram(program);
 
-    pixelStorei(gl, UNPACK_FLIP_Y_WEBGL, 1);
-    pixelStorei(gl, UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-    activeTexture(gl, TEXTURE0);
-    bindTexture(gl, TEXTURE_2D, texture);
-    texParameteri(gl, TEXTURE_2D, TEXTURE_MIN_FILTER, NEAREST);
-    texParameteri(gl, TEXTURE_2D, TEXTURE_MAG_FILTER, NEAREST);
-    texImage2D(gl, TEXTURE_2D, 0, RGB, RGB, UNSIGNED_BYTE, image_id);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image_id);
 
-    uniform1i(gl, sampler, 0);
+    gl.uniform1i(sampler, 0);
 
 
-    activeTexture(gl, TEXTURE1);
-    bindTexture(gl, TEXTURE_2D, normal_texture);
-    texParameteri(gl, TEXTURE_2D, TEXTURE_MIN_FILTER, NEAREST);
-    texParameteri(gl, TEXTURE_2D, TEXTURE_MAG_FILTER, NEAREST);
-    texImage2D(gl, TEXTURE_2D, 0, RGB, RGB, UNSIGNED_BYTE, normal_image_id);
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, normal_texture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, normal_image_id);
 
-    uniform1i(gl, normal_map, 1);
+    gl.uniform1i(normal_map, 1);
     image_ready = true;
   }
-  /*
-  logi32(11111111);
-  logf32(light_x);
-  logf32(light_y);
-  logf32(light_z);
-  */
-  useProgram(gl, program);
+  gl.useProgram(program);
 
-  uniform3f(gl, light_source, light_x, light_y, light_z);
-  bufferData<f32>(gl, ARRAY_BUFFER, quad_data, STATIC_DRAW);
+  gl.uniform3f(light_source, light_x, light_y, light_z);
+  gl.bufferData<f32>(gl.ARRAY_BUFFER, quad_data, gl.STATIC_DRAW);
 
   //vertexAttribPointer     attribute |  dimensions | data type | normalize | stride bytes | offset bytes
-  vertexAttribPointer(gl, position_al, 2, FLOAT, false, 16, 0);
-  vertexAttribPointer(gl, tex_coord_al, 2, FLOAT, false, 16, 8);
+  gl.vertexAttribPointer(position_al, 2, gl.FLOAT, false, 16, 0);
+  gl.vertexAttribPointer(tex_coord_al, 2, gl.FLOAT, false, 16, 8);
 
-  drawArrays(gl, TRIANGLE_STRIP, 0, quad_data.length / 4);
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, quad_data.length / 4);
 
-  useProgram(gl, program2);
-  bufferData<f32>(gl, ARRAY_BUFFER, light_point, STATIC_DRAW);
-  vertexAttribPointer(gl, position2_al, 2, FLOAT, false, 8, 0);
-  drawArrays(gl, POINTS, 0, 1);
-
+  gl.useProgram(program2);
+  gl.bufferData<f32>(gl.ARRAY_BUFFER, light_point, gl.STATIC_DRAW);
+  gl.vertexAttribPointer(position2_al, 2, gl.FLOAT, false, 8, 0);
+  gl.drawArrays(gl.POINTS, 0, 1);
 }
