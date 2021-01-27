@@ -138,7 +138,7 @@ export function displayLoop(): void {
 
 ## Conact me
 If you have any questions, please feel free to conatct me (Rick) on
-
-Twitter: https://twitter.com/battagline @battagline
-LinkeIn: https://www.linkedin.com/in/battagline
+<br/><br/>
+Twitter: https://twitter.com/battagline @battagline <br/>
+LinkeIn: https://www.linkedin.com/in/battagline <br/>
 AssemblyScript Discord: https://discord.gg/mNPWbVT4
