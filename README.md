@@ -4,29 +4,20 @@ ASWebGLue is a set of javascript bindings for AssemblyScript/WebGL. Currently is
 better assembly script compatibility. The primary goal of this project is to provide high level access to WebGL
 for AssemblyScript projects. The glue adds the webgl exports to your asc program. 
 
-**>>> THIS PROJECT IS IN ALPHA STATE <<<**
-
-## Building 
-
-- First make sure to install the project dependecies with `npm install`
-- Once the dependencies have been installed execute `npm run build`
-- After the build completes, use `npm start` to launch the example code on your localhost
-- Navigate your browser to `http://localhost:8080/examples/` for a simple example. 
 
 ## Using
 
-Within your AssemblyScript project run `npm install aswebglue` to install the module. Basically there are two
-main files to be concerned with. One. `webgl.ts` exposes the webgl bindings to your assembly script code. The
-compiler will pull this into to make sure everything is happy within typescript. The other file is the `ASWebGLuejs` 
-which is used to iniatize the loader used by WebAssembly. This file also provides an initialization function
-which will attach the webgl bindings to your instatiated WebGL AssemblyScript program. The js file contains all
-of the high level WebGL functions which are contained in your browsers `lib.dom.js`. 
+There are two files in this project to use in your project.  These files are `ASWebGLue.js` which contains the JavaScript glue code and `WebGL.ts` that contains the AssemblyScript bindings.  There are several examples in the `/src/examples` directory.  A version of aswebglue is available on npm, but I didn't create it, so I am not sure how up to date it is.
+
+
+
+There are two main files to be concerned with. One. `WebGL.ts` exposes the webgl bindings to your assembly script code. The compiler will pull this into to make sure everything is happy within typescript. The other file is the `ASWebGLuejs` which is used to iniatize the loader used by WebAssembly. This file also provides an initialization function which will attach the webgl bindings to your instatiated WebGL AssemblyScript program. The js file contains all of the high level WebGL functions which are contained in your browsers `lib.dom.js`. 
 
 Here is a simple example from **HelloTriangle**
 
 **< JavaScript >**
 ```
- import { initASWebGLue, ASWebGLReady } from '../../ASWebGLue.js';
+  import { initASWebGLue, ASWebGLReady } from '../../ASWebGLue.js';
   const wasm_file = 'triangle.wasm';
   var exports;
   var w = window.innerWidth * 0.99;
@@ -77,18 +68,10 @@ Here is a simple example from **HelloTriangle**
 **< AssemblyScript >**
 ```
 import {
-  WebGLShader, shaderSource, createShader, compileShader,
-  VERTEX_SHADER, FRAGMENT_SHADER, createProgram, WebGLProgram,
-  attachShader, useProgram, WebGLUniformLocation, getUniformLocation,
-  linkProgram, clearColor, clear, WebGLBuffer,
-  createBuffer, ARRAY_BUFFER, GLint,
-  STATIC_DRAW, FLOAT, COLOR_BUFFER_BIT,
-  enableVertexAttribArray, bindBuffer, createContextFromCanvas,
-  bufferData, getAttribLocation, drawArrays,
-  vertexAttribPointer, TRIANGLE_STRIP,
-} from '../../webgl'
+  WebGLRenderingContext, WebGLShader, WebGLProgram, WebGLBuffer, GLint,
+} from '../../WebGL'
 
-const VERTEX_SHADER_CODE:string = /*glsl*/ `#version 300 es
+const VERTEX_SHADER_CODE: string = /*glsl*/ `#version 300 es
   precision highp float;
 
   in vec2 position;
@@ -98,7 +81,7 @@ const VERTEX_SHADER_CODE:string = /*glsl*/ `#version 300 es
   }
 `;
 
-const FRAGMENT_SHADER_CODE:string = /*glsl*/ `#version 300 es
+const FRAGMENT_SHADER_CODE: string = /*glsl*/ `#version 300 es
   precision highp float;
   out vec4 color;
 
@@ -107,48 +90,55 @@ const FRAGMENT_SHADER_CODE:string = /*glsl*/ `#version 300 es
   }
 `;
 
-  // initialize webgl
-  var gl = createContextFromCanvas('cnvs', 'webgl2');
+// initialize webgl
+var gl = new WebGLRenderingContext('cnvs', 'webgl2');
 
-  let vertex_shader: WebGLShader = createShader(gl, VERTEX_SHADER);
-  shaderSource(gl, vertex_shader, VERTEX_SHADER_CODE);
-  compileShader(gl, vertex_shader);
+let vertex_shader: WebGLShader = gl.createShader(gl.VERTEX_SHADER);
+gl.shaderSource(vertex_shader, VERTEX_SHADER_CODE);
+gl.compileShader(vertex_shader);
 
-  let fragment_shader: WebGLShader = createShader(gl, FRAGMENT_SHADER);
-  shaderSource( gl, fragment_shader, FRAGMENT_SHADER_CODE);
-  compileShader( gl, fragment_shader );
+let fragment_shader: WebGLShader = gl.createShader(gl.FRAGMENT_SHADER);
+gl.shaderSource(fragment_shader, FRAGMENT_SHADER_CODE);
+gl.compileShader(fragment_shader);
 
-  let program:WebGLProgram = createProgram(gl);
+let program: WebGLProgram = gl.createProgram();
 
-  attachShader(gl, program, vertex_shader);
-  attachShader(gl, program, fragment_shader);
+gl.attachShader(program, vertex_shader);
+gl.attachShader(program, fragment_shader);
 
-  linkProgram( gl, program );
+gl.linkProgram(program);
 
-  useProgram( gl, program );
+gl.useProgram(program);
 
-  let buffer:WebGLBuffer = createBuffer(gl);
-  bindBuffer(gl, ARRAY_BUFFER, buffer);
+let buffer: WebGLBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 
-  let position_al:GLint = getAttribLocation(gl, program, 'position');
-  enableVertexAttribArray(gl, position_al);
+let position_al: GLint = gl.getAttribLocation(program, 'position');
+gl.enableVertexAttribArray(position_al);
 
-  let triangle_data: StaticArray<f32> = [0.0,0.5,
-                                    -0.5,-0.5,
-                                    0.5,-0.5,];
+let triangle_data: StaticArray<f32> = [0.0, 0.5,
+  -0.5, -0.5,
+  0.5, -0.5,];
 
-  export function displayLoop():void {
-    //             R    G    B    A
-    clearColor(gl, 0.0, 0.0, 0.0, 1.0);
-    clear(gl, COLOR_BUFFER_BIT);
+export function displayLoop(): void {
+  //             R    G    B    A
+  gl.clearColor(0.0, 0.0, 0.0, 1.0);
+  gl.clear(gl.COLOR_BUFFER_BIT);
 
-    bufferData<f32>(gl, ARRAY_BUFFER, triangle_data, STATIC_DRAW);
+  gl.bufferData<f32>(gl.ARRAY_BUFFER, triangle_data, gl.STATIC_DRAW);
 
-    //                      attribute | dimensions | data_type | normalize | stride | offset
-    vertexAttribPointer(gl, position_al, 2,          FLOAT,      false,      0,       0 );
+  //                      attribute | dimensions | data_type | normalize | stride | offset
+  gl.vertexAttribPointer(position_al, 2, gl.FLOAT, false, 0, 0);
 
-    //                      mode | first vertex | count
-    drawArrays(gl, TRIANGLE_STRIP, 0,             3 );
-  }
+  //                      mode | first vertex | count
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 3);
+}
 
 ```
+
+## Conact me
+If you have any questions, please feel free to conatct me (Rick) on
+
+Twitter: https://twitter.com/battagline @battagline
+LinkeIn: https://www.linkedin.com/in/battagline
+AssemblyScript Discord: https://discord.gg/mNPWbVT4

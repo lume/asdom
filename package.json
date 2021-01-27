@@ -19,6 +19,7 @@
   "devDependencies": {
     "@assemblyscript/loader": "^0.17.7",
     "assemblyscript": "^0.17.7",
+    "benchmark": "^2.1.4",
     "child-process": "^1.0.2",
     "connect": "^3.7.0",
     "imagemin": "^7.0.1",

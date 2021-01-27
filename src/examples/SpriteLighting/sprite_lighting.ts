@@ -73,7 +73,6 @@ var light_z: f32 = 0.5;
 // initialize webgl
 var gl: WebGLRenderingContext = new WebGLRenderingContext('cnvs', 'webgl2');
 
-
 //  ImageData, createImage, imageReady,
 var image_id: ImageData = gl.createImage('SpaceShip.png');
 var normal_image_id: ImageData = gl.createImage('SpaceShipN.png');
