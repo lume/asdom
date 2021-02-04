@@ -1,8 +1,4 @@
-
-import {
-  WebGLRenderingContext, WebGLShader, WebGLProgram,
-  WebGLBuffer, GLint, WebGLUniformLocation,
-} from '../../WebGL'
+import {WebGLRenderingContext, WebGLShader, WebGLProgram, WebGLBuffer, GLint, WebGLUniformLocation} from '../../WebGL';
 
 const V_COLOR_LINE_SHADER: string = /*glsl*/ `#version 300 es
   precision highp float;
@@ -11,7 +7,7 @@ const V_COLOR_LINE_SHADER: string = /*glsl*/ `#version 300 es
 
   in vec2 position;
   out vec4 c;
-  
+
   void main() {
     gl_Position = vec4( position, 0.0, 1.0 );
     c = u_color/255.0;
@@ -33,12 +29,12 @@ const F_SHADER: string = /*glsl*/ `#version 300 es
 var theta: f32 = 0.0;
 
 var loop_color: StaticArray<StaticArray<f32>> = [
-  [0.0, 255.0, 0.0, 255.0],   // default layer color
+  [0.0, 255.0, 0.0, 255.0], // default layer color
   [255.0, 255.0, 0.0, 255.0], // cockpit layer color
-  [0.0, 255.0, 0.0, 255.0],   // wings layer color
-  [0.0, 255.0, 0.0, 255.0],   // wings2 layer color
-  [255.0, 0.0, 0.0, 255.0],   // engine layer color
-  [0.0, 255.0, 0.0, 255.0],   // recoloration layer color
+  [0.0, 255.0, 0.0, 255.0], // wings layer color
+  [0.0, 255.0, 0.0, 255.0], // wings2 layer color
+  [255.0, 0.0, 0.0, 255.0], // engine layer color
+  [0.0, 255.0, 0.0, 255.0], // recoloration layer color
 ];
 
 var program_id: i32 = -1;
@@ -54,9 +50,14 @@ var engine_layer: StaticArray<f32> = [-0.1, -0.2, -0.1, -0.3, 0.1, -0.3, 0.1, -0
 
 var recoloration_layer: StaticArray<f32> = [0.2, 0, 0, -0.3, -0.2, 0, 0, -0.3];
 
-var layer_array: StaticArray<StaticArray<f32>> = [default_layer, cockpit_layer,
-  wings_layer, wings2_layer,
-  engine_layer, recoloration_layer];
+var layer_array: StaticArray<StaticArray<f32>> = [
+  default_layer,
+  cockpit_layer,
+  wings_layer,
+  wings2_layer,
+  engine_layer,
+  recoloration_layer,
+];
 
 var color_line_program: WebGLProgram;
 var gl: WebGLRenderingContext;
@@ -92,13 +93,13 @@ function drawLines(line_data: StaticArray<f32>, color_data: StaticArray<f32>): v
   let position_al: GLint = gl.getAttribLocation(color_line_program, 'position');
   gl.enableVertexAttribArray(position_al);
 
-  let color_location: WebGLUniformLocation = gl.getUniformLocation(color_line_program, "u_color");
+  let color_location: WebGLUniformLocation = gl.getUniformLocation(color_line_program, 'u_color');
   store<u32>(changetype<usize>(color_data) - 8, idof<StaticArray<f32>>());
   gl.uniform4fv(color_location, color_data);
 
   const dimensions: i32 = 2;
   const data_type: i32 = gl.FLOAT;
-  const normalize: i32 = false;
+  const normalize: i32 = +false;
   const stride: i32 = 0;
   const offset: i32 = 0;
 
@@ -128,9 +129,7 @@ export function animation_frame(): void {
   }
 }
 
-
-export function animation(theta: f32): void { //u32 {
-
+export function animation(theta: f32): void {
   for (var ship_i: i32 = 0; ship_i < layer_array.length; ship_i++) {
     const layer = layer_array[ship_i];
     const ship_loop_size = layer.length;

@@ -2,9 +2,7 @@
  * @author Rick Battagline / https://embed.com/wasm
  */
 
-import {
-  WebGLRenderingContext, WebGLShader, WebGLProgram
-} from '../../WebGL'
+import {WebGLRenderingContext, WebGLShader, WebGLProgram} from '../../WebGL';
 
 const VERTEX_SHADER_CODE: string = `#version 300 es
   precision highp float;
@@ -12,7 +10,7 @@ const VERTEX_SHADER_CODE: string = `#version 300 es
   in vec3 position;
   in vec3 color;
   out vec4 c;
-  
+
   void main() {
     mat4 mRotateTranslate = mat4(
        1.0, 0.0,       0.0,        0.0, // column 1
@@ -68,39 +66,54 @@ gl.enableVertexAttribArray(color_al);
 
 gl.enable(gl.DEPTH_TEST);
 
-//                                  X    Y    Z     R    G    B
-let cube_data: StaticArray<StaticArray<f32>> =
-  [[-0.5, -0.5, 0.5, 1.0, 0.0, 0.0, // front face
-  -0.5, 0.5, 0.5, 1.0, 0.0, 0.0,
-    0.5, -0.5, 0.5, 1.0, 0.0, 0.0,
-    0.5, 0.5, 0.5, 1.0, 0.0, 0.0],
-  //  back face                       X    Y    Z     R    G    B
-  [-0.5, -0.5, -0.5, 0.0, 1.0, 0.0,
-  -0.5, 0.5, -0.5, 0.0, 1.0, 0.0,
-    0.5, -0.5, -0.5, 0.0, 1.0, 0.0,
-    0.5, 0.5, -0.5, 0.0, 1.0, 0.0],
-  //  left face                       X    Y    Z     R    G    B
-  [-0.5, -0.5, -0.5, 0.0, 0.0, 1.0,
-  -0.5, -0.5, 0.5, 0.0, 0.0, 1.0,
-  -0.5, 0.5, -0.5, 0.0, 0.0, 1.0,
-  -0.5, 0.5, 0.5, 0.0, 0.0, 1.0],
-  //  right face                      X    Y    Z     R    G    B
-  [0.5, -0.5, -0.5, 1.0, 0.7, 0.0,
-    0.5, -0.5, 0.5, 1.0, 0.7, 0.0,
-    0.5, 0.5, -0.5, 1.0, 0.7, 0.0,
-    0.5, 0.5, 0.5, 1.0, 0.7, 0.0],
-  //  top face                        X    Y    Z     R    G    B
-  [-0.5, 0.5, -0.5, 1.0, 0.0, 0.7,
-  -0.5, 0.5, 0.5, 1.0, 0.0, 0.7,
-    0.5, 0.5, -0.5, 1.0, 0.0, 0.7,
-    0.5, 0.5, 0.5, 1.0, 0.0, 0.7],
-  //  bottom face                     X    Y    Z     R    G    B
-  [-0.5, -0.5, -0.5, 0.0, 1.0, 0.7,
-  -0.5, -0.5, 0.5, 0.0, 1.0, 0.7,
-    0.5, -0.5, -0.5, 0.0, 1.0, 0.7,
-    0.5, -0.5, 0.5, 0.0, 1.0, 0.7,]];
+// prettier-ignore
+let cube_data: StaticArray<StaticArray<f32>> = [
+  // front face
+  // X     Y    Z    R    G    B
+  [
+    -0.5, -0.5, 0.5, 1.0, 0.0, 0.0,
+    -0.5,  0.5, 0.5, 1.0, 0.0, 0.0,
+     0.5, -0.5, 0.5, 1.0, 0.0, 0.0,
+     0.5,  0.5, 0.5, 1.0, 0.0, 0.0,
+  ],
+  //  back face
+  [
+    -0.5, -0.5, -0.5, 0.0, 1.0, 0.0,
+    -0.5,  0.5, -0.5, 0.0, 1.0, 0.0,
+     0.5, -0.5, -0.5, 0.0, 1.0, 0.0,
+     0.5,  0.5, -0.5, 0.0, 1.0, 0.0,
+  ],
+  //  left face
+  [
+    -0.5, -0.5, -0.5, 0.0, 0.0, 1.0,
+    -0.5, -0.5,  0.5, 0.0, 0.0, 1.0,
+    -0.5,  0.5, -0.5, 0.0, 0.0, 1.0,
+    -0.5,  0.5,  0.5, 0.0, 0.0, 1.0,
+  ],
+  //  right face
+  [
+     0.5, -0.5, -0.5, 1.0, 0.7, 0.0,
+     0.5, -0.5,  0.5, 1.0, 0.7, 0.0,
+     0.5,  0.5, -0.5, 1.0, 0.7, 0.0,
+     0.5,  0.5,  0.5, 1.0, 0.7, 0.0,
+  ],
+  //  top face
+  [
+    -0.5, 0.5, -0.5, 1.0, 0.0, 0.7,
+    -0.5, 0.5,  0.5, 1.0, 0.0, 0.7,
+     0.5, 0.5, -0.5, 1.0, 0.0, 0.7,
+     0.5, 0.5,  0.5, 1.0, 0.0, 0.7,
+  ],
+  //  bottom face
+  [
+    -0.5, -0.5, -0.5, 0.0, 1.0, 0.7,
+    -0.5, -0.5,  0.5, 0.0, 1.0, 0.7,
+     0.5, -0.5, -0.5, 0.0, 1.0, 0.7,
+     0.5, -0.5,  0.5, 0.0, 1.0, 0.7,
+  ]
+];
 
-function rotate(theta: f32): void { //u32 {
+function rotate(theta: f32): void {
   for (var i: i32 = 0; i < cube_data.length; i++) {
     for (var coord_i: i32 = 0; coord_i < cube_data[i].length; coord_i += 6) {
       let x: f32 = cube_data[i][coord_i];
@@ -113,7 +126,6 @@ function rotate(theta: f32): void { //u32 {
       cube_data[i][coord_i] = x1;
       cube_data[i][coord_i + 2] = z1;
     }
-
   }
   return;
 }
@@ -125,13 +137,11 @@ export function displayLoop(delta: i32): void {
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-
   for (var i: i32 = 0; i < 6; i++) {
     gl.bufferData<f32>(gl.ARRAY_BUFFER, cube_data[i], gl.DYNAMIC_DRAW);
     //                                   dimensions | data_type | normalize | stride | offset
-    gl.vertexAttribPointer(position_al, 3, gl.FLOAT, false, 24, 0);
-    gl.vertexAttribPointer(color_al, 3, gl.FLOAT, false, 24, 12);
+    gl.vertexAttribPointer(position_al, 3, gl.FLOAT, +false, 24, 0);
+    gl.vertexAttribPointer(color_al, 3, gl.FLOAT, +false, 24, 12);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
-
 }

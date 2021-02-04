@@ -3,14 +3,17 @@
  */
 
 import {
-  WebGLRenderingContext, WebGLShader, WebGLProgram, ImageData,
-  WebGLBuffer, GLint, WebGLUniformLocation, WebGLTexture,
-} from '../../WebGL'
+  WebGLRenderingContext,
+  WebGLShader,
+  WebGLProgram,
+  ImageData,
+  WebGLBuffer,
+  GLint,
+  WebGLUniformLocation,
+  WebGLTexture,
+} from '../../WebGL';
 
-
-import {
-  objArray, matArray, groupArray, VertGroup, matMapArray, MaterialMap
-} from './Moon_Sphere'
+import {objArray, groupArray, VertGroup, matMapArray} from './Moon_Sphere';
 
 // OG CODE
 const VERTEX_SHADER_CODE: string = `#version 300 es
@@ -27,17 +30,17 @@ out vec3 norm;
 
 void main() {
   // rotate z axis
-  
+
     mat4 mRotateTranslate = mat4(
        1.0, 0.0,       0.0,        0.0, // column 1
        0.0, cos(-0.2),-sin(-0.2), -0.2, // column 2
        0.0, sin(-0.0), cos(-0.2),  0.0, // column 3
        0.0, 0.0,       0.0,        1.0  // column 4
     );
-  
+
   vec3 up = vec3(0.0, -1.0, 0.0);
   vec3 light_pos = vec3( 0.0, -0.7, 0.5 );
-  float d = dot( up, normal ); 
+  float d = dot( up, normal );
 
   vec3 tan = cross( up, normal );
   vec3 bitan = cross( normal, tan );
@@ -87,7 +90,6 @@ void main (void)
   color = vec4( c, 1.0 );
 }`;
 
-
 // initialize webgl
 var gl = new WebGLRenderingContext('cnvs', 'webgl2');
 
@@ -134,10 +136,9 @@ var image_ready: bool = false;
 //diffuse
 gl.enable(gl.DEPTH_TEST);
 
-function rotate(theta: f32): void { //u32 {
+function rotate(theta: f32): void {
   for (var obj_i: i32 = 0; obj_i < objArray.length; obj_i++) {
     for (var coord_i: i32 = 0; coord_i < objArray[obj_i].length; coord_i += 8) {
-
       let x: f32 = objArray[obj_i][coord_i];
       let z: f32 = objArray[obj_i][coord_i + 2];
 
@@ -175,7 +176,7 @@ export function displayLoop(delta: i32): void {
     }
 
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
-    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, +true);
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
@@ -197,9 +198,9 @@ export function displayLoop(delta: i32): void {
     gl.bufferData<f32>(gl.ARRAY_BUFFER, objArray[vGroup.obj_index], gl.DYNAMIC_DRAW);
 
     //                                   dimensions | data_type | normalize | stride | offset
-    gl.vertexAttribPointer(position_al, 3, gl.FLOAT, false, 32, 0);
-    gl.vertexAttribPointer(tex_uv_al, 2, gl.FLOAT, false, 32, 12);
-    gl.vertexAttribPointer(normal_al, 3, gl.FLOAT, false, 32, 20);
+    gl.vertexAttribPointer(position_al, 3, gl.FLOAT, +false, 32, 0);
+    gl.vertexAttribPointer(tex_uv_al, 2, gl.FLOAT, +false, 32, 12);
+    gl.vertexAttribPointer(normal_al, 3, gl.FLOAT, +false, 32, 20);
     gl.drawArrays(gl.TRIANGLES, vGroup.start_face, vGroup.length);
   }
 }

@@ -2,16 +2,9 @@
  * @author Rick Battagline / https://embed.com/wasm
  */
 
-import {
-  WebGLRenderingContext, WebGLShader, WebGLProgram,
-  WebGLBuffer, GLint, WebGLUniformLocation,
-} from '../../WebGL'
+import {WebGLRenderingContext, WebGLShader, WebGLProgram, WebGLBuffer, GLint, WebGLUniformLocation} from '../../WebGL';
 
-import {
-  objArray, matArray, groupArray, VertGroup,
-} from './Robot'
-
-
+import {objArray, matArray, groupArray, VertGroup} from './Robot';
 
 const VERTEX_SHADER_CODE: string = `#version 300 es
   precision mediump float;
@@ -20,7 +13,7 @@ const VERTEX_SHADER_CODE: string = `#version 300 es
   in vec3 normal;
   uniform vec3 diffuse;
   out vec4 c;
-  
+
   void main() {
     const vec3 light = vec3(0.25, 2.0, -0.5);
     float d = clamp( dot( normal, light ), 0.0, 1.0);
@@ -34,8 +27,8 @@ const VERTEX_SHADER_CODE: string = `#version 300 es
     );
 
     gl_Position = pos * mRotateTranslate;
-    c = vec4( d + diffuse.r, 
-              d + diffuse.g, 
+    c = vec4( d + diffuse.r,
+              d + diffuse.g,
               d + diffuse.b, 1.0);
   }
 `;
@@ -85,10 +78,9 @@ let diffuse: WebGLUniformLocation = gl.getUniformLocation(program, 'diffuse');
 //diffuse
 gl.enable(gl.DEPTH_TEST);
 
-function rotate(theta: f32): void { //u32 {
+function rotate(theta: f32): void {
   for (var obj_i: i32 = 0; obj_i < objArray.length; obj_i++) {
     for (var coord_i: i32 = 0; coord_i < objArray[obj_i].length; coord_i += 8) {
-
       let x: f32 = objArray[obj_i][coord_i];
       let z: f32 = objArray[obj_i][coord_i + 2];
 
@@ -129,9 +121,9 @@ export function displayLoop(delta: i32): void {
     gl.uniform3f(diffuse, diffuse_r, diffuse_g, diffuse_b);
 
     //                                   dimensions | data_type | normalize | stride | offset
-    gl.vertexAttribPointer(position_al, 3, gl.FLOAT, false, 32, 0);
+    gl.vertexAttribPointer(position_al, 3, gl.FLOAT, +false, 32, 0);
     // vertexAttribPointer(gl, tex_uv_al,   2,           FLOAT,      false,      32,      12);
-    gl.vertexAttribPointer(normal_al, 3, gl.FLOAT, false, 32, 20);
+    gl.vertexAttribPointer(normal_al, 3, gl.FLOAT, +false, 32, 20);
     gl.drawArrays(gl.TRIANGLES, vGroup.start_face, vGroup.length);
   }
 }

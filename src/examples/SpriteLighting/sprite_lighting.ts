@@ -3,9 +3,15 @@
  */
 
 import {
-  WebGLRenderingContext, WebGLShader, ImageData, WebGLUniformLocation,
-  WebGLBuffer, GLint, WebGLProgram, WebGLTexture,
-} from '../../WebGL'
+  WebGLRenderingContext,
+  WebGLShader,
+  ImageData,
+  WebGLUniformLocation,
+  WebGLBuffer,
+  GLint,
+  WebGLProgram,
+  WebGLTexture,
+} from '../../WebGL';
 
 const VS_POINT_CODE: string = `#version 300 es
   in vec2 position;
@@ -32,7 +38,7 @@ const VERTEX_SHADER_CODE: string = `#version 300 es
   in vec2 tex_coord;
 
   out vec2 tc;
-  
+
   void main() {
     gl_Position = vec4(position, 0.0, 1.0);
     tc = tex_coord;
@@ -130,7 +136,7 @@ gl.bindBuffer(gl.ARRAY_BUFFER, buffer2);
 let position2_al: GLint = gl.getAttribLocation(program2, 'position');
 gl.enableVertexAttribArray(position2_al);
 
-
+// prettier-ignore
 let quad_data: StaticArray<f32> = [
   //  x     y     u     v
   -0.15, -0.15, 0.0, 0.0,
@@ -138,9 +144,7 @@ let quad_data: StaticArray<f32> = [
   0.15, -0.15, 0.95, 0.0,
   0.15, 0.15, 0.95, 0.99,];
 
-let light_point: StaticArray<f32> = [
-  0.0, 0.0,
-];
+let light_point: StaticArray<f32> = [0.0, 0.0];
 
 let texture: WebGLTexture = gl.createTexture();
 let normal_texture: WebGLTexture = gl.createTexture();
@@ -148,8 +152,7 @@ let sampler: WebGLUniformLocation = gl.getUniformLocation(program, 'sampler');
 let normal_map: WebGLUniformLocation = gl.getUniformLocation(program, 'normal_map');
 let light_source: WebGLUniformLocation = gl.getUniformLocation(program, 'light_source');
 
-
-function rotateLight(theta: f32): void { //u32 {
+function rotateLight(theta: f32): void {
   let x: f32 = light_x;
   let y: f32 = light_y;
 
@@ -161,7 +164,6 @@ function rotateLight(theta: f32): void { //u32 {
   return;
 }
 
-
 export function displayLoop(delta: i32): void {
   let r: f32 = <f32>delta / 1000.0;
   rotateLight(r);
@@ -170,14 +172,13 @@ export function displayLoop(delta: i32): void {
   gl.clear(gl.COLOR_BUFFER_BIT);
 
   if (image_ready == false) {
-    if (gl.imageReady(image_id) == false ||
-      gl.imageReady(normal_image_id) == false) {
+    if (gl.imageReady(image_id) == false || gl.imageReady(normal_image_id) == false) {
       return;
     }
     gl.useProgram(program);
 
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
-    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, +true);
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
@@ -185,7 +186,6 @@ export function displayLoop(delta: i32): void {
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image_id);
 
     gl.uniform1i(sampler, 0);
-
 
     gl.activeTexture(gl.TEXTURE1);
     gl.bindTexture(gl.TEXTURE_2D, normal_texture);
@@ -202,13 +202,13 @@ export function displayLoop(delta: i32): void {
   gl.bufferData<f32>(gl.ARRAY_BUFFER, quad_data, gl.STATIC_DRAW);
 
   //vertexAttribPointer     attribute |  dimensions | data type | normalize | stride bytes | offset bytes
-  gl.vertexAttribPointer(position_al, 2, gl.FLOAT, false, 16, 0);
-  gl.vertexAttribPointer(tex_coord_al, 2, gl.FLOAT, false, 16, 8);
+  gl.vertexAttribPointer(position_al, 2, gl.FLOAT, +false, 16, 0);
+  gl.vertexAttribPointer(tex_coord_al, 2, gl.FLOAT, +false, 16, 8);
 
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, quad_data.length / 4);
 
   gl.useProgram(program2);
   gl.bufferData<f32>(gl.ARRAY_BUFFER, light_point, gl.STATIC_DRAW);
-  gl.vertexAttribPointer(position2_al, 2, gl.FLOAT, false, 8, 0);
+  gl.vertexAttribPointer(position2_al, 2, gl.FLOAT, +false, 8, 0);
   gl.drawArrays(gl.POINTS, 0, 1);
 }

@@ -2,10 +2,7 @@
  * @author Rick Battagline / https://embed.com
  */
 
-import {
-  WebGLRenderingContext, WebGLShader, ImageData, WebGLUniformLocation,
-  WebGLBuffer, GLint, WebGLProgram, WebGLTexture,
-} from '../../WebGL'
+import {WebGLRenderingContext, WebGLShader, WebGLBuffer, GLint, WebGLProgram} from '../../WebGL';
 
 class Point {
   public x: f32 = 0.0;
@@ -41,7 +38,7 @@ const VERTEX_SHADER_CODE: string = `#version 300 es
 
   in vec2 position;
   out vec4 c;
-  
+
   void main() {
     gl_Position = vec4( position, 0.0, 1.0 );
     float total = clamp(abs(position.x) + abs(position.y) + 0.4, 0.01, 1.0);
@@ -87,53 +84,57 @@ gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 let position_al: GLint = gl.getAttribLocation(program, 'position');
 gl.enableVertexAttribArray(position_al);
 
-let point_list: StaticArray<Point> = [new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),
-new Point(), new Point(), new Point(), new Point(), new Point(),];
+// prettier-ignore
+let point_list: StaticArray<Point> = [
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+  new Point(), new Point(), new Point(), new Point(), new Point(),
+];
 
-let point_data: StaticArray<f32> = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+// prettier-ignore
+let point_data: StaticArray<f32> = [
   0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
   0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
   0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
@@ -177,7 +178,9 @@ let point_data: StaticArray<f32> = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
   0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
   0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
   0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-  0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,];
+  0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+  0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+];
 
 export function displayLoop(delta: i32): void {
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -193,12 +196,11 @@ export function displayLoop(delta: i32): void {
 
   const dimensions: i32 = 2;
   const data_type: i32 = gl.FLOAT;
-  const normalize: i32 = false;
+  const normalize: i32 = +false;
   const stride: i32 = 0;
   const offset: i32 = 0;
 
   gl.vertexAttribPointer(position_al, dimensions, data_type, normalize, stride, offset);
 
   gl.drawArrays(gl.POINTS, 0, point_list.length);
-
 }

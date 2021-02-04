@@ -2,10 +2,7 @@
  * @author Rick Battagline / https://embed.com
  */
 
-import {
-  WebGLRenderingContext, WebGLShader,
-  WebGLBuffer, GLint, WebGLProgram,
-} from '../../WebGL'
+import {WebGLRenderingContext, WebGLShader, WebGLBuffer, GLint, WebGLProgram} from '../../WebGL';
 
 const VERTEX_SHADER_CODE: string = `#version 300 es
   precision mediump float;
@@ -13,7 +10,7 @@ const VERTEX_SHADER_CODE: string = `#version 300 es
   in vec3 position;
   in vec3 normal;
   out vec4 c;
-  
+
   void main() {
     const vec3 light = vec3(0.25, 2.0, -0.5);
     float d = clamp( dot( normal, light ), 0.0, 1.0);
@@ -75,6 +72,7 @@ gl.enable(gl.DEPTH_TEST);
 
 // I'M DUPLICATING A LOT OF VERTICES HERE.
 // INDEXES WOULD BE BETTER
+// prettier-ignore
 let cube_data: StaticArray<f32> = [
   //        X    Y    Z       NX   NY   NZ
   // Front
@@ -132,7 +130,7 @@ let cube_data: StaticArray<f32> = [
   -0.5, -0.5, 0.5, -1.0, 0.0, 0.0,
 ];
 
-function rotate(theta: f32): void { //u32 {
+function rotate(theta: f32): void {
   for (var coord_i: i32 = 0; coord_i < cube_data.length; coord_i += 6) {
     let x: f32 = cube_data[coord_i];
     let z: f32 = cube_data[coord_i + 2];
@@ -163,11 +161,9 @@ export function displayLoop(delta: i32): void {
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-
   gl.bufferData<f32>(gl.ARRAY_BUFFER, cube_data, gl.DYNAMIC_DRAW);
   // dimensions | data_type | normalize | stride | offset
-  gl.vertexAttribPointer(position_al, 3, gl.FLOAT, false, 24, 0);
-  gl.vertexAttribPointer(normal_al, 3, gl.FLOAT, false, 24, 12);
+  gl.vertexAttribPointer(position_al, 3, gl.FLOAT, +false, 24, 0);
+  gl.vertexAttribPointer(normal_al, 3, gl.FLOAT, +false, 24, 12);
   gl.drawArrays(gl.TRIANGLES, 0, cube_data.length / 6);
-
 }
