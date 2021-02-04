@@ -34,8 +34,17 @@ layout (location = 2) in vec2 tex_coord;
 out vec2 tc;
 
 void main() {
+  // 1. 0.0, 0.0 to 0.5, 0.5
+  // 2. 0.5, 0.0 to 1.0, 0.5
+  // 3. 0.0, 0.5 to 0.5, 1.0
+  // 4. 0.5, 0.5 to 1.0, 1.0
+  float u_start[4] = float[4](0.0, 0.5, 0.0, 0.5);
+  float v_start[4] = float[4](0.0, 0.0, 0.5, 0.5);
+
   gl_Position = vec4(position+objPosition, 0.0, 1.0);
-  tc = tex_coord;
+  // gl_InstanceID
+  tc.u = tex_coord.u * u_start[gl_InstanceID];
+  tc.v = tex_coord.v * v_start[gl_InstanceID];
 }
 `;
 
@@ -57,7 +66,7 @@ const asteroidCount: i32 = 500_000;
 
 var gl: WebGLRenderingContextId = createContextFromCanvas('cnvs', 'webgl2');
 
-var image_id: ImageData = createImage('kaijunicorn-mini.png');
+var image_id: ImageData = createImage('kaijunicorn-sheet.png');
 var image_ready: bool = false;
 
 let vertex_shader: WebGLShader = createShader(gl, VERTEX_SHADER);
