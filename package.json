@@ -9,7 +9,6 @@
     "type": "git",
     "url": "https://github.com/battlelinegames/ASWebGLue"
   },
-  "// scripts": "TODO: update the following script section as an index of what people can/should run (this standard in the JS/TS world). 'build' is a conventional script to have, along with 'dev' which usually has a watch mode to recompile when files change.",
   "scripts": {
     "clean": "rimraf dist",
     "prebuild": "npm run clean",
