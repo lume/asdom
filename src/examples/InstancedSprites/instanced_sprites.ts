@@ -3,7 +3,25 @@
  */
 
 import {
-  WebGLRenderingContext, WebGLShader, ImageData, WebGLUniformLocation,
+  FRAGMENT_SHADER, VERTEX_SHADER, ARRAY_BUFFER, DYNAMIC_DRAW,
+  STATIC_DRAW, FLOAT, FALSE, COLOR_BUFFER_BIT, TRIANGLES,
+  UNPACK_FLIP_Y_WEBGL, UNPACK_PREMULTIPLY_ALPHA_WEBGL,
+  SRC_ALPHA, ONE_MINUS_SRC_ALPHA, DEPTH_TEST, BLEND,
+  TEXTURE0, TEXTURE_2D, TEXTURE_MAG_FILTER, NEAREST,
+  TEXTURE_MIN_FILTER, RGBA, UNSIGNED_BYTE,
+  clearColor, clear, imageReady, pixelStorei,
+  uniform1i, drawArraysInstanced, createImage,
+  bindTexture, texParameteri, texImage2D,
+  blendFunc, disable, enable, activeTexture,
+  createShader, bindBuffer, getAttribLocation,
+  vertexAttribPointer, vertexAttribDivisor,
+  bindVertexArray, enableVertexAttribArray,
+  createBuffer, bufferData, createVertexArray,
+  shaderSource, compileShader, createProgram,
+  attachShader, linkProgram, useProgram,
+  createTexture, getUniformLocation,
+  createContextFromCanvas, WebGLRenderingContextId,
+  WebGLShader, ImageData, WebGLUniformLocation,
   WebGLBuffer, GLint, WebGLProgram, WebGLTexture, WebGLVertexArrayObject,
 } from '../../WebGL';
 
@@ -35,46 +53,46 @@ void main() {
 `;
 
 // initialize webgl
-const asteroidCount: i32 = 100000;
+const asteroidCount: i32 = 500_000;
 
-var gl: WebGLRenderingContext = new WebGLRenderingContext('cnvs', 'webgl2');
+var gl: WebGLRenderingContextId = createContextFromCanvas('cnvs', 'webgl2');
 
-var image_id: ImageData = gl.createImage('kaijunicorn.png');
+var image_id: ImageData = createImage('kaijunicorn-mini.png');
 var image_ready: bool = false;
 
-let vertex_shader: WebGLShader = gl.createShader(gl.VERTEX_SHADER);
-gl.shaderSource(vertex_shader, VERTEX_SHADER_CODE);
-gl.compileShader(vertex_shader);
+let vertex_shader: WebGLShader = createShader(gl, VERTEX_SHADER);
+shaderSource(gl, vertex_shader, VERTEX_SHADER_CODE);
+compileShader(gl, vertex_shader);
 
-let fragment_shader: WebGLShader = gl.createShader(gl.FRAGMENT_SHADER);
-gl.shaderSource(fragment_shader, FRAGMENT_SHADER_CODE);
-gl.compileShader(fragment_shader);
+let fragment_shader: WebGLShader = createShader(gl, FRAGMENT_SHADER);
+shaderSource(gl, fragment_shader, FRAGMENT_SHADER_CODE);
+compileShader(gl, fragment_shader);
 
-let program: WebGLProgram = gl.createProgram();
+let program: WebGLProgram = createProgram(gl);
 
-gl.attachShader(program, vertex_shader);
-gl.attachShader(program, fragment_shader);
+attachShader(gl, program, vertex_shader);
+attachShader(gl, program, fragment_shader);
 
-gl.linkProgram(program);
+linkProgram(gl, program);
 
-gl.useProgram(program);
+useProgram(gl, program);
 
-let buffer: WebGLBuffer = gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+let buffer: WebGLBuffer = createBuffer(gl);
+bindBuffer(gl, ARRAY_BUFFER, buffer);
 
-let position_al: GLint = gl.getAttribLocation(program, 'position');
-let obj_position_al: GLint = gl.getAttribLocation(program, 'objPosition');
-let tex_coord_al: GLint = gl.getAttribLocation(program, 'tex_coord');
+let position_al: GLint = getAttribLocation(gl, program, 'position');
+let obj_position_al: GLint = getAttribLocation(gl, program, 'objPosition');
+let tex_coord_al: GLint = getAttribLocation(gl, program, 'tex_coord');
 
 let quad_data: StaticArray<f32> = [
   //  x     y    u   v
-  -0.04, 0.05, 0.0, 1.0,
-  0.04, -0.05, 1.0, 0.0,
-  -0.04, -0.05, 0.0, 0.0,
+  -0.05, 0.05, 0.0, 1.0,
+  0.05, -0.05, 1.0, 0.0,
+  -0.05, -0.05, 0.0, 0.0,
 
-  -0.04, 0.05, 0.0, 1.0,
-  0.04, -0.05, 1.0, 0.0,
-  0.04, 0.05, 1.0, 1.0,
+  -0.05, 0.05, 0.0, 1.0,
+  0.05, -0.05, 1.0, 0.0,
+  0.05, 0.05, 1.0, 1.0,
 ];
 
 let translation: StaticArray<f32> = new StaticArray<f32>(asteroidCount * 2);
@@ -93,11 +111,11 @@ class Asteroid {
     return translation[this.index << 1];
   }
 
-  set y(val: f32) {
+  @inline set y(val: f32) {
     translation[(this.index << 1) + 1] = val;
   }
 
-  get y(): f32 {
+  @inline get y(): f32 {
     return translation[(this.index << 1) + 1];
   }
 
@@ -111,7 +129,7 @@ class Asteroid {
     this.dy = Mathf.random() / 50.0 - 0.01;
   }
 
-  public Move(): void {
+  @inline Move(): void {
     this.x += this.dx;
     this.y += this.dy;
 
@@ -138,65 +156,65 @@ for (var i: i32 = 0; i < asteroidCount; i++) {
   asteroidArray[i] = new Asteroid();
 }
 
-let texture: WebGLTexture = gl.createTexture();
-let sampler: WebGLUniformLocation = gl.getUniformLocation(program, 'sampler');
+let texture: WebGLTexture = createTexture(gl);
+let sampler: WebGLUniformLocation = getUniformLocation(gl, program, 'sampler');
 
 var quadVAO: WebGLVertexArrayObject;
 var quadVBO: WebGLBuffer;
 var instanceVBO: WebGLBuffer;
 
 export function init(): void {
-  instanceVBO = gl.createBuffer();
+  instanceVBO = createBuffer(gl);
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, instanceVBO);
-  gl.bufferData(gl.ARRAY_BUFFER, translation, gl.DYNAMIC_DRAW);
+  bindBuffer(gl, ARRAY_BUFFER, instanceVBO);
+  bufferData(gl, ARRAY_BUFFER, translation, DYNAMIC_DRAW);
 
-  quadVAO = gl.createVertexArray();
-  quadVBO = gl.createBuffer();
+  quadVAO = createVertexArray(gl);
+  quadVBO = createBuffer(gl);
 
-  gl.bindVertexArray(quadVAO);
-  gl.bindBuffer(gl.ARRAY_BUFFER, quadVBO);
-  gl.bufferData(gl.ARRAY_BUFFER, quad_data, gl.STATIC_DRAW);
+  bindVertexArray(gl, quadVAO);
+  bindBuffer(gl, ARRAY_BUFFER, quadVBO);
+  bufferData(gl, ARRAY_BUFFER, quad_data, STATIC_DRAW);
 
-  gl.enableVertexAttribArray(position_al);
-  gl.vertexAttribPointer(position_al, 2, gl.FLOAT, gl.FALSE, 16, 0);
+  enableVertexAttribArray(gl, position_al);
+  vertexAttribPointer(gl, position_al, 2, FLOAT, FALSE, 16, 0);
 
-  gl.enableVertexAttribArray(tex_coord_al);
-  gl.vertexAttribPointer(tex_coord_al, 2, gl.FLOAT, gl.FALSE, 16, 8);
+  enableVertexAttribArray(gl, tex_coord_al);
+  vertexAttribPointer(gl, tex_coord_al, 2, FLOAT, FALSE, 16, 8);
 
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, instanceVBO);
+  bindBuffer(gl, ARRAY_BUFFER, instanceVBO);
 
-  gl.enableVertexAttribArray(obj_position_al);
-  gl.vertexAttribPointer(obj_position_al, 2, gl.FLOAT, gl.FALSE, 0, 0);
+  enableVertexAttribArray(gl, obj_position_al);
+  vertexAttribPointer(gl, obj_position_al, 2, FLOAT, FALSE, 0, 0);
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, 0);
+  bindBuffer(gl, ARRAY_BUFFER, 0);
 
-  gl.vertexAttribDivisor(1, 2);
+  vertexAttribDivisor(gl, 1, 2);
 }
 
 export function displayLoop(): void {
-  gl.clearColor(0.0, 0.0, 0.0, 1.0);
-  gl.clear(gl.COLOR_BUFFER_BIT);
+  clearColor(gl, 0.0, 0.0, 0.0, 1.0);
+  clear(gl, COLOR_BUFFER_BIT);
 
   if (image_ready == false) {
-    if (gl.imageReady(image_id) == false) {
+    if (imageReady(image_id) == false) {
       return;
     }
 
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
-    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-    gl.disable(gl.DEPTH_TEST);
-    gl.enable(gl.BLEND);
+    pixelStorei(gl, UNPACK_FLIP_Y_WEBGL, 1);
+    pixelStorei(gl, UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+    blendFunc(gl, SRC_ALPHA, ONE_MINUS_SRC_ALPHA);
+    disable(gl, DEPTH_TEST);
+    enable(gl, BLEND);
 
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image_id);
+    activeTexture(gl, TEXTURE0);
+    bindTexture(gl, TEXTURE_2D, texture);
+    texParameteri(gl, TEXTURE_2D, TEXTURE_MIN_FILTER, NEAREST);
+    texParameteri(gl, TEXTURE_2D, TEXTURE_MAG_FILTER, NEAREST);
+    texImage2D(gl, TEXTURE_2D, 0, RGBA, RGBA, UNSIGNED_BYTE, image_id);
 
-    gl.uniform1i(sampler, 0);
+    uniform1i(gl, sampler, 0);
     image_ready = true;
   }
 
@@ -204,9 +222,9 @@ export function displayLoop(): void {
     asteroidArray[i].Move();
   }
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, instanceVBO);
-  gl.bufferData(gl.ARRAY_BUFFER, translation, gl.DYNAMIC_DRAW);
+  bindBuffer(gl, ARRAY_BUFFER, instanceVBO);
+  bufferData(gl, ARRAY_BUFFER, translation, DYNAMIC_DRAW);
 
-  gl.bindVertexArray(quadVAO);
-  gl.drawArraysInstanced(gl.TRIANGLES, 0, 6, asteroidCount);
+  bindVertexArray(gl, quadVAO);
+  drawArraysInstanced(gl, TRIANGLES, 0, 6, asteroidCount);
 }

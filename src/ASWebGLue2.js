@@ -209,23 +209,18 @@ export function initASWebGLue(importObject) {
   }
 
   importObject.WebGL.createContextFromCanvas = (canvas_id, context_type) => {
-    try {
-      const canvas = document.getElementById(WebGL.getString(canvas_id));
-      const gl = canvas.getContext(WebGL.getString(context_type));
-      let id = WebGL.contextArray.findIndex((element) => element == null);
+    const canvas = document.getElementById(WebGL.getString(canvas_id));
+    const gl = canvas.getContext(WebGL.getString(context_type));
+    let id = WebGL.contextArray.findIndex((element) => element == null);
 
-      if (id == -1) {
-        id = WebGL.contextArray.length;
-        WebGL.contextArray.push(gl);
-      }
-      else {
-        WebGL.contextArray[id] = gl;
-      }
-      return id;
-    } catch (err) {
-      console.log("createContextFromCanvas error");
-      console.error(err);
-    } // end catch
+    if (id == -1) {
+      id = WebGL.contextArray.length;
+      WebGL.contextArray.push(gl);
+    }
+    else {
+      WebGL.contextArray[id] = gl;
+    }
+    return id;
   }
   /*
   importObject.WebGL.activateTexture = (ctx, texture) => {
@@ -238,130 +233,59 @@ export function initASWebGLue(importObject) {
   }
 
   importObject.WebGL.getExtension = (ctx, name_string) => {
-    try {
-      WebGL.contextArray[ctx].getExtension(WebGL.getString(name));
-    } catch (err) {
-      console.log("getExtension error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].getExtension(WebGL.getString(name));
   }
 
   importObject.WebGL.activeTexture = (ctx, texture) => {
-    try {
-      WebGL.contextArray[ctx].activeTexture(texture);
-    } catch (err) {
-      console.log("activeTexture error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].activeTexture(texture);
   }
 
   importObject.WebGL.attachShader = (ctx, program, shader) => {
-    try {
-      WebGL.contextArray[ctx].attachShader(WebGL.programArray[program], WebGL.shaderArray[shader]);
-    } catch (err) {
-      console.log("attachShader error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].attachShader(WebGL.programArray[program], WebGL.shaderArray[shader]);
   }
 
   importObject.WebGL.bindAttribLocation = (ctx, program, index, name) => {
-    try {
-      WebGL.contextArray[ctx].bindAttribLocation(WebGL.programArray[program], index, WebGL.getString(name));
-    } catch (err) {
-      console.log("bindAttribLocation error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].bindAttribLocation(WebGL.programArray[program], index, WebGL.getString(name));
   }
 
   importObject.WebGL.bindBuffer = (ctx, target, buffer) => {
-    try {
-      WebGL.contextArray[ctx].bindBuffer(target, WebGL.bufferArray[buffer]);
-    } catch (err) {
-      console.log("bindBuffer error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].bindBuffer(target, WebGL.bufferArray[buffer]);
   }
 
   importObject.WebGL.bindFramebuffer = (ctx, target, framebuffer) => {
-    try {
-      WebGL.contextArray[ctx].bindFramebuffer(target, WebGL.framebufferArray[framebuffer]);
-    } catch (err) {
-      console.log("bindFramebuffer error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].bindFramebuffer(target, WebGL.framebufferArray[framebuffer]);
   }
 
   importObject.WebGL.bindRenderbuffer = (ctx, target, renderbuffer) => {
-    try {
-      WebGL.contextArray[ctx].bindRenderbuffer(target, WebGL.renderbufferArray[renderbuffer]);
-    } catch (err) {
-      console.log("renderbufferArray error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].bindRenderbuffer(target, WebGL.renderbufferArray[renderbuffer]);
   }
 
   importObject.WebGL.bindTexture = (ctx, target, texture) => {
-    try {
-      WebGL.contextArray[ctx].bindTexture(target, WebGL.textureArray[texture]);
-    } catch (err) {
-      console.log("bindTexture error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].bindTexture(target, WebGL.textureArray[texture]);
   }
 
   importObject.WebGL.blendColor = (ctx, r, g, b, a) => {
-    try {
-      WebGL.contextArray[ctx].blendColor(r, g, b, a);
-    } catch (err) {
-      console.log("blendColor error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].blendColor(r, g, b, a);
   }
 
   importObject.WebGL.blendEquation = (ctx, mode) => {
-    try {
-      WebGL.contextArray[ctx].blendEquation(mode);
-    } catch (err) {
-      console.log("blendEquation error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].blendEquation(mode);
   }
 
   importObject.WebGL.blendEquationSeparate = (ctx, modeRGB, modeAlpha) => {
-    try {
-      WebGL.contextArray[ctx].blendEquationSeparate(modeRGB, modeAlpha);
-    } catch (err) {
-      console.log("blendEquationSeparate error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].blendEquationSeparate(modeRGB, modeAlpha);
   }
 
   importObject.WebGL.blendFunc = (ctx, sfactor, dfactor) => {
-    try {
-      WebGL.contextArray[ctx].blendFunc(sfactor, dfactor);
-    } catch (err) {
-      console.log("blendFunc error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].blendFunc(sfactor, dfactor);
   }
 
   importObject.WebGL.blendFuncSeparate = (ctx, srcRGB, dstRGB, srcAlpha, dstAlpha) => {
-    try {
-      WebGL.contextArray[ctx].blendFuncSeparate(srcRGB, dstRGB, srcAlpha, dstAlpha);
-    } catch (err) {
-      console.log("blendFuncSeparate error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].blendFuncSeparate(srcRGB, dstRGB, srcAlpha, dstAlpha);
   }
 
   const bufferdata = (ctx, target, data, usage) => {
-    try {
-      WebGL.contextArray[ctx].bufferData(target, WebGL.getArrayView(data), usage);
-    } catch (err) {
-      console.log("bufferData error");
-      console.log(WebGL.getArrayView(data));
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].bufferData(target, WebGL.getArrayView(data), usage);
   }
 
   importObject.WebGL["bufferData<f32>"] = bufferdata;
@@ -370,150 +294,85 @@ export function initASWebGLue(importObject) {
 
   // LAST TWO PARAMETERS ARE IN WEBGL 2.0
   importObject.WebGL.bufferSubData = (target, dstByteOffset, srcData, srcOffset, length) => {
-    try {
-      WebGL.contextArray[ctx].bufferSubData(target, dstByteOffset, WebGL.getArrayView(srcData), srcOffset, length);
-    } catch (err) {
-      console.log("bufferSubData error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].bufferSubData(target, dstByteOffset, WebGL.getArrayView(srcData), srcOffset, length);
   }
 
   importObject.WebGL.checkFramebufferStatus = (ctx, target) => {
-    try {
-      return WebGL.contextArray[ctx].checkFramebufferStatus(target);
-    } catch (err) {
-      console.log("checkFramebufferStatus error");
-      console.error(err);
-    } // end catch
+    return WebGL.contextArray[ctx].checkFramebufferStatus(target);
   }
 
   // Clears the color, depth and stencil buffers
   importObject.WebGL.clear = (ctx, mask) => {
-    try {
-      WebGL.contextArray[ctx].clear(mask);
-    } catch (err) {
-      console.log("clear error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].clear(mask);
   }
 
   // Specify the color fill a cleared color buffer with
   importObject.WebGL.clearColor = (ctx, r, g, b, a) => {
-    try {
-      WebGL.contextArray[ctx].clearColor(r, g, b, a);
-    } catch (err) {
-      console.log("clearColor error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].clearColor(r, g, b, a);
   }
 
   // Specifies a depth value to fill the depth buffer when it is cleared
   importObject.WebGL.clearDepth = (ctx, depth) => {
-    try {
-      WebGL.contextArray[ctx].clearDepth(depth);
-    } catch (err) {
-      console.log("clearDepth error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].clearDepth(depth);
   }
 
   // Specifies a clear value for the stencil buffer
   importObject.WebGL.clearStencil = (ctx, s) => {
-    try {
-      WebGL.contextArray[ctx].clearStencil(s);
-    } catch (err) {
-      console.log("clearStencil error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].clearStencil(s);
   }
 
   // Allows you to turn on and off colors when writing to a framebuffer
   importObject.WebGL.colorMask = (ctx, r, g, b, a) => {
-    try {
-      WebGL.contextArray[ctx].colorMask(r, g, b, a);
-    } catch (err) {
-      console.log("colorMask error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].colorMask(r, g, b, a);
   }
 
   // Compiles a GLSL shader to be used by a WebGL program.
   importObject.WebGL.compileShader = (ctx, shader) => {
-    try {
-      WebGL.contextArray[ctx].compileShader(WebGL.shaderArray[shader]);
-      var compilationLog = WebGL.contextArray[ctx].getShaderInfoLog(WebGL.shaderArray[shader]);
-      console.log(compilationLog);
-    } catch (err) {
-      console.log("compileShader error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].compileShader(WebGL.shaderArray[shader]);
+    var compilationLog = WebGL.contextArray[ctx].getShaderInfoLog(WebGL.shaderArray[shader]);
+    console.log(compilationLog);
   }
 
   // NOTE: Requires extensions
   // see https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Using_Extensions
   // Secifies a 2D texture image in a compressed format
   importObject.WebGL.compressedTexImage2D = (ctx, target, level, internalformat, width, height, border, data) => {
-    try {
-      // THIS DOES NOT LOOK RIGHT TO ME
-      WebGL.contextArray[ctx].compileShader(target, level, internalformat,
-        width, height, border, WebGL.getArrayView(data));
-    } catch (err) {
-      console.log("compressedTexImage2D error");
-      console.error(err);
-    } // end catch
+    // THIS DOES NOT LOOK RIGHT TO ME
+    WebGL.contextArray[ctx].compileShader(target, level, internalformat,
+      width, height, border, WebGL.getArrayView(data));
   }
 
   // NOTE: Requires extensions
   // see https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Using_Extensions
   // Specifies a 2D sub-image rectangle for a compressed format texture image.
   importObject.WebGL.compressedTexSubImage2D = (ctx, target, level, xoffset, yoffset, width, height, format, data) => {
-    try {
-      WebGL.contextArray[ctx].compressedTexSubImage2D(target, xoffset, yoffset, width, height, format,
-        WebGL.getArrayView(data));
-    } catch (err) {
-      console.log("compressedTexSubImage2D error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].compressedTexSubImage2D(target, xoffset, yoffset, width, height, format,
+      WebGL.getArrayView(data));
   }
 
   // Copies pixels from the current WebGLFramebuffer into a 2D texture image
   importObject.WebGL.copyTexImage2D = (ctx, target, level, internalformat, x, y, width, height, border) => {
-    try {
-      WebGL.contextArray[ctx].copyTexImage2D(target, level, internalformat, x, y, width, height, border);
-    } catch (err) {
-      console.log("copyTexImage2D error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].copyTexImage2D(target, level, internalformat, x, y, width, height, border);
   }
 
   // Copies pixels from the current WebGLFramebuffer into an existing 2D texture sub-image
   importObject.WebGL.copyTexSubImage2D = (ctx, target, level, xoffset, yoffset, x, y, width, height) => {
-    try {
-      WebGL.contextArray[ctx].copyTexSubImage2D(target, level, xoffset, yoffset, x, y, width, height);
-    } catch (err) {
-      console.log("copyTexSubImage2D error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].copyTexSubImage2D(target, level, xoffset, yoffset, x, y, width, height);
   }
 
   // Creates a buffer to hold vertex related data
   importObject.WebGL.createBuffer = (ctx) => {
-    try {
-      let id = WebGL.bufferArray.findIndex((element) => element == null);
-      let buffer = WebGL.contextArray[ctx].createBuffer();
+    let id = WebGL.bufferArray.findIndex((element) => element == null);
+    let buffer = WebGL.contextArray[ctx].createBuffer();
 
-      if (id == -1) {
-        id = WebGL.bufferArray.length;
-        WebGL.bufferArray.push(buffer);
-      }
-      else {
-        WebGL.bufferArray[id] = buffer;
-      }
-      return id;
-    } catch (err) {
-      console.log("createBuffer error");
-      console.error(err);
-    } // end catch
+    if (id == -1) {
+      id = WebGL.bufferArray.length;
+      WebGL.bufferArray.push(buffer);
+    }
+    else {
+      WebGL.bufferArray[id] = buffer;
+    }
+    return id;
   }
 
   // Creates a frame buffer object to be used as a rendering destination
@@ -523,22 +382,17 @@ export function initASWebGLue(importObject) {
 
   // Creates a WebGL program that consists of a vertex and fragment shader
   importObject.WebGL.createProgram = (ctx) => {
-    try {
-      let id = WebGL.programArray.findIndex((element) => element == null);
-      let program = WebGL.contextArray[ctx].createProgram();
+    let id = WebGL.programArray.findIndex((element) => element == null);
+    let program = WebGL.contextArray[ctx].createProgram();
 
-      if (id == -1) {
-        id = WebGL.programArray.length;
-        WebGL.programArray.push(program);
-      }
-      else {
-        WebGL.programArray[id] = program;
-      }
-      return id;
-    } catch (err) {
-      console.log("createProgram error");
-      console.error(err);
-    } // end catch
+    if (id == -1) {
+      id = WebGL.programArray.length;
+      WebGL.programArray.push(program);
+    }
+    else {
+      WebGL.programArray[id] = program;
+    }
+    return id;
   }
 
   // Creates a render buffer object that can be used as a source or target for rendering
@@ -563,43 +417,32 @@ export function initASWebGLue(importObject) {
 
   // Creates a vertex or fragment shader object to be used when compiling a WebGL program
   importObject.WebGL.createShader = (ctx, type) => {
-    try {
-      let id = WebGL.shaderArray.findIndex((element) => element == null);
-      let shader = WebGL.contextArray[ctx].createShader(type);
+    let id = WebGL.shaderArray.findIndex((element) => element == null);
+    let shader = WebGL.contextArray[ctx].createShader(type);
 
-      if (id == -1) {
-        id = WebGL.shaderArray.length;
-        WebGL.shaderArray.push(shader);
-      }
-      else {
-        WebGL.shaderArray[id] = shader;
-      }
-      return id;
-    } catch (err) {
-      console.log("createShader error");
-      console.error(err);
-    } // end catch
+    if (id == -1) {
+      id = WebGL.shaderArray.length;
+      WebGL.shaderArray.push(shader);
+    }
+    else {
+      WebGL.shaderArray[id] = shader;
+    }
+    return id;
   }
 
   // Creates a texture object 
   importObject.WebGL.createTexture = (ctx) => {
-    try {
-      let id = WebGL.textureArray.findIndex((element) => element == null);
-      let texture = WebGL.contextArray[ctx].createTexture();
+    let id = WebGL.textureArray.findIndex((element) => element == null);
+    let texture = WebGL.contextArray[ctx].createTexture();
 
-      if (id == -1) {
-        id = WebGL.textureArray.length;
-        WebGL.textureArray.push(texture);
-      }
-      else {
-        WebGL.textureArray[id] = texture;
-      }
-      console.log('createTexture id=' + id);
-      return id;
-    } catch (err) {
-      console.log("createTexture error");
-      console.error(err);
-    } // end catch
+    if (id == -1) {
+      id = WebGL.textureArray.length;
+      WebGL.textureArray.push(texture);
+    }
+    else {
+      WebGL.textureArray[id] = texture;
+    }
+    return id;
   }
 
   // Sets the culling mode
@@ -771,12 +614,7 @@ export function initASWebGLue(importObject) {
   }
 
   importObject.WebGL.enableVertexAttribArray = (ctx, index) => {
-    try {
-      WebGL.contextArray[ctx].enableVertexAttribArray(index);
-    } catch (err) {
-      console.log("enableVertexAttribArray error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].enableVertexAttribArray(index);
   }
 
   // waits for all previously executed WebGL api calls to finish
@@ -861,12 +699,7 @@ export function initASWebGLue(importObject) {
 
   // get an attribute location inside a program given a name
   importObject.WebGL.getAttribLocation = (ctx, program, name) => {
-    try {
-      return WebGL.contextArray[ctx].getAttribLocation(WebGL.programArray[program], WebGL.getString(name));
-    } catch (err) {
-      console.log("getAttribLocation error");
-      console.error(err);
-    } // end catch
+    return WebGL.contextArray[ctx].getAttribLocation(WebGL.programArray[program], WebGL.getString(name));
   }
 
   // returns an int given a buffer parameter name
@@ -955,23 +788,18 @@ export function initASWebGLue(importObject) {
   }
 
   importObject.WebGL.getUniformLocation = (ctx, program, name) => {
-    try {
-      let id = WebGL.uniformLocationArray.findIndex((element) => element == null);
-      let uniformLocation = WebGL.contextArray[ctx].getUniformLocation(WebGL.programArray[program], WebGL.getString(name));
+    let id = WebGL.uniformLocationArray.findIndex((element) => element == null);
+    let uniformLocation = WebGL.contextArray[ctx].getUniformLocation(WebGL.programArray[program], WebGL.getString(name));
 
-      if (id == -1) {
-        id = WebGL.uniformLocationArray.length;
-        WebGL.uniformLocationArray.push(uniformLocation);
-      }
-      else {
-        WebGL.uniformLocationArray[id] = uniformLocation;
-      }
+    if (id == -1) {
+      id = WebGL.uniformLocationArray.length;
+      WebGL.uniformLocationArray.push(uniformLocation);
+    }
+    else {
+      WebGL.uniformLocationArray[id] = uniformLocation;
+    }
 
-      return id;
-    } catch (err) {
-      console.log("getUniformLocation error");
-      console.error(err);
-    } // end catch
+    return id;
   }
 
   importObject.WebGL.getVertexAttrib = (ctx, index, pname) => {
@@ -1077,27 +905,17 @@ export function initASWebGLue(importObject) {
   }
 
   importObject.WebGL.linkProgram = (ctx, program) => {
-    try {
-      WebGL.contextArray[ctx].linkProgram(WebGL.programArray[program]);
+    WebGL.contextArray[ctx].linkProgram(WebGL.programArray[program]);
 
-      if (!WebGL.contextArray[ctx].getProgramParameter(WebGL.programArray[program],
-        WebGL.contextArray[ctx].LINK_STATUS)) {
-        console.log(WebGL.contextArray[ctx].getProgramInfoLog(WebGL.programArray[program]));
-      }
-    } catch (err) {
-      console.log("linkProgram error");
-      console.error(err);
-    } // end catch
+    if (!WebGL.contextArray[ctx].getProgramParameter(WebGL.programArray[program],
+      WebGL.contextArray[ctx].LINK_STATUS)) {
+      console.log(WebGL.contextArray[ctx].getProgramInfoLog(WebGL.programArray[program]));
+    }
   }
 
   // set pixel storage mode
   importObject.WebGL.pixelStorei = (ctx, pname, param) => {
-    try {
-      WebGL.contextArray[ctx].pixelStorei(pname, param);
-    } catch (err) {
-      console.log("pixelStorei error");
-      console.log(err);
-    } // end catch
+    WebGL.contextArray[ctx].pixelStorei(pname, param);
   }
 
   // ???
@@ -1146,12 +964,7 @@ export function initASWebGLue(importObject) {
   }
 
   importObject.WebGL.shaderSource = (ctx, shader, source) => {
-    try {
-      WebGL.contextArray[ctx].shaderSource(WebGL.shaderArray[shader], WebGL.getString(source));
-    } catch (err) {
-      console.log("shaderSource error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].shaderSource(WebGL.shaderArray[shader], WebGL.getString(source));
   }
 
   // sets a function for allowing pixels to pass through a stencil.  STENCIL_TEST must be set.
@@ -1206,17 +1019,8 @@ export function initASWebGLue(importObject) {
 
   // specify a two-dimensional texture image
   importObject.WebGL.texImage2D = (ctx, target, level, internalformat, format, typ, image_id) => {
-    try {
-      console.log(`
-      image_id=${image_id}
-      WebGL.imageArray.length=${WebGL.imageArray.length}
-      `);
-      WebGL.contextArray[ctx].texImage2D(target, level, internalformat,
-        format, typ, WebGL.imageArray[image_id]);//WebGL.getArrayView(pixels));
-    } catch (err) {
-      console.log("texImage2D error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].texImage2D(target, level, internalformat,
+      format, typ, WebGL.imageArray[image_id]);//WebGL.getArrayView(pixels));
   }
 
   importObject.WebGL.texParameterf = (ctx, target, pname, param) => {
@@ -1229,12 +1033,7 @@ export function initASWebGLue(importObject) {
   }
 
   importObject.WebGL.texParameteri = (ctx, target, pname, param) => {
-    try {
-      WebGL.contextArray[ctx].texParameteri(target, pname, param);
-    } catch (err) {
-      console.log("texParameteri error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].texParameteri(target, pname, param);
   }
 
   importObject.WebGL.texSubImage2D = (ctx, target, level, xoffset, yoffset,
@@ -1268,12 +1067,7 @@ export function initASWebGLue(importObject) {
   }
 
   importObject.WebGL.uniform1i = (ctx, location, x) => {
-    try {
-      return WebGL.contextArray[ctx].uniform1i(WebGL.uniformLocationArray[location], x);
-    } catch (err) {
-      console.log("uniform1i error");
-      console.error(err);
-    } // end catch
+    return WebGL.contextArray[ctx].uniform1i(WebGL.uniformLocationArray[location], x);
   }
 
   importObject.WebGL.uniform1iv = (ctx, location, v) => {
@@ -1440,12 +1234,7 @@ export function initASWebGLue(importObject) {
   }
 
   importObject.WebGL.useProgram = (ctx, program) => {
-    try {
-      WebGL.contextArray[ctx].useProgram(WebGL.programArray[program]);
-    } catch (err) {
-      console.log("useProgram error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].useProgram(WebGL.programArray[program]);
   }
 
   importObject.WebGL.validateProgram = (ctx, program) => {
@@ -1530,12 +1319,7 @@ export function initASWebGLue(importObject) {
   }
 
   importObject.WebGL.vertexAttribPointer = (ctx, indx, size, typ, normalized, stride, offset) => {
-    try {
-      WebGL.contextArray[ctx].vertexAttribPointer(indx, size, typ, normalized, stride, offset);
-    } catch (err) {
-      console.log("vertexAttrib4fv error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].vertexAttribPointer(indx, size, typ, normalized, stride, offset);
   }
 
   importObject.WebGL.viewport = (ctx, indx, x, y, width, height) => {
@@ -1751,22 +1535,12 @@ export function initASWebGLue(importObject) {
 
   // expiramental WebGL2
   importObject.WebGL.vertexAttribDivisor = (ctx, index, divisor) => {
-    try {
-      return WebGL.contextArray[ctx].vertexAttribDivisor(ctx, index, divisor);
-    } catch (err) {
-      console.trace("vertexAttribDivisor error");
-      console.error(err);
-    } // end catch
+    return WebGL.contextArray[ctx].vertexAttribDivisor(ctx, index, divisor);
   }
 
   // expiramental WebGL2
   importObject.WebGL.drawArraysInstanced = (ctx, mode, first, count, instanceCount) => {
-    try {
-      return WebGL.contextArray[ctx].drawArraysInstanced(mode, first, count, instanceCount);
-    } catch (err) {
-      console.log("drawArraysInstanced error");
-      console.error(err);
-    } // end catch
+    return WebGL.contextArray[ctx].drawArraysInstanced(mode, first, count, instanceCount);
   }
 
   // expiramental WebGL2
@@ -2052,23 +1826,17 @@ export function initASWebGLue(importObject) {
 
   // expiramental WebGL2
   importObject.WebGL.createVertexArray = (ctx) => {
-    try {
-      let id = WebGL.vaoArray.findIndex((element) => element == null);
-      let vao = WebGL.contextArray[ctx].createVertexArray();
+    let id = WebGL.vaoArray.findIndex((element) => element == null);
+    let vao = WebGL.contextArray[ctx].createVertexArray();
 
-      if (id == -1) {
-        id = WebGL.vaoArray.length;
-        WebGL.vaoArray.push(vao);
-      }
-      else {
-        WebGL.vaoArray[id] = vao;
-      }
-      return id;
-    } catch (err) {
-      console.log("renderBufferArray error");
-      console.error(err);
-    } // end catch
-
+    if (id == -1) {
+      id = WebGL.vaoArray.length;
+      WebGL.vaoArray.push(vao);
+    }
+    else {
+      WebGL.vaoArray[id] = vao;
+    }
+    return id;
   }
 
   // expiramental WebGL2
@@ -2085,12 +1853,7 @@ export function initASWebGLue(importObject) {
 
   // expiramental WebGL2
   importObject.WebGL.bindVertexArray = (ctx, vaoId) => {
-    try {
-      WebGL.contextArray[ctx].bindVertexArray(WebGL.vaoArray[vaoId]);
-    } catch (err) {
-      console.log("uniform2i error");
-      console.error(err);
-    } // end catch
+    WebGL.contextArray[ctx].bindVertexArray(WebGL.vaoArray[vaoId]);
   }
 
 }

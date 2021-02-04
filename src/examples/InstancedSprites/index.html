@@ -10,7 +10,7 @@
 <body style="background-color: black">
   <div style="font-family: 'Courier New', Courier, monospace; font-size: 12px; color:white" id="fps">fps:</div>
   <div style="text-align: center">
-    <canvas id="cnvs" width="512" height="512"></canvas>
+    <canvas id="cnvs" width="640" height="640"></canvas>
   </div>
 </body>
 <script type="module">
@@ -18,19 +18,10 @@
   const wasm_file = 'instanced_sprites.wasm';
   var exports;
   var last_time = 0;
-  var w = window.innerWidth * 0.99;
-  var h = window.innerHeight * 0.99;
+
   var cnvs = document.getElementById("cnvs");
   var fps = document.getElementById("fps");
 
-  if (w > h) {
-    cnvs.width = h;
-    cnvs.height = h;
-  }
-  else {
-    cnvs.width = w;
-    cnvs.height = w;
-  }
   var frames = 0;
   var time_passed = 0;
 

@@ -1,3 +1,5 @@
 # Instanced Sprites
 
-# This thing is not working.
+# Instanced Sprites
+
+This demo uses instanced rendering to render 500,000 sprites at once.
