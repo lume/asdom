@@ -64,7 +64,7 @@ void main() {
 `;
 
 // initialize webgl
-const asteroidCount: i32 = 500_000;
+const asteroidCount: i32 = 50_000;
 
 var gl: WebGLRenderingContextId = createContextFromCanvas('cnvs', 'webgl2');
 
