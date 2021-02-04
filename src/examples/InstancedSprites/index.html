@@ -8,7 +8,9 @@
 </head>
 
 <body style="background-color: black">
-  <div style="font-family: 'Courier New', Courier, monospace; font-size: 12px; color:white" id="fps">fps:</div>
+  <div style="font-family: 'Courier New', Courier, monospace; font-size: 12px; color:white">
+    sprites: <span id="sprites"></span> fps: <span id="fps">0</span>
+  </div>
   <div style="text-align: center">
     <canvas id="cnvs" width="640" height="640"></canvas>
   </div>
@@ -21,8 +23,10 @@
 
   var cnvs = document.getElementById("cnvs");
   var fps = document.getElementById("fps");
+  var sprites = document.getElementById("sprites");
 
   var frames = 0;
+  var sprite_count = 0;
   var time_passed = 0;
 
   function renderFrame() {
@@ -31,9 +35,13 @@
       delta = (new Date().getTime() - last_time);
       time_passed += delta;
       frames++;
+      if (sprite_count < 500_000) {
+        sprite_count += 100;
+      }
 
       if (time_passed > 1000) {
-        fps.innerHTML = `fps: ${frames}`;
+        fps.innerHTML = frames;
+        sprites.innerHTML = sprite_count;
         frames = 0;
         time_passed = 0;
       }
