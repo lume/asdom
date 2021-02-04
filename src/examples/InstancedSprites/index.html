@@ -4,22 +4,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quad Following The Mouse Example</title>
+  <title>Textured Quad Example</title>
 </head>
 
 <body style="background-color: black">
+  <div style="font-family: 'Courier New', Courier, monospace; font-size: 12px; color:white" id="fps">fps:</div>
   <div style="text-align: center">
     <canvas id="cnvs" width="512" height="512"></canvas>
   </div>
 </body>
 <script type="module">
-  import { initASWebGLue, ASWebGLReady } from '../../ASWebGLue.js';
-  const wasm_file = 'quad_follow_mouse.wasm';
+  import { initASWebGLue, ASWebGLReady } from '../../ASWebGLue2.js';
+  const wasm_file = 'instanced_sprites.wasm';
   var exports;
   var last_time = 0;
   var w = window.innerWidth * 0.99;
   var h = window.innerHeight * 0.99;
   var cnvs = document.getElementById("cnvs");
+  var fps = document.getElementById("fps");
+
   if (w > h) {
     cnvs.width = h;
     cnvs.height = h;
@@ -28,9 +31,31 @@
     cnvs.width = w;
     cnvs.height = w;
   }
+  var frames = 0;
+  var time_passed = 0;
 
-  var mouse_x = 0.0;
-  var mouse_y = 0.0;
+  function renderFrame() {
+    let delta = 0;
+    if (last_time !== 0) {
+      delta = (new Date().getTime() - last_time);
+      time_passed += delta;
+      frames++;
+
+      if (time_passed > 1000) {
+        fps.innerHTML = `fps: ${frames}`;
+        frames = 0;
+        time_passed = 0;
+      }
+    }
+    last_time = new Date().getTime();
+
+    // call the displayLoop function in the WASM module
+    exports.displayLoop(delta);
+
+    // requestAnimationFrame calls renderFrame the next time a frame is rendered
+    requestAnimationFrame(renderFrame);
+
+  }
 
   const memory = new WebAssembly.Memory({ initial: 100 }); // linear memory
 
@@ -49,17 +74,14 @@
     let obj = await WebAssembly.instantiateStreaming(
       fetch(wasm_file),
       importObject);
+    console.log('instantiateStreaming');
     console.log(obj);
     exports = obj.instance.exports;
+    console.log(exports);
     ASWebGLReady(obj, importObject);
+    exports.init();
 
-    // call the moveMouse function in the WASM module
-    cnvs.addEventListener('mousemove', function (evt) {
-      const rect = cnvs.getBoundingClientRect();
-      mouse_x = ((evt.clientX - rect.left) / cnvs.width) * 2.0 - 1.0;
-      mouse_y = ((1.0 - (evt.clientY - rect.top) / cnvs.height)) * 2.0 - 1.0;
-      exports.moveMouse(mouse_x, mouse_y);
-    }, false);
+    requestAnimationFrame(renderFrame);
   })();
 
 </script>

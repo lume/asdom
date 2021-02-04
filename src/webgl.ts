@@ -42,7 +42,7 @@ export declare function imageReady(image_id: ImageData): bool;
 
 // === WebGLContextAttributes ===
 export const ALPHA_DEFAULT = true;
-export const FALSE: i32 = false;
+export const FALSE: GLboolean = false;
 
 //export declare function activateTexture(gl: WebGLContextAttributes, texture: WebGLTexture): void;
 
@@ -670,43 +670,43 @@ export declare function texSubImage2D(gl: WebGLRenderingContextId, target: GLenu
 	format: GLenum, typ: GLenum, pixels: ImageData): void;
 
 export declare function uniform1f(gl: WebGLRenderingContextId, location: WebGLUniformLocation, x: GLfloat): void;
-export declare function uniform1fv<T>(gl: WebGLRenderingContextId, location: WebGLUniformLocation, v: StaticArray<T>/*Float32Array*/): void;
+export declare function uniform1fv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, v: StaticArray<GLfloat>/*Float32Array*/): void;
 
 export declare function uniform1i(gl: WebGLRenderingContextId, location: WebGLUniformLocation, x: GLint): void;
-export declare function uniform1iv<T>(gl: WebGLRenderingContextId, location: WebGLUniformLocation, v: StaticArray<T>/*Int32Array*/): void;
+export declare function uniform1iv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, v: StaticArray<GLint>/*Int32Array*/): void;
 
 export declare function uniform2f(gl: WebGLRenderingContextId, location: WebGLUniformLocation, x: GLfloat, y: GLfloat): void;
-export declare function uniform2fv<T>(gl: WebGLRenderingContextId, location: WebGLUniformLocation, v: StaticArray<T>/*Float32Array*/): void;
+export declare function uniform2fv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, v: StaticArray<GLfloat>/*Float32Array*/): void;
 
 export declare function uniform2i(gl: WebGLRenderingContextId, location: WebGLUniformLocation, x: GLint, y: GLint): void;
-export declare function uniform2iv<T>(gl: WebGLRenderingContextId, location: WebGLUniformLocation, v: StaticArray<T> /*Int32Array*/): void;
+export declare function uniform2iv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, v: StaticArray<GLint> /*Int32Array*/): void;
 
 export declare function uniform3f(gl: WebGLRenderingContextId, location: WebGLUniformLocation, x: GLfloat, y: GLfloat, z: GLfloat): void;
-export declare function uniform3fv<T>(gl: WebGLRenderingContextId, location: WebGLUniformLocation, v: StaticArray<T>/*Float32Array*/): void;
+export declare function uniform3fv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, v: StaticArray<GLfloat>/*Float32Array*/): void;
 
 export declare function uniform3i(gl: WebGLRenderingContextId, location: WebGLUniformLocation, x: GLint, y: GLint, z: GLint): void;
-export declare function uniform3iv<T>(gl: WebGLRenderingContextId, location: WebGLUniformLocation, v: StaticArray<T>/*Int32Array*/): void;
+export declare function uniform3iv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, v: StaticArray<GLint>/*Int32Array*/): void;
 
 export declare function uniform4f(gl: WebGLRenderingContextId, location: WebGLUniformLocation, x: GLfloat, y: GLfloat, z: GLfloat, w: GLfloat): void;
-export declare function uniform4fv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, v: StaticArray<f32>/*JSFloat32Array*/): void;
+export declare function uniform4fv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, v: StaticArray<GLfloat>/*JSFloat32Array*/): void;
 
 export declare function uniform4i(gl: WebGLRenderingContextId, location: WebGLUniformLocation, x: GLint, y: GLint, z: GLint, w: GLint): void;
-export declare function uniform4iv<T>(gl: WebGLRenderingContextId, location: WebGLUniformLocation, v: StaticArray<T>/*JSInt32Array*/): void;
+export declare function uniform4iv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, v: StaticArray<GLint>/*JSInt32Array*/): void;
 
 export declare function uniformMatrix2fv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, transpose: GLboolean,
-	value: Float32Array): void;
+	value: StaticArray<GLfloat>): void;
 /*
 export declare function uniformMatrix2fv( gl: WebGLRenderingContextId, location: WebGLUniformLocation, transpose: GLboolean,
 	value: sequence<GLfloat>): void;
 */
 export declare function uniformMatrix3fv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, transpose: GLboolean,
-	value: Float32Array): void;
+	value: StaticArray<GLfloat>): void;
 /*
 export declare function uniformMatrix3fv( gl: WebGLRenderingContextId, location: WebGLUniformLocation, transpose: GLboolean,
 	value: sequence<GLfloat>): void;
 */
 export declare function uniformMatrix4fv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, transpose: GLboolean,
-	value: Float32Array): void;
+	value: StaticArray<GLfloat>): void;
 /*
 export declare function uniformMatrix4fv( gl: WebGLRenderingContextId, location: WebGLUniformLocation, transpose: GLboolean,
 	value: sequence<GLfloat>): void;
@@ -715,16 +715,16 @@ export declare function useProgram(gl: WebGLRenderingContextId, program: WebGLPr
 export declare function validateProgram(gl: WebGLRenderingContextId, program: WebGLProgram): void;
 
 export declare function vertexAttrib1f(gl: WebGLRenderingContextId, indx: GLuint, x: GLfloat): void;
-export declare function vertexAttrib1fv(gl: WebGLRenderingContextId, indx: GLuint, values: Float32Array): void;
+export declare function vertexAttrib1fv(gl: WebGLRenderingContextId, indx: GLuint, values: StaticArray<GLfloat>): void;
 
 export declare function vertexAttrib2f(gl: WebGLRenderingContextId, indx: GLuint, x: GLfloat, y: GLfloat): void;
-export declare function vertexAttrib2fv(gl: WebGLRenderingContextId, indx: GLuint, values: Float32Array): void;
+export declare function vertexAttrib2fv(gl: WebGLRenderingContextId, indx: GLuint, values: StaticArray<GLfloat>): void;
 
 export declare function vertexAttrib3f(gl: WebGLRenderingContextId, indx: GLuint, x: GLfloat, y: GLfloat, z: GLfloat): void;
-export declare function vertexAttrib3fv(gl: WebGLRenderingContextId, indx: GLuint, values: Float32Array): void;
+export declare function vertexAttrib3fv(gl: WebGLRenderingContextId, indx: GLuint, values: StaticArray<GLfloat>): void;
 
 export declare function vertexAttrib4f(gl: WebGLRenderingContextId, indx: GLuint, x: GLfloat, y: GLfloat, z: GLfloat, w: GLfloat): void;
-export declare function vertexAttrib4fv(gl: WebGLRenderingContextId, indx: GLuint, values: Float32Array): void;
+export declare function vertexAttrib4fv(gl: WebGLRenderingContextId, indx: GLuint, values: StaticArray<GLfloat>): void;
 
 export declare function vertexAttribPointer(gl: WebGLRenderingContextId, indx: GLint, size: GLint, typ: GLenum,
 	normalized: /*GLboolean*/GLint, stride: GLsizei, offset: GLintptr): void;
@@ -919,7 +919,7 @@ export class WebGLRenderingContext {
 		return ALPHA_DEFAULT;
 	}
 
-	@inline get FALSE(): bool {
+	@inline get FALSE(): GLboolean {
 		return FALSE;
 	}
 
@@ -2549,50 +2549,50 @@ export class WebGLRenderingContext {
 	@inline uniform1f(location: WebGLUniformLocation, x: GLfloat): void {
 		uniform1f(this.gl_id, location, x);
 	}
-	@inline uniform1fv<T>(location: WebGLUniformLocation, v: StaticArray<T>): void {
-		uniform1fv<T>(this.gl_id, location, v);
+	@inline uniform1fv(location: WebGLUniformLocation, v: StaticArray<GLfloat>): void {
+		uniform1fv(this.gl_id, location, v);
 	}
 
 	@inline uniform1i(location: WebGLUniformLocation, x: GLint): void {
 		uniform1i(this.gl_id, location, x);
 	}
-	@inline uniform1iv<T>(location: WebGLUniformLocation, v: StaticArray<T>): void {
-		uniform1iv<T>(this.gl_id, location, v);
+	@inline uniform1iv(location: WebGLUniformLocation, v: StaticArray<GLint>): void {
+		uniform1iv(this.gl_id, location, v);
 	}
 
 	@inline uniform2f(location: WebGLUniformLocation, x: GLfloat, y: GLfloat): void {
 		uniform2f(this.gl_id, location, x, y);
 	}
-	@inline uniform2fv<T>(location: WebGLUniformLocation, v: StaticArray<T>): void {
-		uniform2fv<T>(this.gl_id, location, v);
+	@inline uniform2fv(location: WebGLUniformLocation, v: StaticArray<GLfloat>): void {
+		uniform2fv(this.gl_id, location, v);
 	}
 
 	@inline uniform2i(location: WebGLUniformLocation, x: GLint, y: GLint): void {
 		uniform2i(this.gl_id, location, x, y);
 	}
-	@inline uniform2iv<T>(location: WebGLUniformLocation, v: StaticArray<T>): void {
-		uniform2iv<T>(this.gl_id, location, v);
+	@inline uniform2iv(location: WebGLUniformLocation, v: StaticArray<GLint>): void {
+		uniform2iv(this.gl_id, location, v);
 	}
 
 	@inline uniform3f(location: WebGLUniformLocation, x: GLfloat, y: GLfloat, z: GLfloat): void {
 		uniform3f(this.gl_id, location, x, y, z);
 	}
-	@inline uniform3fv<T>(location: WebGLUniformLocation, v: StaticArray<T>): void {
-		uniform3fv<T>(gl, location, v);
+	@inline uniform3fv(location: WebGLUniformLocation, v: StaticArray<GLfloat>): void {
+		uniform3fv(gl, location, v);
 	}
 
 	@inline uniform3i(location: WebGLUniformLocation, x: GLint, y: GLint, z: GLint): void {
 		uniform3i(this.gl_id, location, x, y, z);
 	}
-	@inline uniform3iv<T>(location: WebGLUniformLocation, v: StaticArray<T>): void {
-		uniform3iv<T>(this.gl_id, location, v);
+	@inline uniform3iv(location: WebGLUniformLocation, v: StaticArray<GLint>): void {
+		uniform3iv(this.gl_id, location, v);
 	}
 
 	@inline uniform4f(location: WebGLUniformLocation, x: GLfloat, y: GLfloat, z: GLfloat, w: GLfloat): void {
 		uniform4f(this.gl_id, location, x, y, z, w);
 	}
 
-	@inline uniform4fv(location: WebGLUniformLocation, v: StaticArray<f32>): void {
+	@inline uniform4fv(location: WebGLUniformLocation, v: StaticArray<GLfloat>): void {
 		uniform4fv(this.gl_id, location, v);
 	}
 
@@ -2600,19 +2600,19 @@ export class WebGLRenderingContext {
 		uniform4i(this.gl_id, location, x, y, z, w);
 	}
 
-	@inline uniform4iv<T>(location: WebGLUniformLocation, v: StaticArray<T>): void {
-		uniform4iv<T>(this.gl_id, location, v);
+	@inline uniform4iv(location: WebGLUniformLocation, v: StaticArray<GLint>): void {
+		uniform4iv(this.gl_id, location, v);
 	}
 
-	@inline uniformMatrix2fv(location: WebGLUniformLocation, transpose: GLboolean, value: Float32Array): void {
+	@inline uniformMatrix2fv(location: WebGLUniformLocation, transpose: GLboolean, value: StaticArray<GLfloat>): void {
 		uniformMatrix2fv(this.gl_id, location, transpose, value);
 	}
 
-	@inline uniformMatrix3fv(location: WebGLUniformLocation, transpose: GLboolean, value: Float32Array): void {
+	@inline uniformMatrix3fv(location: WebGLUniformLocation, transpose: GLboolean, value: StaticArray<GLfloat>): void {
 		uniformMatrix3fv(this.gl_id, location, transpose, value);
 	}
 
-	@inline uniformMatrix4fv(location: WebGLUniformLocation, transpose: GLboolean, value: Float32Array): void {
+	@inline uniformMatrix4fv(location: WebGLUniformLocation, transpose: GLboolean, value: StaticArray<GLfloat>): void {
 		uniformMatrix4fv(this.gl_id, location, transpose, value);
 	}
 	@inline useProgram(program: WebGLProgram): void {
@@ -2626,7 +2626,7 @@ export class WebGLRenderingContext {
 		vertexAttrib1f(this.gl_id, indx, x);
 	}
 
-	@inline vertexAttrib1fv(indx: GLuint, values: Float32Array): void {
+	@inline vertexAttrib1fv(indx: GLuint, values: StaticArray<GLfloat>): void {
 		vertexAttrib1fv(this.gl_id, indx, values);
 	}
 
@@ -2634,21 +2634,21 @@ export class WebGLRenderingContext {
 		vertexAttrib2f(this.gl_id, indx, x, y);
 	}
 
-	@inline vertexAttrib2fv(indx: GLuint, values: Float32Array): void {
+	@inline vertexAttrib2fv(indx: GLuint, values: StaticArray<GLfloat>): void {
 		vertexAttrib2fv(this.gl_id, indx, values);
 	}
 
 	@inline vertexAttrib3f(indx: GLuint, x: GLfloat, y: GLfloat, z: GLfloat): void {
 		vertexAttrib3f(this.gl_id, indx, x, y, z);
 	}
-	@inline vertexAttrib3fv(indx: GLuint, values: Float32Array): void {
+	@inline vertexAttrib3fv(indx: GLuint, values: StaticArray<GLfloat>): void {
 		vertexAttrib3fv(this.gl_id, indx, values);
 	}
 
 	@inline vertexAttrib4f(indx: GLuint, x: GLfloat, y: GLfloat, z: GLfloat, w: GLfloat): void {
 		vertexAttrib4f(this.gl_id, indx, x, y, z, w)
 	}
-	@inline vertexAttrib4fv(indx: GLuint, values: Float32Array): void {
+	@inline vertexAttrib4fv(indx: GLuint, values: StaticArray<GLfloat>): void {
 		vertexAttrib4fv(this.gl_id, indx, values)
 	}
 

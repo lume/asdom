@@ -7,4 +7,5 @@ package-lock.json
 images
 src/extended
 src/old
+hidden
 *.sh

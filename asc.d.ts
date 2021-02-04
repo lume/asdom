@@ -11,9 +11,9 @@ type u16 = any;
 type u32 = any;
 type u64 = any;
 type usize = any;
-type StaticArray<T> = {
-	value: T;
-} | any;
+declare class StaticArray<T> {
+	constructor(x: number)
+}
 
 declare function assert<T>(isTrueish: Text, message?: string): Text;
 declare function instantiate<T>(...args: any[]): T;
