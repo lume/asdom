@@ -8,7 +8,7 @@ import {
   UNPACK_FLIP_Y_WEBGL, UNPACK_PREMULTIPLY_ALPHA_WEBGL,
   SRC_ALPHA, ONE_MINUS_SRC_ALPHA, DEPTH_TEST, BLEND,
   TEXTURE0, TEXTURE_2D, TEXTURE_MAG_FILTER, NEAREST,
-  TEXTURE_MIN_FILTER, RGBA, UNSIGNED_BYTE,
+  TEXTURE_MIN_FILTER, RGBA, UNSIGNED_BYTE, CULL_FACE,
   clearColor, clear, imageReady, pixelStorei,
   uniform1i, drawArraysInstanced, createImage,
   bindTexture, texParameteri, texImage2D,
@@ -33,18 +33,20 @@ layout (location = 2) in vec2 tex_coord;
 
 out vec2 tc;
 
+// 1. 0.0, 0.0 to 0.5, 0.5
+// 2. 0.5, 0.0 to 1.0, 0.5
+// 3. 0.0, 0.5 to 0.5, 1.0
+// 4. 0.5, 0.5 to 1.0, 1.0
+const float u_start[4] = float[4](0.0, 0.5, 0.0, 0.5);
+const float v_start[4] = float[4](0.0, 0.0, 0.5, 0.5);
+
 void main() {
-  // 1. 0.0, 0.0 to 0.5, 0.5
-  // 2. 0.5, 0.0 to 1.0, 0.5
-  // 3. 0.0, 0.5 to 0.5, 1.0
-  // 4. 0.5, 0.5 to 1.0, 1.0
-  float u_start[4] = float[4](0.0, 0.5, 0.0, 0.5);
-  float v_start[4] = float[4](0.0, 0.0, 0.5, 0.5);
 
   gl_Position = vec4(position+objPosition, 0.0, 1.0);
   // gl_InstanceID
-  tc.u = tex_coord.u * u_start[gl_InstanceID];
-  tc.v = tex_coord.v * v_start[gl_InstanceID];
+  int instance_sprite = gl_InstanceID & 3;
+  tc.x = tex_coord.x * 0.5 + u_start[instance_sprite];
+  tc.y = tex_coord.y * 0.5 + v_start[instance_sprite];
 }
 `;
 
@@ -96,8 +98,8 @@ let tex_coord_al: GLint = getAttribLocation(gl, program, 'tex_coord');
 let quad_data: StaticArray<f32> = [
   //  x     y    u   v
   -0.05, 0.05, 0.0, 1.0,
-  0.05, -0.05, 1.0, 0.0,
   -0.05, -0.05, 0.0, 0.0,
+  0.05, -0.05, 1.0, 0.0,
 
   -0.05, 0.05, 0.0, 1.0,
   0.05, -0.05, 1.0, 0.0,
@@ -200,6 +202,7 @@ export function init(): void {
   bindBuffer(gl, ARRAY_BUFFER, 0);
 
   vertexAttribDivisor(gl, 1, 2);
+
 }
 
 export function displayLoop(): void {
@@ -216,6 +219,7 @@ export function displayLoop(): void {
     blendFunc(gl, SRC_ALPHA, ONE_MINUS_SRC_ALPHA);
     disable(gl, DEPTH_TEST);
     enable(gl, BLEND);
+    enable(gl, CULL_FACE);
 
     activeTexture(gl, TEXTURE0);
     bindTexture(gl, TEXTURE_2D, texture);
