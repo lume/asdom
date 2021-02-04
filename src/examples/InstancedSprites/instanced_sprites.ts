@@ -64,7 +64,8 @@ void main() {
 `;
 
 // initialize webgl
-const asteroidCount: i32 = 50_000;
+const asteroidMax: i32 = 500_000;
+var asteroidCount: i32 = 0;
 
 var gl: WebGLRenderingContextId = createContextFromCanvas('cnvs', 'webgl2');
 
@@ -106,7 +107,7 @@ let quad_data: StaticArray<f32> = [
   0.05, 0.05, 1.0, 1.0,
 ];
 
-let translation: StaticArray<f32> = new StaticArray<f32>(asteroidCount * 2);
+let translation: StaticArray<f32> = new StaticArray<f32>(asteroidMax * 2);
 
 class Asteroid {
   static COUNT: i32 = 0;
@@ -133,8 +134,8 @@ class Asteroid {
 
   constructor() {
     this.index = Asteroid.COUNT++;
-    this.x = Mathf.random() * 2.0 - 1.0;
-    this.y = Mathf.random() * 2.0 - 1.0;
+    //this.x = Mathf.random() * 2.0 - 1.0;
+    //this.y = Mathf.random() * 2.0 - 1.0;
 
     this.dx = Mathf.random() / 50.0 - 0.01;
     this.dy = Mathf.random() / 50.0 - 0.01;
@@ -144,6 +145,9 @@ class Asteroid {
     this.x += this.dx;
     this.y += this.dy;
 
+    this.x %= 1.0;
+    this.y %= 1.0;
+    /*
     if (this.x > 1.0) {
       this.x = -1.0;
     }
@@ -157,13 +161,14 @@ class Asteroid {
     else if (this.y < -1.0) {
       this.y = 1.0;
     }
+    */
   }
 
 }
 
-var asteroidArray: StaticArray<Asteroid> = new StaticArray<Asteroid>(asteroidCount);
+var asteroidArray: StaticArray<Asteroid> = new StaticArray<Asteroid>(asteroidMax);
 
-for (var i: i32 = 0; i < asteroidCount; i++) {
+for (var i: i32 = 0; i < asteroidMax; i++) {
   asteroidArray[i] = new Asteroid();
 }
 
@@ -229,6 +234,10 @@ export function displayLoop(): void {
 
     uniform1i(gl, sampler, 0);
     image_ready = true;
+  }
+
+  if (asteroidCount < asteroidMax) {
+    asteroidCount += 100;
   }
 
   for (var i: i32 = 0; i < asteroidCount; i++) {
