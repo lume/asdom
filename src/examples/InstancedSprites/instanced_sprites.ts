@@ -25,7 +25,7 @@ import {
   WebGLBuffer, GLint, WebGLProgram, WebGLTexture, WebGLVertexArrayObject,
 } from '../../WebGL';
 
-const VERTEX_SHADER_CODE: string = `#version 300 es
+const VERTEX_SHADER_CODE: string = /*glsl*/ `#version 300 es
 precision mediump float;
 layout (location = 0) in vec2 objPosition;
 layout (location = 1) in vec2 position;
@@ -48,9 +48,9 @@ void main() {
   tc.x = tex_coord.x * 0.5 + u_start[instance_sprite];
   tc.y = tex_coord.y * 0.5 + v_start[instance_sprite];
 }
-`;
+`; /* end vertex shader */
 
-const FRAGMENT_SHADER_CODE: string = `#version 300 es
+const FRAGMENT_SHADER_CODE: string = /*glsl*/ `#version 300 es
 precision mediump float;
 in vec2 tc;
 
@@ -61,7 +61,7 @@ out vec4 color;
 void main() {
   color = texture( sampler, tc );
 }
-`;
+`; /* end fragment shader */
 
 // initialize webgl
 const asteroidMax: i32 = 500_000;
