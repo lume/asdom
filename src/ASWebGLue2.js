@@ -1,7 +1,3 @@
-export function print(str) {
-  console.log(str)
-}
-
 export function ASWebGLReady(wasm_obj, importObject) {
   console.log("ASWebGLReady");
   if (wasm_obj == null) {

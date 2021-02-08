@@ -2,9 +2,7 @@
  * @author Rick Battagline / https://embed.com/wasm
  */
 
-import {
-  WebGLRenderingContext
-} from '../../WebGL'
+import {WebGLRenderingContext} from '../../WebGL';
 
 const VERTEX_SHADER_CODE: string = `#version 300 es
   precision highp float;
@@ -13,7 +11,7 @@ const VERTEX_SHADER_CODE: string = `#version 300 es
   in vec2 tex_coord;
 
   out vec2 tc;
-  
+
   void main() {
     gl_Position = vec4(position, 0.0, 1.0);
     tc = tex_coord;
@@ -36,7 +34,6 @@ const FRAGMENT_SHADER_CODE: string = `#version 300 es
 
 // initialize webgl
 var gl = new WebGLRenderingContext('cnvs', 'webgl2');
-
 
 //  ImageData, createImage, imageReady,
 var image_id = gl.createImage('kaijunicorn.png');
@@ -73,22 +70,30 @@ gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
 let frame_num = 0;
 // frame 44 x 198
-//  x    y        u    v
-let frame_1: StaticArray<f32> = [-0.15, -0.2, 0.0, 0.01,
--0.15, 0.2, 0.0, 0.33,
-  0.15, -0.2, 0.95, 0.01,
-  0.15, 0.2, 0.95, 0.33,];
+// prettier-ignore
+let frame_1: StaticArray<f32> = [
+// x      y    u     v
+  -0.15, -0.2, 0.0,  0.01,
+  -0.15,  0.2, 0.0,  0.33,
+   0.15, -0.2, 0.95, 0.01,
+   0.15,  0.2, 0.95, 0.33,
+];
 
-let frame_2: StaticArray<f32> = [-0.15, -0.2, 0.0, 0.33,
--0.15, 0.2, 0.0, 0.66,
+// prettier-ignore
+let frame_2: StaticArray<f32> = [
+ -0.15, -0.2, 0.0,  0.33,
+ -0.15,  0.2, 0.0,  0.66,
   0.15, -0.2, 0.95, 0.33,
-  0.15, 0.2, 0.95, 0.66,];
+  0.15,  0.2, 0.95, 0.66,
+];
 
-let frame_3: StaticArray<f32> = [-0.15, -0.2, 0.0, 0.66,
--0.15, 0.2, 0.0, 0.999,
+// prettier-ignore
+let frame_3: StaticArray<f32> = [
+ -0.15, -0.2, 0.0,  0.66,
+ -0.15,  0.2, 0.0,  0.999,
   0.15, -0.2, 0.95, 0.66,
-  0.15, 0.2, 0.95, 0.999,];
-
+  0.15,  0.2, 0.95, 0.999,
+];
 
 let texture = gl.createTexture();
 let sampler = gl.getUniformLocation(program, 'sampler');
@@ -104,7 +109,7 @@ export function displayLoop(delta: i32): void {
     }
 
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
-    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, +true);
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
@@ -118,34 +123,27 @@ export function displayLoop(delta: i32): void {
   if (time_left <= 0) {
     if (frame_num == 3) {
       frame_num = 0;
-    }
-    else {
+    } else {
       frame_num++;
     }
     time_left = 100;
-  }
-  else {
+  } else {
     time_left -= delta;
   }
 
-
   if (frame_num == 0) {
     gl.bufferData<f32>(gl.ARRAY_BUFFER, frame_3, gl.STATIC_DRAW);
-
-  }
-  else if (frame_num == 1) {
+  } else if (frame_num == 1) {
     gl.bufferData<f32>(gl.ARRAY_BUFFER, frame_2, gl.STATIC_DRAW);
-  }
-  else if (frame_num == 2) {
+  } else if (frame_num == 2) {
     gl.bufferData<f32>(gl.ARRAY_BUFFER, frame_3, gl.STATIC_DRAW);
-  }
-  else {
+  } else {
     gl.bufferData<f32>(gl.ARRAY_BUFFER, frame_1, gl.STATIC_DRAW);
   }
 
   //vertexAttribPointer     attribute |  dimensions | data type | normalize | stride bytes | offset bytes
-  gl.vertexAttribPointer(position_al, 2, gl.FLOAT, false, 16, 0);
-  gl.vertexAttribPointer(tex_coord_al, 2, gl.FLOAT, false, 16, 8);
+  gl.vertexAttribPointer(position_al, 2, gl.FLOAT, +false, 16, 0);
+  gl.vertexAttribPointer(tex_coord_al, 2, gl.FLOAT, +false, 16, 8);
 
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, frame_1.length / 4);
 }

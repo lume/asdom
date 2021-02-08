@@ -2,9 +2,7 @@
  * @author Rick Battagline / https://embed.com/wasm
  */
 
-import {
-  WebGLRenderingContext, WebGLShader, WebGLProgram, WebGLBuffer, GLint,
-} from '../../WebGL'
+import {WebGLRenderingContext, WebGLShader, WebGLProgram, WebGLBuffer, GLint} from '../../WebGL';
 
 const VERTEX_SHADER_CODE: string = /*glsl*/ `#version 300 es
   precision highp float;
@@ -51,9 +49,12 @@ gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 let position_al: GLint = gl.getAttribLocation(program, 'position');
 gl.enableVertexAttribArray(position_al);
 
-let triangle_data: StaticArray<f32> = [0.0, 0.5,
-  -0.5, -0.5,
-  0.5, -0.5,];
+// prettier-ignore
+let triangle_data: StaticArray<f32> = [
+  0.0,  0.5,
+ -0.5, -0.5,
+  0.5, -0.5,
+];
 
 export function displayLoop(): void {
   //             R    G    B    A
@@ -63,7 +64,7 @@ export function displayLoop(): void {
   gl.bufferData<f32>(gl.ARRAY_BUFFER, triangle_data, gl.STATIC_DRAW);
 
   //                      attribute | dimensions | data_type | normalize | stride | offset
-  gl.vertexAttribPointer(position_al, 2, gl.FLOAT, false, 0, 0);
+  gl.vertexAttribPointer(position_al, 2, gl.FLOAT, +false, 0, 0);
 
   //                      mode | first vertex | count
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, 3);

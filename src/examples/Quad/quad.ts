@@ -2,17 +2,13 @@
  * @author Rick Battagline / https://embed.com
  */
 
-import {
-  WebGLRenderingContext, WebGLShader, WebGLProgram, ImageData,
-  WebGLBuffer, GLint, WebGLUniformLocation,
-} from '../../WebGL'
-
+import {WebGLRenderingContext, WebGLShader, WebGLProgram, WebGLBuffer, GLint} from '../../WebGL';
 
 const VERTEX_SHADER_CODE: string = `#version 300 es
   precision highp float;
 
   in vec2 position;
-  
+
   void main() {
     gl_Position = vec4( position, 0.0, 1.0 );
   }
@@ -53,10 +49,13 @@ gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 let position_al: GLint = gl.getAttribLocation(program, 'position');
 gl.enableVertexAttribArray(position_al);
 
-let quad_data: StaticArray<f32> = [-0.5, -0.5,
--0.5, 0.5,
+// prettier-ignore
+let quad_data: StaticArray<f32> = [
+ -0.5, -0.5,
+ -0.5,  0.5,
   0.5, -0.5,
-  0.5, 0.5,];
+  0.5,  0.5
+];
 
 export function displayLoop(delta: i32): void {
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -66,7 +65,7 @@ export function displayLoop(delta: i32): void {
 
   const dimensions: i32 = 2;
   const data_type: i32 = gl.FLOAT;
-  const normalize: i32 = false;
+  const normalize: i32 = +false;
   const stride: i32 = 0;
   const offset: i32 = 0;
 

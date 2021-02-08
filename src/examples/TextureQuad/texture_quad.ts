@@ -3,9 +3,15 @@
  */
 
 import {
-  WebGLRenderingContext, WebGLShader, ImageData, WebGLUniformLocation,
-  WebGLBuffer, GLint, WebGLProgram, WebGLTexture,
-} from '../../WebGL'
+  WebGLRenderingContext,
+  WebGLShader,
+  ImageData,
+  WebGLUniformLocation,
+  WebGLBuffer,
+  GLint,
+  WebGLProgram,
+  WebGLTexture,
+} from '../../WebGL';
 
 const VERTEX_SHADER_CODE: string = `#version 300 es
   precision highp float;
@@ -14,7 +20,7 @@ const VERTEX_SHADER_CODE: string = `#version 300 es
   in vec2 tex_coord;
 
   out vec2 tc;
-  
+
   void main() {
     gl_Position = vec4(position, 0.0, 1.0);
     tc = tex_coord;
@@ -37,7 +43,6 @@ const FRAGMENT_SHADER_CODE: string = `#version 300 es
 
 // initialize webgl
 var gl: WebGLRenderingContext = new WebGLRenderingContext('cnvs', 'webgl2');
-
 
 //  ImageData, createImage, imageReady,
 var image_id: ImageData = gl.createImage('kaijunicorn.png');
@@ -74,10 +79,23 @@ gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
 let quad_data: StaticArray<f32> = [
   //  x     y     u     v
-  -0.15, -0.2, 0.0, 0.0,
-  -0.15, 0.2, 0.0, 0.99,
-  0.15, -0.2, 0.95, 0.0,
-  0.15, 0.2, 0.95, 0.99,];
+  -0.15,
+  -0.2,
+  0.0,
+  0.0,
+  -0.15,
+  0.2,
+  0.0,
+  0.99,
+  0.15,
+  -0.2,
+  0.95,
+  0.0,
+  0.15,
+  0.2,
+  0.95,
+  0.99,
+];
 
 let texture: WebGLTexture = gl.createTexture();
 let sampler: WebGLUniformLocation = gl.getUniformLocation(program, 'sampler');
@@ -92,7 +110,7 @@ export function displayLoop(): void {
     }
 
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
-    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, +true);
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
@@ -106,8 +124,8 @@ export function displayLoop(): void {
   gl.bufferData<f32>(gl.ARRAY_BUFFER, quad_data, gl.STATIC_DRAW);
 
   //vertexAttribPointer     attribute |  dimensions | data type | normalize | stride bytes | offset bytes
-  gl.vertexAttribPointer(position_al, 2, gl.FLOAT, false, 16, 0);
-  gl.vertexAttribPointer(tex_coord_al, 2, gl.FLOAT, false, 16, 8);
+  gl.vertexAttribPointer(position_al, 2, gl.FLOAT, +false, 16, 0);
+  gl.vertexAttribPointer(tex_coord_al, 2, gl.FLOAT, +false, 16, 8);
 
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, quad_data.length / 4);
 }

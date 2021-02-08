@@ -3,16 +3,17 @@
  */
 
 import {
-  WebGLRenderingContext, WebGLShader, ImageData, WebGLUniformLocation,
-  WebGLBuffer, GLint, WebGLProgram, WebGLTexture,
-} from '../../WebGL'
+  WebGLRenderingContext,
+  WebGLShader,
+  ImageData,
+  WebGLUniformLocation,
+  WebGLBuffer,
+  GLint,
+  WebGLProgram,
+  WebGLTexture,
+} from '../../WebGL';
 
-
-import {
-  objArray, matArray, groupArray, VertGroup, matMapArray, MaterialMap
-} from './RobotTex'
-
-
+import {objArray, matArray, groupArray, VertGroup, matMapArray, MaterialMap} from './RobotTex';
 
 const VERTEX_SHADER_CODE: string = `#version 300 es
   precision mediump float;
@@ -24,7 +25,7 @@ const VERTEX_SHADER_CODE: string = `#version 300 es
 
   out vec2 tc;
   out vec4 c;
-  
+
   void main() {
     const vec3 light = vec3(0.25, 2.0, -0.5);
     float d = clamp( dot( normal, light ), 0.0, 1.0);
@@ -39,8 +40,8 @@ const VERTEX_SHADER_CODE: string = `#version 300 es
 
     gl_Position = pos * mRotateTranslate;
     tc = tex_uv;
-    c = vec4( d + diffuse.r, 
-              d + diffuse.g, 
+    c = vec4( d + diffuse.r,
+              d + diffuse.g,
               d + diffuse.b, 1.0);
   }
 `;
@@ -101,10 +102,10 @@ var image_ready: bool = false;
 //diffuse
 gl.enable(gl.DEPTH_TEST);
 
-function rotate(theta: f32): void { //u32 {
+function rotate(theta: f32): void {
+  //u32 {
   for (var obj_i: i32 = 0; obj_i < objArray.length; obj_i++) {
     for (var coord_i: i32 = 0; coord_i < objArray[obj_i].length; coord_i += 8) {
-
       let x: f32 = objArray[obj_i][coord_i];
       let z: f32 = objArray[obj_i][coord_i + 2];
 
@@ -142,7 +143,7 @@ export function displayLoop(delta: i32): void {
     }
 
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
-    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, +true);
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
@@ -162,9 +163,9 @@ export function displayLoop(delta: i32): void {
     gl.uniform3f(diffuse, diffuse_r, diffuse_g, diffuse_b);
 
     //                                   dimensions | data_type | normalize | stride | offset
-    gl.vertexAttribPointer(position_al, 3, gl.FLOAT, false, 32, 0);
-    gl.vertexAttribPointer(tex_uv_al, 2, gl.FLOAT, false, 32, 12);
-    gl.vertexAttribPointer(normal_al, 3, gl.FLOAT, false, 32, 20);
+    gl.vertexAttribPointer(position_al, 3, gl.FLOAT, +false, 32, 0);
+    gl.vertexAttribPointer(tex_uv_al, 2, gl.FLOAT, +false, 32, 12);
+    gl.vertexAttribPointer(normal_al, 3, gl.FLOAT, +false, 32, 20);
     gl.drawArrays(gl.TRIANGLES, vGroup.start_face, vGroup.length);
   }
 }
