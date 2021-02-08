@@ -3,14 +3,16 @@
  */
 
 import {
-  WebGLRenderingContext, WebGLShader, WebGLProgram, ImageData,
-  WebGLBuffer, GLint, WebGLUniformLocation,
-} from '../../WebGL'
+  WebGLRenderingContext,
+  WebGLShader,
+  WebGLProgram,
+  ImageData,
+  WebGLBuffer,
+  GLint,
+  WebGLUniformLocation,
+} from '../../WebGL';
 
-
-import {
-  Suzanne_data
-} from './Suzanne'
+import {Suzanne_data} from './Suzanne';
 
 const VERTEX_SHADER_CODE: string = `#version 300 es
   precision mediump float;
@@ -18,7 +20,7 @@ const VERTEX_SHADER_CODE: string = `#version 300 es
   in vec3 position;
   in vec3 normal;
   out vec4 c;
-  
+
   void main() {
     const vec3 light = vec3(0.25, 2.0, -0.5);
     float d = clamp( dot( normal, light ), 0.0, 1.0);
@@ -81,7 +83,7 @@ gl.enable(gl.DEPTH_TEST);
 // I'M DUPLICATING A LOT OF VERTICES HERE.
 // INDEXES WOULD BE BETTER
 
-function rotate(theta: f32): void { //u32 {
+function rotate(theta: f32): void {
   for (var coord_i: i32 = 0; coord_i < Suzanne_data.length; coord_i += 6) {
     let x: f32 = Suzanne_data[coord_i];
     let z: f32 = Suzanne_data[coord_i + 2];
@@ -112,11 +114,9 @@ export function displayLoop(delta: i32): void {
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-
   gl.bufferData<f32>(gl.ARRAY_BUFFER, Suzanne_data, gl.DYNAMIC_DRAW);
   //                                   dimensions | data_type | normalize | stride | offset
-  gl.vertexAttribPointer(position_al, 3, gl.FLOAT, false, 24, 0);
-  gl.vertexAttribPointer(normal_al, 3, gl.FLOAT, false, 24, 12);
+  gl.vertexAttribPointer(position_al, 3, gl.FLOAT, +false, 24, 0);
+  gl.vertexAttribPointer(normal_al, 3, gl.FLOAT, +false, 24, 12);
   gl.drawArrays(gl.TRIANGLES, 0, Suzanne_data.length / 6);
-
 }

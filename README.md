@@ -2,20 +2,18 @@
 
 ASWebGLue is a set of javascript bindings for AssemblyScript/WebGL. Currently is being ported into typescript for
 better assembly script compatibility. The primary goal of this project is to provide high level access to WebGL
-for AssemblyScript projects. The glue adds the webgl exports to your asc program. 
-
+for AssemblyScript projects. The glue adds the webgl exports to your asc program.
 
 ## Using
 
-There are two files in this project to use in your project.  These files are `ASWebGLue.js` which contains the JavaScript glue code and `WebGL.ts` that contains the AssemblyScript bindings.  There are several examples in the `/src/examples` directory.  A version of aswebglue is available on npm, but I didn't create it, so I am not sure how up to date it is.
+There are two files in this project to use in your project. These files are `ASWebGLue.js` which contains the JavaScript glue code and `WebGL.ts` that contains the AssemblyScript bindings. There are several examples in the `/src/examples` directory. A version of aswebglue is available on npm, but I didn't create it, so I am not sure how up to date it is.
 
-
-
-There are two main files to be concerned with. One. `WebGL.ts` exposes the webgl bindings to your assembly script code. The compiler will pull this into to make sure everything is happy within typescript. The other file is the `ASWebGLuejs` which is used to iniatize the loader used by WebAssembly. This file also provides an initialization function which will attach the webgl bindings to your instatiated WebGL AssemblyScript program. The js file contains all of the high level WebGL functions which are contained in your browsers `lib.dom.js`. 
+There are two main files to be concerned with. One. `WebGL.ts` exposes the webgl bindings to your assembly script code. The compiler will pull this into to make sure everything is happy within typescript. The other file is the `ASWebGLuejs` which is used to iniatize the loader used by WebAssembly. This file also provides an initialization function which will attach the webgl bindings to your instatiated WebGL AssemblyScript program. The js file contains all of the high level WebGL functions which are contained in your browsers `lib.dom.js`.
 
 Here is a simple example from **HelloTriangle**
 
 **< JavaScript >**
+
 ```
   import { initASWebGLue, ASWebGLReady } from '../../ASWebGLue.js';
   const wasm_file = 'triangle.wasm';
@@ -64,12 +62,14 @@ Here is a simple example from **HelloTriangle**
     ASWebGLReady(obj, importObject);
     requestAnimationFrame(renderFrame);
   })();
-  ```
+```
+
 **< AssemblyScript >**
+
 ```
 import {
   WebGLRenderingContext, WebGLShader, WebGLProgram, WebGLBuffer, GLint,
-} from '../../WebGL'
+} from '../../webgl'
 
 const VERTEX_SHADER_CODE: string = /*glsl*/ `#version 300 es
   precision highp float;
@@ -137,6 +137,7 @@ export function displayLoop(): void {
 ```
 
 ## Conact me
+
 If you have any questions, please feel free to conatct me (Rick) on
 <br/><br/>
 Twitter: https://twitter.com/battagline @battagline <br/>

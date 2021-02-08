@@ -1,12 +1,9 @@
 {
   "extends": "assemblyscript/std/assembly.json",
-  "include": [
-    "./**/*.ts"
-  ],
-  "lib": [
-    "asc.d.ts"
-  ],
+  "include": ["./src/**/*.ts"],
+  "lib": ["asc.d.ts"],
   "compilerOptions": {
-    "target": "es2020"
+    // "target": "es2020",
+    // "module": "esnext"
   }
 }

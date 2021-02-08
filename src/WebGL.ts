@@ -736,8 +736,8 @@ export declare function viewport(gl: WebGLRenderingContextId, x: GLint, y: GLint
 export declare function copyBufferSubData(gl: WebGLRenderingContextId, readTarget: GLenum, writeTarget: GLenum, readOffset: GLintptr,
 	writeOffset: GLintptr, size: GLsizeiptr): void;
 
-export declare function getBufferSubData(gl: WebGLRenderingContextId, target: GLenum, srcByteOffset: GLintptr, /*[AllowShared]*/ dstBuffer: ArrayBufferView,
-	dstOffset: GLuint = 0, length: GLuint = 0): void; //@ts-ignore
+// @ts-ignore
+export declare function getBufferSubData(gl: WebGLRenderingContextId, target: GLenum, srcByteOffset: GLintptr, /*[AllowShared]*/ dstBuffer: ArrayBufferView, dstOffset: GLuint = 0, length: GLuint = 0): void;
 
 /* Framebuffer objects */
 export declare function blitFramebuffer(gl: WebGLRenderingContextId, srcX0: GLint, srcY0: GLint, srcX1: GLint, srcY1: GLint, dstX0: GLint, dstY0: GLint,
@@ -786,28 +786,28 @@ export declare function uniform2ui(gl: WebGLRenderingContextId, location: WebGLU
 export declare function uniform3ui(gl: WebGLRenderingContextId, location: WebGLUniformLocation, v0: GLuint, v1: GLuint, v2: GLuint): void;
 export declare function uniform4ui(gl: WebGLRenderingContextId, location: WebGLUniformLocation, v0: GLuint, v1: GLuint, v2: GLuint, v3: GLuint): void;
 
-export declare function uniform1uiv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, data: Uint32List, srcOffset: GLuint = 0,
-	srcLength: GLuint = 0): void;
-export declare function uniform2uiv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, data: Uint32List, srcOffset: GLuint = 0,
-	srcLength: GLuint = 0): void;
-export declare function uniform3uiv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, data: Uint32List, srcOffset: GLuint = 0,
-	srcLength: GLuint = 0): void;
-export declare function uniform4uiv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, data: Uint32List, srcOffset: GLuint = 0,
-	srcLength: GLuint = 0): void;
-export declare function uniformMatrix3x2fv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, transpose: GLboolean, data: Float32List,
-	srcOffset: GLuint = 0, srcLength: GLuint = 0): void;
-export declare function uniformMatrix4x2fv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, transpose: GLboolean, data: Float32List,
-	srcOffset: GLuint = 0, srcLength: GLuint = 0): void;
+// @ts-ignore
+export declare function uniform1uiv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, data: Uint32List, srcOffset: GLuint = 0, srcLength: GLuint = 0): void;
+// @ts-ignore
+export declare function uniform2uiv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, data: Uint32List, srcOffset: GLuint = 0, srcLength: GLuint = 0): void;
+// @ts-ignore
+export declare function uniform3uiv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, data: Uint32List, srcOffset: GLuint = 0, srcLength: GLuint = 0): void;
+// @ts-ignore
+export declare function uniform4uiv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, data: Uint32List, srcOffset: GLuint = 0, srcLength: GLuint = 0): void;
+// @ts-ignore
+export declare function uniformMatrix3x2fv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, transpose: GLboolean, data: Float32List, srcOffset: GLuint = 0, srcLength: GLuint = 0): void;
+// @ts-ignore
+export declare function uniformMatrix4x2fv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, transpose: GLboolean, data: Float32List, srcOffset: GLuint = 0, srcLength: GLuint = 0): void;
 
-export declare function uniformMatrix2x3fv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, transpose: GLboolean, data: Float32List,
-	srcOffset: GLuint = 0, srcLength: GLuint = 0): void;
-export declare function uniformMatrix4x3fv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, transpose: GLboolean, data: Float32List,
-	srcOffset: GLuint = 0, srcLength: GLuint = 0): void;
+// @ts-ignore
+export declare function uniformMatrix2x3fv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, transpose: GLboolean, data: Float32List, srcOffset: GLuint = 0, srcLength: GLuint = 0): void;
+// @ts-ignore
+export declare function uniformMatrix4x3fv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, transpose: GLboolean, data: Float32List, srcOffset: GLuint = 0, srcLength: GLuint = 0): void;
 
-export declare function uniformMatrix2x4fv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, transpose: GLboolean, data: Float32List,
-	srcOffset: GLuint = 0, srcLength: GLuint = 0): void;
-export declare function uniformMatrix3x4fv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, transpose: GLboolean, data: Float32List,
-	srcOffset: GLuint = 0, srcLength: GLuint = 0): void;
+// @ts-ignore
+export declare function uniformMatrix2x4fv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, transpose: GLboolean, data: Float32List, srcOffset: GLuint = 0, srcLength: GLuint = 0): void;
+// @ts-ignore
+export declare function uniformMatrix3x4fv(gl: WebGLRenderingContextId, location: WebGLUniformLocation, transpose: GLboolean, data: Float32List, srcOffset: GLuint = 0, srcLength: GLuint = 0): void;
 
 /* Vertex attribs */
 export declare function vertexAttribI4i(gl: WebGLRenderingContextId, index: GLuint, x: GLint, y: GLint, z: GLint, w: GLint): void;
@@ -825,12 +825,12 @@ export declare function drawRangeElements(gl: WebGLRenderingContextId, mode: GLe
 /* Multiple Render Targets */
 export declare function drawBuffers(gl: WebGLRenderingContextId, buffers: sequence<GLenum>): void;
 
-export declare function clearBufferfv(gl: WebGLRenderingContextId, buffer: GLenum, drawbuffer: GLint, values: Float32List,
-	srcOffset: GLuint = 0): void;
-export declare function clearBufferiv(gl: WebGLRenderingContextId, buffer: GLenum, drawbuffer: GLint, values: Int32List,
-	srcOffset: GLuint = 0): void;
-export declare function clearBufferuiv(gl: WebGLRenderingContextId, buffer: GLenum, drawbuffer: GLint, values: Uint32List,
-	srcOffset: GLuint = 0): void;
+// @ts-ignore
+export declare function clearBufferfv(gl: WebGLRenderingContextId, buffer: GLenum, drawbuffer: GLint, values: Float32List, srcOffset: GLuint = 0): void;
+// @ts-ignore
+export declare function clearBufferiv(gl: WebGLRenderingContextId, buffer: GLenum, drawbuffer: GLint, values: Int32List, srcOffset: GLuint = 0): void;
+// @ts-ignore
+export declare function clearBufferuiv(gl: WebGLRenderingContextId, buffer: GLenum, drawbuffer: GLint, values: Uint32List, srcOffset: GLuint = 0): void;
 
 export declare function clearBufferfi(gl: WebGLRenderingContextId, buffer: GLenum, drawbuffer: GLint, depth: GLfloat, stencil: GLint): void;
 
@@ -898,15 +898,18 @@ export declare function bindVertexArray(gl: WebGLRenderingContextId, array: WebG
 @final @unmanaged
 export class WebGLRenderingContext {
 	gl_id: WebGLRenderingContextId;
+
 	@inline constructor(canvas_id: string, context_type: string) {
 		// constructor needs to create the gl_id
 		this.gl_id = createContextFromCanvas(canvas_id, context_type);
 	}
+
 	/*
 	@inline get ptr(): usize {
 		return changetype<usize>(this);
 	}
 	*/
+
 	@inline createImage(image_location: string): ImageData {
 		return createImage(image_location);
 	}
@@ -936,7 +939,7 @@ export class WebGLRenderingContext {
 	}
 
 	@inline getDepth(): GLboolean {
-		getDepth(this.gl_id);
+		return getDepth(this.gl_id);
 	}
 
 	@inline setDepth(value: GLboolean): void {
@@ -948,7 +951,7 @@ export class WebGLRenderingContext {
 	}
 
 	@inline getStencil(): GLboolean {
-		getStencil(this.gl_id);
+		return getStencil(this.gl_id);
 	}
 
 	@inline setStencil(value: GLboolean): void {
@@ -960,7 +963,7 @@ export class WebGLRenderingContext {
 	}
 
 	@inline getAntialias(): GLboolean {
-		getAntialias(this.gl_id);
+		return getAntialias(this.gl_id);
 	}
 
 	@inline setAntialias(value: GLboolean): void {
@@ -972,7 +975,7 @@ export class WebGLRenderingContext {
 	}
 
 	@inline getPremultipliedAlpha(): GLboolean {
-		getPremultipliedAlpha(this.gl_id);
+		return getPremultipliedAlpha(this.gl_id);
 	}
 
 	@inline setPremultipliedAlpha(value: GLboolean): void {
@@ -984,7 +987,7 @@ export class WebGLRenderingContext {
 	}
 
 	@inline getPreserveDrawingBuffer(): GLboolean {
-		getPreserveDrawingBuffer(this.gl_id);
+		return getPreserveDrawingBuffer(this.gl_id);
 	}
 
 	@inline setPreserveDrawingBuffer(value: GLboolean): void {
@@ -992,26 +995,32 @@ export class WebGLRenderingContext {
 	}
 
 	@inline getSize(): GLint {
+    // @ts-ignore
 		return getSize(this.gl_id);
 	}
 
 	@inline getType(): GLenum {
+    // @ts-ignore
 		return getType(this.gl_id);
 	}
 
 	@inline getName(): string {
+    // @ts-ignore
 		return getName(this.gl_id);
 	}
 
 	@inline getRangeMin(): GLint {
+    // @ts-ignore
 		return getRangeMin(this.gl_id);
 	}
 
 	@inline getRangeMax(): GLint {
+    // @ts-ignore
 		return getRangeMax(this.gl_id);
 	}
 	@inline getPrecision(): GLint {
-		getPrecision(this.gl_id)
+    // @ts-ignore
+		return getPrecision(this.gl_id)
 	}
 
 	@inline get DEPTH_BUFFER_BIT(): GLenum {
@@ -2181,8 +2190,8 @@ export class WebGLRenderingContext {
 		return getDrawingBufferHeight(this.gl_id);
 	}
 
-	@inline getContextAttributes(gl: WebGLRenderingContext): WebGLContextAttributes {
-		return getContextAttributes();
+	@inline getContextAttributes(): WebGLContextAttributes {
+		return getContextAttributes(this.gl_id);
 	}
 	@inline isContextLost(): bool {
 		return isContextLost(this.gl_id);
@@ -2199,9 +2208,9 @@ export class WebGLRenderingContext {
 	@inline activeTexture(texture: GLenum): void {
 		activeTexture(this.gl_id, texture);
 	}
-	@inline createContextFromCanvas(canvas_id: string, context_type: string): WebGLRenderingContext {
-		this.gl_id = createContextFromCanvas(canvas_id, context_type);
-		return this.gl_id;
+
+	@inline static createContextFromCanvas(canvas_id: string, context_type: string): WebGLRenderingContext {
+    return new WebGLRenderingContext(canvas_id, context_type)
 	}
 
 	@inline attachShader(program: WebGLProgram, shader: WebGLShader): void {
@@ -2385,7 +2394,7 @@ export class WebGLRenderingContext {
 		return getActiveAttrib(this.gl_id, program, index);
 	}
 	@inline getActiveUniform(program: WebGLProgram, index: GLuint): WebGLActiveInfo {
-		getActiveUniform(this.gl_id, program, index);
+		return getActiveUniform(this.gl_id, program, index);
 	}
 	@inline getAttachedShaders(program: WebGLProgram): sequence<WebGLShader> {
 		return getAttachedShaders(this.gl_id, program);
@@ -2406,7 +2415,7 @@ export class WebGLRenderingContext {
 		return getError(this.gl_id);
 	}
 
-	@inline getFramebufferAttachmentParameter(target, attachment, pname): externref {
+	@inline getFramebufferAttachmentParameter(target: GLenum, attachment: GLenum, pname: GLenum): externref {
 		return getFramebufferAttachmentParameter(this.gl_id, target, attachment, pname);
 	}
 	@inline getProgramParameter(program: WebGLProgram, pname: GLenum): bool {
@@ -2470,7 +2479,7 @@ export class WebGLRenderingContext {
 		return isProgram(this.gl_id, program);
 	}
 	@inline isRenderbuffer(renderbuffer: WebGLRenderbuffer): GLboolean {
-		isRenderbuffer(this.gl_id, renderbuffer);
+		return isRenderbuffer(this.gl_id, renderbuffer);
 	}
 	@inline isShader(shader: WebGLShader): GLboolean {
 		return isShader(this.gl_id, shader);
@@ -2578,7 +2587,7 @@ export class WebGLRenderingContext {
 		uniform3f(this.gl_id, location, x, y, z);
 	}
 	@inline uniform3fv(location: WebGLUniformLocation, v: StaticArray<GLfloat>): void {
-		uniform3fv(gl, location, v);
+		uniform3fv(this.gl_id, location, v);
 	}
 
 	@inline uniform3i(location: WebGLUniformLocation, x: GLint, y: GLint, z: GLint): void {
@@ -2692,7 +2701,7 @@ export class WebGLRenderingContext {
 	}
 
 	@inline getInternalformatParameter(target: GLenum, internalformat: GLenum, pname: GLenum): externref {
-		getInternalformatParameter(this.gl_id, target, internalformat, pname);
+		return getInternalformatParameter(this.gl_id, target, internalformat, pname);
 	}
 	@inline renderbufferStorageMultisample(target: GLenum, samples: GLsizei, internalformat: GLenum,
 		width: GLsizei, height: GLsizei): void {
@@ -2738,7 +2747,7 @@ export class WebGLRenderingContext {
 	}
 
 	@inline getFragDataLocation(program: WebGLProgram, name: DOMString): GLint {
-		getFragDataLocation(this.gl_id, program, name);
+		return getFragDataLocation(this.gl_id, program, name);
 	}
 
 	@inline uniform1ui(location: WebGLUniformLocation, v0: GLuint): void {
@@ -2979,8 +2988,8 @@ export class WebGLRenderingContext {
 	@inline getActiveUniformBlockName(program: WebGLProgram, uniformBlockIndex: GLuint): DOMString {
 		return getActiveUniformBlockName(this.gl_id, program, uniformBlockIndex);
 	}
-	@inline uniformBlockBinding(program: WebGLProgram, uniformBlockIndex: GLuint, uniformBlockBinding: GLuint): void {
-		uniformBlockBinding(this.gl_id, program, uniformBlockIndex, uniformBlockBinding);
+	@inline uniformBlockBinding(program: WebGLProgram, uniformBlockIndex: GLuint, _uniformBlockBinding: GLuint): void {
+		uniformBlockBinding(this.gl_id, program, uniformBlockIndex, _uniformBlockBinding);
 	}
 
 	@inline createVertexArray(): WebGLVertexArrayObject {

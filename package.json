@@ -1,20 +1,23 @@
 {
   "name": "aswebglue",
-  "version": "0.1.2",
-  "ascMain": "webgl.ts",
+  "version": "0.1.1",
+  "ascMain": "src/WebGL.ts",
+  "type": "module",
   "main": "src/ASWebGLue.js",
   "types": "src/ASWebGLue.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/battlelinegames/ASWebGLue"
   },
-  "// scripts": "TODO: update the following script section as an index of what people can/should run (this standard in the JS/TS world). 'build' is a conventional script to have, along with 'dev' which usually has a watch mode to recompile when files change.",
   "scripts": {
-    "asc": "asc --runtime stub --importMemory",
-    "clean": "rimraf build && rimraf dist",
+    "clean": "rimraf dist",
     "prebuild": "npm run clean",
-    "build": "node ./scripts/build.js",
-    "start": "live-server --verbose --watch=build ./build"
+    "build": "npm run build:examples",
+    "build:examples": "node ./scripts/build.js --mode dev",
+    "start": "live-server --verbose ./src",
+    "release:patch": "npm version patch --message 'v%s' && npm publish && git push --follow-tags",
+    "release:minor": "npm version minor --message 'v%s' && npm publish && git push --follow-tags",
+    "release:major": "npm version major --message 'v%s' && npm publish && git push --follow-tags"
   },
   "devDependencies": {
     "@assemblyscript/loader": "^0.17.7",

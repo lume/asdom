@@ -2,6 +2,7 @@
  * @author Rick Battagline / https://embed.com
  */
 
+// prettier-ignore
 import {
   FRAGMENT_SHADER, VERTEX_SHADER, ARRAY_BUFFER, DYNAMIC_DRAW,
   STATIC_DRAW, FLOAT, FALSE, COLOR_BUFFER_BIT, TRIANGLES,
@@ -23,7 +24,7 @@ import {
   createContextFromCanvas, WebGLRenderingContextId,
   WebGLShader, ImageData, WebGLUniformLocation,
   WebGLBuffer, GLint, WebGLProgram, WebGLTexture, WebGLVertexArrayObject,
-} from '../../WebGL';
+} from "../../WebGL";
 
 const VERTEX_SHADER_CODE: string = /*glsl*/ `#version 300 es
 precision mediump float;
@@ -96,15 +97,16 @@ let position_al: GLint = getAttribLocation(gl, program, 'position');
 let obj_position_al: GLint = getAttribLocation(gl, program, 'objPosition');
 let tex_coord_al: GLint = getAttribLocation(gl, program, 'tex_coord');
 
+// prettier-ignore
 let quad_data: StaticArray<f32> = [
-  //  x     y    u   v
-  -0.05, 0.05, 0.0, 1.0,
+// x      y     u    v
+  -0.05,  0.05, 0.0, 1.0,
   -0.05, -0.05, 0.0, 0.0,
-  0.05, -0.05, 1.0, 0.0,
+   0.05, -0.05, 1.0, 0.0,
 
   -0.05, 0.05, 0.0, 1.0,
-  0.05, -0.05, 1.0, 0.0,
-  0.05, 0.05, 1.0, 1.0,
+   0.05, -0.05, 1.0, 0.0,
+   0.05, 0.05, 1.0, 1.0,
 ];
 
 let translation: StaticArray<f32> = new StaticArray<f32>(asteroidMax * 2);
@@ -131,7 +133,6 @@ class Asteroid {
     return translation[(this.index << 1) + 1];
   }
 
-
   constructor() {
     this.index = Asteroid.COUNT++;
     //this.x = Mathf.random() * 2.0 - 1.0;
@@ -150,20 +151,17 @@ class Asteroid {
     /*
     if (this.x > 1.0) {
       this.x = -1.0;
-    }
-    else if (this.x < -1.0) {
+    } else if (this.x < -1.0) {
       this.x = 1.0;
     }
 
     if (this.y > 1.0) {
       this.y = -1.0;
-    }
-    else if (this.y < -1.0) {
+    } else if (this.y < -1.0) {
       this.y = 1.0;
     }
     */
   }
-
 }
 
 var asteroidArray: StaticArray<Asteroid> = new StaticArray<Asteroid>(asteroidMax);
@@ -193,21 +191,19 @@ export function init(): void {
   bufferData(gl, ARRAY_BUFFER, quad_data, STATIC_DRAW);
 
   enableVertexAttribArray(gl, position_al);
-  vertexAttribPointer(gl, position_al, 2, FLOAT, FALSE, 16, 0);
+  vertexAttribPointer(gl, position_al, 2, FLOAT, +FALSE, 16, 0);
 
   enableVertexAttribArray(gl, tex_coord_al);
-  vertexAttribPointer(gl, tex_coord_al, 2, FLOAT, FALSE, 16, 8);
-
+  vertexAttribPointer(gl, tex_coord_al, 2, FLOAT, +FALSE, 16, 8);
 
   bindBuffer(gl, ARRAY_BUFFER, instanceVBO);
 
   enableVertexAttribArray(gl, obj_position_al);
-  vertexAttribPointer(gl, obj_position_al, 2, FLOAT, FALSE, 0, 0);
+  vertexAttribPointer(gl, obj_position_al, 2, FLOAT, +FALSE, 0, 0);
 
   bindBuffer(gl, ARRAY_BUFFER, 0);
 
   vertexAttribDivisor(gl, 1, 2);
-
 }
 
 export function displayLoop(): void {
@@ -220,7 +216,7 @@ export function displayLoop(): void {
     }
 
     pixelStorei(gl, UNPACK_FLIP_Y_WEBGL, 1);
-    pixelStorei(gl, UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+    pixelStorei(gl, UNPACK_PREMULTIPLY_ALPHA_WEBGL, +true);
     blendFunc(gl, SRC_ALPHA, ONE_MINUS_SRC_ALPHA);
     disable(gl, DEPTH_TEST);
     enable(gl, BLEND);

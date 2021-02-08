@@ -1,15 +1,11 @@
-import {
-  WebGLRenderingContext, WebGLShader, WebGLProgram, ImageData,
-  WebGLBuffer, GLint, WebGLUniformLocation,
-} from '../../WebGL'
-
+import {WebGLRenderingContext, WebGLShader, WebGLProgram, WebGLBuffer, WebGLUniformLocation} from '../../WebGL';
 
 const VERTEX_SHADER_CODE: string = `#version 300 es
   precision highp float;
 
   uniform vec2 quad_pos;
   in vec2 position;
-  
+
   void main() {
     vec2 pos = position + quad_pos;
     gl_Position = vec4( pos, 0.0, 1.0 );
@@ -51,12 +47,15 @@ gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 let position_al = gl.getAttribLocation(program, 'position');
 gl.enableVertexAttribArray(position_al);
 
-let quad_data: StaticArray<f32> = [-0.2, -0.2,
--0.2, 0.2,
+// prettier-ignore
+let quad_data: StaticArray<f32> = [
+ -0.2, -0.2,
+ -0.2,  0.2,
   0.2, -0.2,
-  0.2, 0.2,];
+  0.2,  0.2
+];
 
-let quad_pos: WebGLUniformLocation = gl.getUniformLocation(program, "quad_pos");
+let quad_pos: WebGLUniformLocation = gl.getUniformLocation(program, 'quad_pos');
 
 export function moveMouse(mouse_x: f32, mouse_y: f32): void {
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -66,7 +65,7 @@ export function moveMouse(mouse_x: f32, mouse_y: f32): void {
 
   const dimensions: i32 = 2;
   const data_type: i32 = gl.FLOAT;
-  const normalize: i32 = false;
+  const normalize: i32 = +false;
   const stride: i32 = 0;
   const offset: i32 = 0;
 
