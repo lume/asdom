@@ -7,7 +7,7 @@ import {
   FRAGMENT_SHADER, VERTEX_SHADER, ARRAY_BUFFER, DYNAMIC_DRAW,
   STATIC_DRAW, FLOAT, FALSE, COLOR_BUFFER_BIT, TRIANGLES,
   UNPACK_FLIP_Y_WEBGL, UNPACK_PREMULTIPLY_ALPHA_WEBGL,
-  SRC_ALPHA, ONE_MINUS_SRC_ALPHA, DEPTH_TEST, BLEND,
+  SRC_ALPHA, ONE_MINUS_SRC_ALPHA, DEPTH_TEST, BLEND, STENCIL_TEST,
   TEXTURE0, TEXTURE_2D, TEXTURE_MAG_FILTER, NEAREST,
   TEXTURE_MIN_FILTER, RGBA, UNSIGNED_BYTE, CULL_FACE,
   clearColor, clear, imageReady, pixelStorei,
@@ -20,7 +20,7 @@ import {
   createBuffer, bufferData, createVertexArray,
   shaderSource, compileShader, createProgram,
   attachShader, linkProgram, useProgram,
-  createTexture, getUniformLocation,
+  createTexture, getUniformLocation, viewport,
   createContextFromCanvas, WebGLRenderingContextId,
   WebGLShader, ImageData, WebGLUniformLocation,
   WebGLBuffer, GLint, WebGLProgram, WebGLTexture, WebGLVertexArrayObject,
@@ -65,8 +65,8 @@ void main() {
 `; /* end fragment shader */
 
 // initialize webgl
-const asteroidMax: i32 = 500_000;
-var asteroidCount: i32 = 0;
+const kaijunicornMax: i32 = 500_000;
+var kaijunicornCount: i32 = 0;
 
 var gl: WebGLRenderingContextId = createContextFromCanvas('cnvs', 'webgl2');
 
@@ -99,44 +99,42 @@ let tex_coord_al: GLint = getAttribLocation(gl, program, 'tex_coord');
 
 // prettier-ignore
 let quad_data: StaticArray<f32> = [
-// x      y     u    v
-  -0.05,  0.05, 0.0, 1.0,
+  // x      y     u    v
+  -0.05, 0.05, 0.0, 1.0,
   -0.05, -0.05, 0.0, 0.0,
-   0.05, -0.05, 1.0, 0.0,
+  0.05, -0.05, 1.0, 0.0,
 
   -0.05, 0.05, 0.0, 1.0,
-   0.05, -0.05, 1.0, 0.0,
-   0.05, 0.05, 1.0, 1.0,
+  0.05, -0.05, 1.0, 0.0,
+  0.05, 0.05, 1.0, 1.0,
 ];
 
-let translation: StaticArray<f32> = new StaticArray<f32>(asteroidMax * 2);
+let translation: StaticArray<f32> = new StaticArray<f32>(kaijunicornMax * 2);
 
-class Asteroid {
+class Kaijunicorn {
   static COUNT: i32 = 0;
   public index: i32 = 0;
   public dx: f32;
   public dy: f32;
 
   @inline set x(val: f32) {
-    translation[this.index << 1] = val;
+    unchecked(translation[this.index << 1] = val);
   }
 
   @inline get x(): f32 {
-    return translation[this.index << 1];
+    return unchecked(translation[this.index << 1]);
   }
 
   @inline set y(val: f32) {
-    translation[(this.index << 1) + 1] = val;
+    unchecked(translation[(this.index << 1) + 1] = val);
   }
 
   @inline get y(): f32 {
-    return translation[(this.index << 1) + 1];
+    return unchecked(translation[(this.index << 1) + 1]);
   }
 
   constructor() {
-    this.index = Asteroid.COUNT++;
-    //this.x = Mathf.random() * 2.0 - 1.0;
-    //this.y = Mathf.random() * 2.0 - 1.0;
+    this.index = Kaijunicorn.COUNT++;
 
     this.dx = Mathf.random() / 50.0 - 0.01;
     this.dy = Mathf.random() / 50.0 - 0.01;
@@ -164,10 +162,10 @@ class Asteroid {
   }
 }
 
-var asteroidArray: StaticArray<Asteroid> = new StaticArray<Asteroid>(asteroidMax);
+var KaijunicornArray: StaticArray<Kaijunicorn> = new StaticArray<Kaijunicorn>(kaijunicornMax);
 
-for (var i: i32 = 0; i < asteroidMax; i++) {
-  asteroidArray[i] = new Asteroid();
+for (var i: i32 = 0; i < kaijunicornMax; i++) {
+  KaijunicornArray[i] = new Kaijunicorn();
 }
 
 let texture: WebGLTexture = createTexture(gl);
@@ -178,6 +176,7 @@ var quadVBO: WebGLBuffer;
 var instanceVBO: WebGLBuffer;
 
 export function init(): void {
+  viewport(gl, 0, 0, 640, 640);
   instanceVBO = createBuffer(gl);
 
   bindBuffer(gl, ARRAY_BUFFER, instanceVBO);
@@ -206,7 +205,7 @@ export function init(): void {
   vertexAttribDivisor(gl, 1, 2);
 }
 
-export function displayLoop(): void {
+export function displayLoop(delta: i32): void {
   clearColor(gl, 0.0, 0.0, 0.0, 1.0);
   clear(gl, COLOR_BUFFER_BIT);
 
@@ -216,7 +215,7 @@ export function displayLoop(): void {
     }
 
     pixelStorei(gl, UNPACK_FLIP_Y_WEBGL, 1);
-    pixelStorei(gl, UNPACK_PREMULTIPLY_ALPHA_WEBGL, +true);
+    pixelStorei(gl, UNPACK_PREMULTIPLY_ALPHA_WEBGL, /*true*/1);
     blendFunc(gl, SRC_ALPHA, ONE_MINUS_SRC_ALPHA);
     disable(gl, DEPTH_TEST);
     enable(gl, BLEND);
@@ -232,17 +231,17 @@ export function displayLoop(): void {
     image_ready = true;
   }
 
-  if (asteroidCount < asteroidMax) {
-    asteroidCount += 100;
+  if (kaijunicornCount < kaijunicornMax) {
+    kaijunicornCount += 100;
   }
 
-  for (var i: i32 = 0; i < asteroidCount; i++) {
-    asteroidArray[i].Move();
+  for (var i: i32 = 0; i < kaijunicornCount; i++) {
+    KaijunicornArray[i].Move();
   }
 
   bindBuffer(gl, ARRAY_BUFFER, instanceVBO);
   bufferData(gl, ARRAY_BUFFER, translation, DYNAMIC_DRAW);
 
   bindVertexArray(gl, quadVAO);
-  drawArraysInstanced(gl, TRIANGLES, 0, 6, asteroidCount);
+  drawArraysInstanced(gl, TRIANGLES, 0, 6, kaijunicornCount);
 }
