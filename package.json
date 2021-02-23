@@ -14,13 +14,13 @@
     "prebuild": "npm run clean",
     "build": "npm run build:examples",
     "build:examples": "node ./scripts/build.js --mode dev",
-    "start": "live-server --verbose ./src",
+    "start": "live-server --verbose ./",
     "release:patch": "npm version patch --message 'v%s' && npm publish && git push --follow-tags",
     "release:minor": "npm version minor --message 'v%s' && npm publish && git push --follow-tags",
     "release:major": "npm version major --message 'v%s' && npm publish && git push --follow-tags"
   },
   "devDependencies": {
-    "@assemblyscript/loader": "^0.17.7",
+    "@assemblyscript/loader": "^0.17.14",
     "assemblyscript": "^0.17.7",
     "benchmark": "^2.1.4",
     "child-process": "^1.0.2",
