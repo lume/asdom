@@ -2,26 +2,26 @@ export function print(str) {
   console.log(str)
 }
 
-export function ASWebGLReady(wasm_obj, importObject) {
+export function ASWebGLReady(wasmModule, importObject) {
   console.log("ASWebGLReady");
-  if (wasm_obj == null) {
+  if (wasmModule == null) {
     console.error("ASWebGLReady requires the WebAssembly Instance as 1st parameter");
     return;
   }
-  if (wasm_obj == null) {
+  if (wasmModule == null) {
     console.error("ASWebGLReady requires import object as 2nd parameter");
     return;
   }
   importObject.WebGL.WEBGL_READY = true;
   console.log("=========================");
-  console.log(wasm_obj.instance.exports);
-  console.log(wasm_obj.instance.exports["__rtti_base"]);
-  importObject.WebGL.RTTI_BASE = wasm_obj.instance.exports["__rtti_base"];
+  console.log(wasmModule.instance.exports);
+  console.log(wasmModule.instance.exports["__rtti_base"]);
+  importObject.WebGL.RTTI_BASE = wasmModule.instance.exports["__rtti_base"];
 }
 
 export function initASWebGLue(importObject) {
-  if (importObject.env.memory == null) {
-    alert('You need to set memory in your importObject');
+  if (!importObject?.env?.memory) {
+    throw new Error('You need to pass an importObject with .env.memory in it.');
   }
 
   if (importObject.WebGL == null) {
