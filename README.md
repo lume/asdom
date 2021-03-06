@@ -4,6 +4,8 @@ ASWebGLue is a set of javascript bindings for AssemblyScript/WebGL. Currently is
 better assembly script compatibility. The primary goal of this project is to provide high level access to WebGL
 for AssemblyScript projects. The glue adds the webgl exports to your asc program.
 
+Tutorials available on [Wasm Book](https://wasmbook.com)
+
 ## Using
 
 There are two files in this project to use in your project. These files are `ASWebGLue.js` which contains the JavaScript glue code and `WebGL.ts` that contains the AssemblyScript bindings. There are several examples in the `/src/examples` directory. A version of aswebglue is available on npm, but I didn't create it, so I am not sure how up to date it is.
@@ -12,6 +14,7 @@ There are two main files to be concerned with. One. `WebGL.ts` exposes the webgl
 
 Here is a simple example from **HelloTriangle**
 
+### JavaScript
 ```javascript
   import { initASWebGLue, ASWebGLReady } from '../../ASWebGLue.js';
   const wasm_file = 'triangle.wasm';
@@ -62,6 +65,7 @@ Here is a simple example from **HelloTriangle**
   })();
 ```
 
+### AssemblyScript
 ```typescript
 import {
   WebGLRenderingContext, WebGLShader, WebGLProgram, WebGLBuffer, GLint,
