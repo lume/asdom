@@ -142,5 +142,5 @@ If you have any questions, please feel free to conatct me (Rick) on
 <br/><br/>
 Twitter: https://twitter.com/battagline @battagline <br/>
 LinkeIn: https://www.linkedin.com/in/battagline <br/>
-AssemblyScript Discord: https://discord.gg/mNPWbVT4
+AssemblyScript Discord: https://discord.gg/mNPWbVT4 <br/>
 [WebAssembly Book](https://wasmbook.com)
