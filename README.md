@@ -12,9 +12,7 @@ There are two main files to be concerned with. One. `WebGL.ts` exposes the webgl
 
 Here is a simple example from **HelloTriangle**
 
-**< JavaScript >**
-
-```
+```javascript
   import { initASWebGLue, ASWebGLReady } from '../../ASWebGLue.js';
   const wasm_file = 'triangle.wasm';
   var exports;
@@ -64,9 +62,7 @@ Here is a simple example from **HelloTriangle**
   })();
 ```
 
-**< AssemblyScript >**
-
-```
+```typescript
 import {
   WebGLRenderingContext, WebGLShader, WebGLProgram, WebGLBuffer, GLint,
 } from '../../webgl'
@@ -136,10 +132,11 @@ export function displayLoop(): void {
 
 ```
 
-## Conact me
+## Conact me (Rick Battagline)
 
 If you have any questions, please feel free to conatct me (Rick) on
 <br/><br/>
 Twitter: https://twitter.com/battagline @battagline <br/>
 LinkeIn: https://www.linkedin.com/in/battagline <br/>
 AssemblyScript Discord: https://discord.gg/mNPWbVT4
+[WebAssembly Book](https://wasmbook.com)
