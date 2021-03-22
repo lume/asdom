@@ -65,7 +65,7 @@ void main() {
 `; /* end fragment shader */
 
 // initialize webgl
-const kaijunicornMax: i32 = 500_000;
+const kaijunicornMax: i32 = 1_000_000;
 var kaijunicornCount: i32 = 0;
 
 var gl: WebGLRenderingContextId = createContextFromCanvas('cnvs', 'webgl2');
@@ -144,21 +144,8 @@ class Kaijunicorn {
     this.x += this.dx;
     this.y += this.dy;
 
-    this.x %= 1.0;
-    this.y %= 1.0;
-    /*
-    if (this.x > 1.0) {
-      this.x = -1.0;
-    } else if (this.x < -1.0) {
-      this.x = 1.0;
-    }
-
-    if (this.y > 1.0) {
-      this.y = -1.0;
-    } else if (this.y < -1.0) {
-      this.y = 1.0;
-    }
-    */
+    this.x %= 1.1;
+    this.y %= 1.1;
   }
 }
 
@@ -190,19 +177,19 @@ export function init(): void {
   bufferData(gl, ARRAY_BUFFER, quad_data, STATIC_DRAW);
 
   enableVertexAttribArray(gl, position_al);
-  vertexAttribPointer(gl, position_al, 2, FLOAT, +FALSE, 16, 0);
+  vertexAttribPointer(gl, position_al, 2, FLOAT, FALSE, 16, 0);
 
   enableVertexAttribArray(gl, tex_coord_al);
-  vertexAttribPointer(gl, tex_coord_al, 2, FLOAT, +FALSE, 16, 8);
+  vertexAttribPointer(gl, tex_coord_al, 2, FLOAT, FALSE, 16, 8);
 
   bindBuffer(gl, ARRAY_BUFFER, instanceVBO);
 
   enableVertexAttribArray(gl, obj_position_al);
-  vertexAttribPointer(gl, obj_position_al, 2, FLOAT, +FALSE, 0, 0);
+  vertexAttribPointer(gl, obj_position_al, 2, FLOAT, FALSE, 0, 0);
 
   bindBuffer(gl, ARRAY_BUFFER, 0);
 
-  vertexAttribDivisor(gl, 1, 2);
+  vertexAttribDivisor(gl, 1, 1);
 }
 
 export function displayLoop(delta: i32): void {
@@ -232,7 +219,7 @@ export function displayLoop(delta: i32): void {
   }
 
   if (kaijunicornCount < kaijunicornMax) {
-    kaijunicornCount += 100;
+    kaijunicornCount += 500;
   }
 
   for (var i: i32 = 0; i < kaijunicornCount; i++) {
