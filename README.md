@@ -5,6 +5,10 @@ Use DOM APIs in AssemblyScript.
 This allows us to write WebAssembly applications (in AssemblyScript) that can
 manipulate the DOM.
 
+# Early Stages!
+
+Work in progress (probably may always be), but right now it's early and many APIs need to be added.
+
 # Usage
 
 First you should get familiar with AssemblyScript and learn how to run
