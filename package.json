@@ -16,5 +16,13 @@
 		"assemblyscript": "^0.18.11",
 		"prettier": "^2.3.2",
 		"typescript": "^4.3.4"
-	}
+	},
+	"keywords": [
+		"assemblyscript",
+		"typescript",
+		"javascript",
+		"webassembly",
+		"html",
+		"dom"
+	]
 }
