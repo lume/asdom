@@ -1,5 +1,6 @@
 # Ignore everything,
 /**/*
 
-# but include these folders
+# but include these.
 !/assembly/**/*
+!/glue/**/*

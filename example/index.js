@@ -1,4 +1,4 @@
-import {Asdom} from './node_modules/asdom/index.js'
+import {Asdom} from './node_modules/asdom/glue/index.js'
 import {instantiate} from './node_modules/@assemblyscript/loader/index.js'
 
 async function main() {

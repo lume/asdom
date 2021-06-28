@@ -16,7 +16,7 @@ the use of native ES Modules in the browser and a static HTTP server serving
 files at the root of a project that has `node_modules`:
 
 ```js
-import {Asdom} from './node_modules/asdom/index.js'
+import {Asdom} from './node_modules/asdom/glue/index.js'
 import {instantiate} from './node_modules/@assemblyscript/loader/index.js'
 
 async function main() {
@@ -45,7 +45,7 @@ know how to write import maps for native ES Modules, then you can use
 Node.js-style import specifiers instead:
 
 ```js
-import {Asdom} from 'asdom/index.js'
+import {Asdom} from 'asdom/glue/index.js'
 import {instantiate} from '@assemblyscript/loader/index.js'
 ```
 
