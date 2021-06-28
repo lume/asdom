@@ -1,0 +1,5 @@
+.vscode/
+*lock.*
+
+build/
+node_modules/
