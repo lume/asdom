@@ -2,6 +2,14 @@
 	"name": "asdom",
 	"version": "0.1.4",
 	"type": "module",
+	"homepage": "https://lume.io",
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:lume/asdom.git"
+	},
+	"bugs": {
+		"url": "https://github.com/lume/asdom/issues"
+	},
 	"scripts": {
 		"build": "npm run asbuild:untouched && npm run asbuild:optimized",
 		"asbuild:untouched": "asc assembly/index.ts --target debug",
