@@ -1,6 +1,4 @@
-import {Document} from '../node_modules/asdom/assembly/index'
-
-const document = new Document()
+import {document} from '../node_modules/asdom/assembly/index'
 
 export function run(): void {
 	const el = document.createElement('h1')

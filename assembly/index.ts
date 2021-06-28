@@ -76,7 +76,7 @@ export class Document extends Node {
 		else if (tag == 'a') el = new HTMLAnchorElement()
 		else if (tag == 'script') el = new HTMLScriptElement()
 		else if (tag == 'template') el = new HTMLTemplateElement()
-		else if (tag.includes('-')) throw new Error('TODO: Handle elements with hyphens or custom elements.')
+		else if (tag.indexOf('-') > -1) throw new Error('TODO: Handle elements with hyphens or custom elements.')
 		else el = new HTMLUnknownElement()
 
 		setElement(this.__ptr__, el.__ptr__, tag)
@@ -85,5 +85,4 @@ export class Document extends Node {
 	}
 }
 
-// const b: HTMLBodyElement = new Document().body
-// new Document().body = null
+export const document = new Document()

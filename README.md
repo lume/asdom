@@ -49,13 +49,11 @@ import {Asdom} from 'asdom/glue/index.js'
 import {instantiate} from '@assemblyscript/loader/index.js'
 ```
 
-Now in your AssemblyScript code you can import `Document` from `asdom`, create
-a `Document`, then start manipulating the DOM:
+Now in your AssemblyScript code you can import `document` from `asdom` then
+start manipulating the DOM:
 
 ```ts
-import {Document} from '../node_modules/asdom/assembly/index'
-
-const document = new Document()
+import {document} from '../node_modules/asdom/assembly/index'
 
 export function run(): void {
 	const el = document.createElement('h1')
@@ -80,3 +78,4 @@ We will add more DOM APIs as needed while we chisel away.
 
 - [ ] Use as-pect for testing.
 - [ ] Import jsdom or undom so that DOM APIs are mocked (on the JavaScript side) during testing (as-pect runs in Node.js not a browser).
+- [ ] Make `document` global. Currently making AS globals is incompatible with TypeScript, so VS Code intellisense doesn't pick up AS globals.
