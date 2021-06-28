@@ -7,7 +7,10 @@
 		"asbuild:untouched": "asc assembly/index.ts --target debug",
 		"asbuild:optimized": "asc assembly/index.ts --target release",
 		"test": "node tests",
-		"format": "prettier . --write"
+		"format": "prettier . --write",
+		"release:patch": "npm version patch -m 'v%s' && npm publish && git push --follow-tags",
+		"release:minor": "npm version minor -m 'v%s' && npm publish && git push --follow-tags",
+		"release:major": "npm version major -m 'v%s' && npm publish && git push --follow-tags"
 	},
 	"dependencies": {
 		"@assemblyscript/loader": "^0.18.11"
