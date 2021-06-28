@@ -78,4 +78,4 @@ We will add more DOM APIs as needed while we chisel away.
 
 - [ ] Use as-pect for testing.
 - [ ] Import jsdom or undom so that DOM APIs are mocked (on the JavaScript side) during testing (as-pect runs in Node.js not a browser).
-- [ ] Make `document` global. Currently making AS globals is incompatible with TypeScript, so VS Code intellisense doesn't pick up AS globals.
+- [ ] Make `document` global. Currently making AS globals is incompatible with TypeScript, so VS Code intellisense doesn't pick up AS globals (https://github.com/AssemblyScript/assemblyscript/issues/1929)
