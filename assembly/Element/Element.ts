@@ -25,6 +25,14 @@ export declare function elSetInnerText(id: usize, value: string | null): void
 export declare function elGetInnerText(id: usize): string
 
 // @ts-ignore
+@external('asDOM_Element', 'elSetInnerText')
+export declare function elSetInnerText(id: usize, value: string | null): void
+
+// @ts-ignore
+@external('asDOM_Element', 'elGetInnerText')
+export declare function elGetInnerText(id: usize): string
+
+// @ts-ignore
 @external('asDOM_Element', 'elClick')
 export declare function elClick(id: usize): void
 
@@ -46,6 +54,21 @@ export class Element extends Node {
 	set innerHTML(value: string | null) {
 		elSetInnerHTML(this.__ptr__, value)
 	}
+
+	get innerText(): string {
+		return elGetInnerText(this.__ptr__)
+	}
+	set innerText(value: string | null) {
+		elSetInnerText(this.__ptr__, value)
+	}
+
+	click(): void {
+		elClick(this.__ptr__)
+	}
+
+    set onclick(cb: () => void) {
+        elOnClick(this.__ptr__, cb.index)
+    }
 }
 
 export class HTMLElement extends Element {}
