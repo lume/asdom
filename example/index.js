@@ -1,11 +1,11 @@
-import {Asdom} from './node_modules/asdom/glue/index.js'
-import {instantiate} from './node_modules/@assemblyscript/loader/index.js'
+import {Asdom} from '../glue/index.js'
+import {instantiate} from '../node_modules/@assemblyscript/loader/index.js'
 
 async function main() {
 	// Create an Asdom instance.
 	const asdom = new Asdom()
 
-	const {exports} = await instantiate(fetch('/build/untouched.wasm'), {
+	const {exports} = await instantiate(fetch('/example/build/untouched.wasm'), {
 		// Pass the wasmImports in.
 		...asdom.wasmImports,
 

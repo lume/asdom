@@ -2,9 +2,9 @@
 	"scripts": {
 		"dev": "npm run build:untouched && npm run serve",
 		"build": "npm run build:untouched && npm run build:optimized",
-		"serve": "serve .",
-		"build:untouched": "asc assembly/index.ts --target debug --exportRuntime",
-		"build:optimized": "asc assembly/index.ts --target release --exportRuntime",
+		"serve": "serve ../",
+		"build:untouched": "asc assembly/index.ts --target debug --exportRuntime --exportTable",
+		"build:optimized": "asc assembly/index.ts --target release --exportRuntime --exportTable",
 		"test": "node tests"
 	},
 	"dependencies": {
