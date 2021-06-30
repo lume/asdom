@@ -25,14 +25,6 @@ export declare function elSetInnerText(id: usize, value: string | null): void
 export declare function elGetInnerText(id: usize): string
 
 // @ts-ignore
-@external('asDOM_Element', 'elSetInnerText')
-export declare function elSetInnerText(id: usize, value: string | null): void
-
-// @ts-ignore
-@external('asDOM_Element', 'elGetInnerText')
-export declare function elGetInnerText(id: usize): string
-
-// @ts-ignore
 @external('asDOM_Element', 'elClick')
 export declare function elClick(id: usize): void
 
