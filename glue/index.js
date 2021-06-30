@@ -114,6 +114,14 @@ export class Asdom {
 			pauseAudio: (id) => {
 				const el = this.__refs.get(id)
 				el.pause()
+			},
+			setAutoplay: (toggle, id) => {
+				const el = this.__refs.get(id)
+				el.autoplay = toggle ? true : false
+			},
+			getAutoplay: (id) => {
+				const el = this.__refs.get(id)
+				return el.autoplay ? 1 : 0
 			}
 		}
 	}
