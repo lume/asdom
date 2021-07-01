@@ -44,7 +44,7 @@ async function main() {
 main()
 ```
 
-If you use a tools like Webpack or Rollup to bundle your application, or if you
+If you use a tool like Webpack or Rollup to bundle your application, or if you
 know how to write import maps for native ES Modules, then you can use
 Node.js-style import specifiers instead:
 
