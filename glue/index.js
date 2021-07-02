@@ -90,13 +90,26 @@ export class Asdom {
 				const el = this.__refs.get(id)
 				el.click()
 			},
+			// element.remove()
+			remove: id => {
+				const el = this.__refs.get(id)
+				el.remove()
+			},
 		},
 		asDOM_Node: {
 			// element.appendChild()
 			nodeAppendChild: (parentId, childId) => {
 				const parent = this.__refs.get(parentId)
 				const child = this.__refs.get(childId)
+				// We'd actually return the object here when we switch to `externref`.
 				/*return*/ parent.appendChild(child)
+			},
+			// element.removeChild()
+			nodeRemoveChild: (parentId, childId) => {
+				const parent = this.__refs.get(parentId)
+				const child = this.__refs.get(childId)
+				// We'd actually return the object here when we switch to `externref`.
+				/*return*/ parent.removeChild(child)
 			},
 		},
 		asDOM_Audio: {

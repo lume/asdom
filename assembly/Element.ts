@@ -32,6 +32,10 @@ export declare function elClick(id: usize): void
 @external('asDOM_Element', 'elOnClick')
 export declare function elOnClick(id: usize, ptr: number): void
 
+// @ts-ignore
+@external('asDOM_Element', 'remove')
+export declare function remove(id: usize): void
+
 export class Element extends Node {
 	setAttribute(attr: string, value: string | null): void {
 		elSetAttribute(this.__ptr__, attr, value)
@@ -61,6 +65,10 @@ export class Element extends Node {
     set onclick(cb: () => void) {
         elOnClick(this.__ptr__, cb.index)
     }
+
+	remove(): void {
+		remove(this.__ptr__)
+	}
 }
 
 export class HTMLElement extends Element {}

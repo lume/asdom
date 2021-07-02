@@ -7,9 +7,11 @@
 		"build:optimized": "asc assembly/index.ts --target release --exportRuntime --exportTable",
 		"test": "node tests"
 	},
+	"asdom": "^0.1.8",
 	"dependencies": {
 		"@assemblyscript/loader": "^0.18.32",
-		"asdom": "^0.1.8"
+		"asdom": "file:../",
+		"ecmassembly": "^0.1.4"
 	},
 	"devDependencies": {
 		"assemblyscript": "^0.18.11",
