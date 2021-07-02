@@ -1,5 +1,3 @@
-const log = console.log.bind(console)
-
 export class Asdom {
 	__refs = new Map()
 	__getString
@@ -28,7 +26,6 @@ export class Asdom {
 				if (!this.__refs.get(id)) this.wasmImports.asDOM_Document.setDocument(id)
 				return this.__refs.get(id)
 			},
-
 			setElement: (docId, elId, tag) => {
 				tag = this.__getString(tag)
 				let el =
@@ -40,7 +37,7 @@ export class Asdom {
 			getElement: id => {
 				return this.__refs.get(id)
 			},
-
+			// document.createElement()
 			documentCreateElement: (id, tag) => {
 				const document = this.__refs.get(id)
 				return document.createElement(tag)
@@ -89,13 +86,13 @@ export class Asdom {
 				el.onclick = this._exports.table.get(ptr)
 			},
 			// element.click()
-			// element.click()
 			elClick: id => {
 				const el = this.__refs.get(id)
 				el.click()
 			},
 		},
 		asDOM_Node: {
+			// element.appendChild()
 			nodeAppendChild: (parentId, childId) => {
 				const parent = this.__refs.get(parentId)
 				const child = this.__refs.get(childId)
@@ -107,23 +104,27 @@ export class Asdom {
 				const src = this.__getString(srcPtr)
 				this.__refs.set(id, new Audio(src))
 			},
-			playAudio: (id) => {
+			// element.play()
+			playAudio: id => {
 				const el = this.__refs.get(id)
 				el.play()
 			},
-			pauseAudio: (id) => {
+			// element.pause()
+			pauseAudio: id => {
 				const el = this.__refs.get(id)
 				el.pause()
 			},
+			// element.autoplay
 			setAutoplay: (toggle, id) => {
 				const el = this.__refs.get(id)
 				el.autoplay = toggle ? true : false
 			},
-			getAutoplay: (id) => {
+			// element.autoplay
+			getAutoplay: id => {
 				const el = this.__refs.get(id)
 				return el.autoplay ? 1 : 0
-			}
-		}
+			},
+		},
 	}
 }
 

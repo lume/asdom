@@ -2,14 +2,14 @@
 	"scripts": {
 		"dev": "npm run build:untouched && npm run serve",
 		"build": "npm run build:untouched && npm run build:optimized",
-		"serve": "serve ../",
+		"serve": "serve ./",
 		"build:untouched": "asc assembly/index.ts --target debug --exportRuntime --exportTable",
 		"build:optimized": "asc assembly/index.ts --target release --exportRuntime --exportTable",
 		"test": "node tests"
 	},
 	"dependencies": {
 		"@assemblyscript/loader": "^0.18.32",
-		"asdom": "^0.1.7"
+		"asdom": "file:../"
 	},
 	"devDependencies": {
 		"assemblyscript": "^0.18.11",

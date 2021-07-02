@@ -1,4 +1,4 @@
-import { Node } from "../Node/Node"
+import { Node } from "./Node"
 
 // @ts-ignore
 @external('asDOM_Element', 'elSetAttribute')

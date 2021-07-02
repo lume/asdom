@@ -14,10 +14,10 @@ export declare function setElement(docId: usize, elId: usize, tag: string): void
 @external('asDOM_Document', 'documentHasBody')
 export declare function documentHasBody(doc: usize): boolean
 
-import { HTMLBodyElement } from '../Element/Element'
-import { Element, HTMLAnchorElement, HTMLDivElement, HTMLParagraphElement, HTMLScriptElement, HTMLSpanElement, HTMLTemplateElement, HTMLUnknownElement } from '../Element/Element'
-import { Node } from '../Node/Node'
-
+// TODO Perhaps put these on a new `window` objects, to make it more like on the JS side.
+import { Element, HTMLBodyElement, HTMLAnchorElement, HTMLDivElement, HTMLParagraphElement, HTMLScriptElement, HTMLSpanElement, HTMLTemplateElement, HTMLUnknownElement } from './Element'
+import { Node } from './Node'
+import { Audio } from './Audio'
 
 export class Document extends Node {
 	constructor() {
@@ -28,7 +28,7 @@ export class Document extends Node {
 	get URL(): string {
 		return getUrl()
 	}
-	
+
 	// @ts-expect-error
 	get body(): HTMLBodyElement | null {
 		let el: HTMLBodyElement
@@ -49,13 +49,15 @@ export class Document extends Node {
 	createElement(tag: string): Element {
 		let el: Element
 
+		// Don't forget to add Elements here so they can be created with `document.createElement`.
 		if (tag == 'div') el = new HTMLDivElement()
 		else if (tag == 'span') el = new HTMLSpanElement()
 		else if (tag == 'p') el = new HTMLParagraphElement()
 		else if (tag == 'a') el = new HTMLAnchorElement()
 		else if (tag == 'script') el = new HTMLScriptElement()
 		else if (tag == 'template') el = new HTMLTemplateElement()
-		else if (tag.indexOf('-') > -1) throw new Error('TODO: Handle elements with hyphens or custom elements.')
+		else if (tag == 'audio') el = new Audio()
+		else if (tag.indexOf('-') > -1) throw ERROR('TODO: Handle elements with hyphens or custom elements.')
 		else el = new HTMLUnknownElement()
 
 		setElement(this.__ptr__, el.__ptr__, tag)

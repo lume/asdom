@@ -1,24 +1,25 @@
-import {Audio, document} from '../../assembly/index'
+import {Audio, document} from '../node_modules/asdom/assembly/index'
 
 export function run(): void {
 	const style = document.createElement('div')
 
-	style.innerHTML = `
-	<style>
-		span {
-			font-weight: normal;
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%)
-		}
-	</style>`
+	style.innerHTML = /*html*/ `
+		<style>
+			span {
+				font-weight: normal;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%)
+			}
+		</style>
+	`
 
 	document.body!.appendChild(style)
 
 	const el = document.createElement('h1')
 
-	el.innerHTML = `
+	el.innerHTML = /*html*/ `
 		<span><em>hello</em> from <strong>AssemblyScript</strong></span>
 	`
 
@@ -26,7 +27,7 @@ export function run(): void {
 
 	const img = document.createElement('img')
 
-	img.setAttribute('src', '../../assets/image.png')
+	img.setAttribute('src', '../assets/image.png')
 
 	img.setAttribute(
 		'style',
@@ -35,7 +36,7 @@ export function run(): void {
 
 	document.body!.appendChild(img)
 
-	const audio = new Audio('http://localhost:5000/assets/audio2.mp3')
+	const audio = new Audio('../assets/audio2.mp3')
 
 	audio.autoplay = true
 }
