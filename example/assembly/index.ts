@@ -28,6 +28,9 @@ export function run(): void {
 			body {
 				/* And there was 3D depth. */
 				perspective: 800px;
+				width: 100%;
+				height: 100%;
+				padding: 0;
 			}
 			span {
 				font-weight: normal;
