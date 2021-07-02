@@ -15,7 +15,7 @@ export declare function getAutoplay(id: usize): u32
 @external('asDOM_Audio', 'setAutoplay')
 export declare function setAutoplay(toggle: u32, id: usize): void
 
-import { HTMLElement } from "./Element";
+import { HTMLElement } from "./HTMLElement";
 
 export class HTMLAudioElement extends HTMLElement {
     constructor(src: string | null = null) {

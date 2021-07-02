@@ -1,4 +1,4 @@
-import { Node } from "./Node"
+import { Node } from "../Node"
 
 // @ts-ignore
 @external('asDOM_Element', 'elSetAttribute')
@@ -71,12 +71,3 @@ export class Element extends Node {
 	}
 }
 
-export class HTMLElement extends Element {}
-export class HTMLBodyElement extends HTMLElement {}
-export class HTMLDivElement extends HTMLElement {}
-export class HTMLSpanElement extends HTMLElement {}
-export class HTMLParagraphElement extends HTMLElement {}
-export class HTMLAnchorElement extends HTMLElement {}
-export class HTMLScriptElement extends HTMLElement {}
-export class HTMLTemplateElement extends HTMLElement {}
-export class HTMLUnknownElement extends HTMLElement {}
