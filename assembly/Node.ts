@@ -28,6 +28,10 @@ export declare function nodeRemoveChild(parentId: usize, childId: usize): void
 export declare function getFirstChild(id: usize): i32
 
 // @ts-expect-error
+@external('asDOM_Node', 'cloneNode')
+export declare function cloneNode(id: usize, deep?: boolean): i32
+
+// @ts-expect-error
 @external('asDOM_Node', 'log')
 declare function log(msg: string): void
 
@@ -109,7 +113,7 @@ export class Node {
 			else if (-id == ElementTypes.h5) child = new HTMLHeadingElement()
 			else if (-id == ElementTypes.h6) child = new HTMLHeadingElement()
 			else if (-id === ElementTypes.unknown) child = new HTMLUnknownElement()
-			else throw ERROR('Hyphenated or custom elements not yet supported.')
+			else throw new Error('Hyphenated or custom elements not yet supported.')
 
 			// Associate the AS-side instance with the JS-side instance.
 			// TODO use this.ownerDocument.__ptr__ instead of document.__ptr__
@@ -131,5 +135,44 @@ export class Node {
 		else {
 			return this.__children.get(id)
 		}
+	}
+
+	cloneNode(deep: boolean = false): Node {
+		const id: i32 = cloneNode(this.__ptr__, deep)
+
+		log('AS: cloned node ID:' + id.toString())
+
+		// If negative, there is an element on the JS-side that doesn't have a
+		// corresponding AS-side instance yet. In this case we need to
+		// create a new instanced based on its type.
+		if (id < 0) {
+			let clone: Node
+
+			if (-id == ElementTypes.body) clone = new HTMLBodyElement()
+			else if (-id == ElementTypes.div) clone = new HTMLDivElement()
+			else if (-id == ElementTypes.span) clone = new HTMLSpanElement()
+			else if (-id == ElementTypes.p) clone = new HTMLParagraphElement()
+			else if (-id == ElementTypes.a) clone = new HTMLAnchorElement()
+			else if (-id == ElementTypes.script) clone = new HTMLScriptElement()
+			else if (-id == ElementTypes.template) clone = new HTMLTemplateElement()
+			else if (-id == ElementTypes.audio) clone = new Audio()
+			else if (-id == ElementTypes.img) clone = new Image()
+			else if (-id == ElementTypes.h1) clone = new HTMLHeadingElement()
+			else if (-id == ElementTypes.h2) clone = new HTMLHeadingElement()
+			else if (-id == ElementTypes.h3) clone = new HTMLHeadingElement()
+			else if (-id == ElementTypes.h4) clone = new HTMLHeadingElement()
+			else if (-id == ElementTypes.h5) clone = new HTMLHeadingElement()
+			else if (-id == ElementTypes.h6) clone = new HTMLHeadingElement()
+			else if (-id === ElementTypes.unknown) clone = new HTMLUnknownElement()
+			else throw new Error('Hyphenated or custom elements not yet supported.')
+
+			// Associate the AS-side instance with the JS-side instance.
+			// TODO use this.ownerDocument.__ptr__ instead of document.__ptr__
+			trackNextElement(document.__ptr__, clone.__ptr__)
+
+			return clone
+		}
+
+		throw new Error('This should not happen.')
 	}
 }

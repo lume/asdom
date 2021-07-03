@@ -124,6 +124,7 @@ export class Asdom {
 			},
 		},
 		asDOM_Node: {
+			log: str => console.log(this.__getString(str)),
 			// node.appendChild()
 			nodeAppendChild: (parentId, childId) => {
 				const parent = this.__refs.get(parentId)
@@ -182,7 +183,49 @@ export class Asdom {
 
 				return key
 			},
-			log: str => console.log(this.__getString(str)),
+			cloneNode: (id, deep = false) => {
+				/** @type {Node} */
+				const node = this.__refs.get(id)
+
+				const clone = node.cloneNode(deep)
+
+				console.log('JS: cloned node:', clone)
+
+				const key = this.__refs.keyFrom(clone)
+
+				if (!key) {
+					this.__nextElementToTrack = clone
+
+					// Returning negative means the AS-side should create an instance to track the JS-side object.
+					if (clone instanceof Element) {
+						const tag = clone.tagName
+						if (tag === 'BODY') return -2
+						else if (tag === 'DIV') return -3
+						else if (tag === 'SPAN') return -4
+						else if (tag === 'P') return -5
+						else if (tag === 'A') return -6
+						else if (tag === 'SCRIPT') return -7
+						else if (tag === 'TEMPLATE') return -8
+						else if (tag === 'AUDIO') return -9
+						else if (tag === 'IMG') return -10
+						else if (tag === 'H1') return -11
+						else if (tag === 'H2') return -12
+						else if (tag === 'H3') return -13
+						else if (tag === 'H4') return -14
+						else if (tag === 'H5') return -15
+						else if (tag === 'H6') return -16
+						else if (tag.includes('-'))
+							throw new Error('Hyphenated (possibly-custom) element not supported yet.')
+						else return -1 // HTMLUnknownElement
+					} else {
+						throw new Error('TODO: firstChild not yet supported for nodes besides Element nodes.')
+					}
+				}
+
+				console.log('JS: cloned node key:', key)
+
+				return key
+			},
 		},
 		asDOM_Audio: {
 			initAudio: (srcPtr, id) => {

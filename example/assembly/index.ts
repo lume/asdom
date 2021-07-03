@@ -134,6 +134,11 @@ export function run(): void {
 	const template2 = document.createElement('template') as HTMLTemplateElement
 	document.body!.appendChild(template2)
 	template2.innerHTML = '<h2>Hello even more! (template.content.firstChild)</h2>'
-	const first: Node = template2.content.firstChild!
+	const first = template2.content.firstChild! as Element
 	document.body!.appendChild(first)
+
+	const cloned = first.cloneNode(true) as Element
+	cloned.innerHTML = cloned.innerHTML.replace('even more', 'one more time')
+	cloned.innerHTML = cloned.innerHTML.replace('template.content.firstChild', 'element.cloneNode()')
+	document.body!.appendChild(cloned)
 }
