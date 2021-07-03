@@ -14,6 +14,10 @@ export declare function setElement(docId: usize, elId: usize, tag: string): void
 @external('asDOM_Document', 'documentHasBody')
 export declare function documentHasBody(doc: usize): boolean
 
+// @ts-expect-error
+@external('asDOM_Document', 'createTextNode')
+export declare function createTextNode(docId: usize, textId: usize, data: string): void
+
 // TODO Perhaps put these on a new `window` object, to make it more like on the JS side.
 import {
 	Element,
@@ -30,6 +34,7 @@ import {
 	HTMLHeadingElement,
 } from './elements/index'
 import {Node} from './Node'
+import {Text} from './Text'
 
 export class Document extends Node {
 	constructor() {
@@ -87,6 +92,16 @@ export class Document extends Node {
 
 	// TODO, for SVG elements.
 	// createElementNS(ns, name, options) { }
+
+	/**
+	 * Creates a text string from the specified value.
+	 * @param data String that specifies the nodeValue property of the text node.
+	 */
+	createTextNode(data: string): Text {
+		const text = new Text
+		createTextNode(this.__ptr__, text.__ptr__, data)
+		return text
+	}
 }
 
 export const document = new Document()

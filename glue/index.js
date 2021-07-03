@@ -73,6 +73,11 @@ export class Asdom {
 				const document = this.__refs.get(id)
 				return document.body ? true : false
 			},
+			createTextNode: (docId, textId, data) => {
+				const document = this.__refs.get(docId)
+				const text = document.createTextNode(this.__getString(data))
+				this.__refs.set(textId, text)
+			},
 		},
 		asDOM_Element: {
 			// element.setAttribute

@@ -141,4 +141,6 @@ export function run(): void {
 	cloned.innerHTML = cloned.innerHTML.replace('even more', 'one more time')
 	cloned.innerHTML = cloned.innerHTML.replace('template.content.firstChild', 'element.cloneNode()')
 	document.body!.appendChild(cloned)
+
+	document.body!.appendChild(document.createTextNode('This is a text node!'))
 }
