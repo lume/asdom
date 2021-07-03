@@ -1,17 +1,17 @@
-// @ts-ignore
+// @ts-expect-error
 @external('asDOM_Audio', 'initAudio')
 export declare function initAudio(src: string, id: usize): void
-// @ts-ignore
+// @ts-expect-error
 @external('asDOM_Audio', 'pauseAudio')
 export declare function pauseAudio(id: usize): void
-// @ts-ignore
+// @ts-expect-error
 @external('asDOM_Audio', 'playAudio')
 export declare function playAudio(id: usize): void
 
-// @ts-ignore
+// @ts-expect-error
 @external('asDOM_Audio', 'getAutoplay')
 export declare function getAutoplay(id: usize): u32
-// @ts-ignore
+// @ts-expect-error
 @external('asDOM_Audio', 'setAutoplay')
 export declare function setAutoplay(toggle: u32, id: usize): void
 

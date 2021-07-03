@@ -1,16 +1,16 @@
-// @ts-ignore
+// @ts-expect-error
 @external('asDOM_Document', 'getUrl')
 export declare function getUrl(): string
 
-// @ts-ignore
+// @ts-expect-error
 @external('asDOM_Document', 'setDocument')
 export declare function setDocument(id: usize): void
 
-// @ts-ignore
+// @ts-expect-error
 @external('asDOM_Document', 'setElement')
 export declare function setElement(docId: usize, elId: usize, tag: string): void
 
-// @ts-ignore
+// @ts-expect-error
 @external('asDOM_Document', 'documentHasBody')
 export declare function documentHasBody(doc: usize): boolean
 
