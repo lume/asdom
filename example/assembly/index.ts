@@ -1,4 +1,4 @@
-import {Audio, document, Element, HTMLDivElement} from '../node_modules/asdom/assembly/index'
+import {Audio, document, Element, HTMLDivElement, HTMLTemplateElement, Node} from '../node_modules/asdom/assembly/index'
 
 // TODO move these into asdom, because requestAnimationFrame is a DOM API.
 import {cancelAnimationFrame, requestAnimationFrame} from '../node_modules/ecmassembly/assembly/requestAnimationFrame'
@@ -30,7 +30,7 @@ export function run(): void {
 				perspective: 800px;
 				width: 100%;
 				height: 100%;
-				padding: 0;
+				margin: 0;
 			}
 			span {
 				font-weight: normal;
@@ -93,10 +93,6 @@ export function run(): void {
 			dotPositionDeltas[i] = 3.0 + Mathf.random() * 2.0
 			dotRotations[i] = 360.0 * Mathf.random()
 			dot.setAttribute('class', 'dot')
-			// dot.setAttribute(
-			// 	'style',
-			// 	'position: absolute; top: 25%; left: 50%; transform: translate3d(-50%, -50%, 0) translate3d(0, 0, 0) rotateZ(0deg) ',
-			// )
 			document.body!.appendChild(dot)
 		}
 
@@ -129,4 +125,15 @@ export function run(): void {
 	const audio = new Audio('../assets/audio2.mp3')
 
 	audio.autoplay = true
+
+	const template = document.createElement('template') as HTMLTemplateElement
+	document.body!.appendChild(template)
+	template.innerHTML = '<h2>Hello yet again! (template.content)</h2>'
+	document.body!.appendChild(template.content)
+
+	const template2 = document.createElement('template') as HTMLTemplateElement
+	document.body!.appendChild(template2)
+	template2.innerHTML = '<h2>Hello even more! (template.content.firstChild)</h2>'
+	const first: Node = template2.content.firstChild!
+	document.body!.appendChild(first)
 }

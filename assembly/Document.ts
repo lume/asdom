@@ -15,8 +15,21 @@ export declare function setElement(docId: usize, elId: usize, tag: string): void
 export declare function documentHasBody(doc: usize): boolean
 
 // TODO Perhaps put these on a new `window` object, to make it more like on the JS side.
-import { Element, Audio, HTMLBodyElement, HTMLAnchorElement, HTMLDivElement, HTMLParagraphElement, HTMLScriptElement, HTMLSpanElement, HTMLTemplateElement, HTMLUnknownElement, Image } from './elements/index'
-import { Node } from './Node'
+import {
+	Element,
+	Audio,
+	HTMLBodyElement,
+	HTMLAnchorElement,
+	HTMLDivElement,
+	HTMLParagraphElement,
+	HTMLScriptElement,
+	HTMLSpanElement,
+	HTMLTemplateElement,
+	HTMLUnknownElement,
+	Image,
+	HTMLHeadingElement,
+} from './elements/index'
+import {Node} from './Node'
 
 export class Document extends Node {
 	constructor() {
@@ -58,6 +71,12 @@ export class Document extends Node {
 		else if (tag == 'template') el = new HTMLTemplateElement()
 		else if (tag == 'audio') el = new Audio()
 		else if (tag == 'img') el = new Image()
+		else if (tag == 'h1') el = new HTMLHeadingElement()
+		else if (tag == 'h2') el = new HTMLHeadingElement()
+		else if (tag == 'h3') el = new HTMLHeadingElement()
+		else if (tag == 'h4') el = new HTMLHeadingElement()
+		else if (tag == 'h5') el = new HTMLHeadingElement()
+		else if (tag == 'h6') el = new HTMLHeadingElement()
 		else if (tag.indexOf('-') > -1) throw ERROR('TODO: Elements with hyphens or custom elements not supported yet.')
 		else el = new HTMLUnknownElement()
 
@@ -65,7 +84,6 @@ export class Document extends Node {
 
 		return el
 	}
-
 
 	// TODO, for SVG elements.
 	// createElementNS(ns, name, options) { }
