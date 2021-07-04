@@ -1,4 +1,11 @@
-import {Audio, document, Element, HTMLDivElement, HTMLTemplateElement, Node} from '../node_modules/asdom/assembly/index'
+import {
+	Audio,
+	document,
+	Element,
+	HTMLDivElement,
+	HTMLTemplateElement,
+	unbind,
+} from '../node_modules/asdom/assembly/index'
 
 // TODO move these into asdom, because requestAnimationFrame is a DOM API.
 import {cancelAnimationFrame, requestAnimationFrame} from '../node_modules/ecmassembly/assembly/requestAnimationFrame'
@@ -85,7 +92,12 @@ export function run(): void {
 		dotScale = 1.0
 
 		for (let i = 0; i < dotsLength; i++) {
-			if (!firstClick) dots[i].remove()
+			if (!firstClick) {
+				dots[i].remove()
+
+				// Don't forget to unbind any element when done using it to avoid a memory leak!
+				unbind(dots[i])
+			}
 
 			const dot = document.createElement('div') as HTMLDivElement
 			dots[i] = dot
@@ -134,6 +146,7 @@ export function run(): void {
 	const template2 = document.createElement('template') as HTMLTemplateElement
 	document.body!.appendChild(template2)
 	template2.innerHTML = '<h2>Hello even more! (template.content.firstChild)</h2>'
+
 	const first = template2.content.firstChild! as Element
 	document.body!.appendChild(first)
 
@@ -142,5 +155,33 @@ export function run(): void {
 	cloned.innerHTML = cloned.innerHTML.replace('template.content.firstChild', 'element.cloneNode()')
 	document.body!.appendChild(cloned)
 
-	document.body!.appendChild(document.createTextNode('This is a text node!'))
+	const text = document.createTextNode('This is a text node!')
+
+	if (text.parentNode) throw new Error('There should not be a parent yet!')
+
+	document.body!.appendChild(text)
+
+	const br = document.createElement('br')
+
+	text.parentNode!.appendChild(br)
+
+	const text2 = document.createTextNode('Another text node, appended using parentNode!')
+	text.parentNode!.appendChild(text2)
+
+	// Don't forget that in AssemblyScript (unlike in JavaScript or TypeScript)
+	// you should unbind any DOM instances you are done using, otherwise there
+	// will be a memory leak. After this, you should not use the unbound
+	// instances or else the DOM bindings may not work as expected.
+	unbind(style)
+	unbind(el)
+	unbind(img)
+	unbind(audio)
+	unbind(template)
+	unbind(template2)
+	unbind(first)
+	unbind(cloned)
+	unbind(text)
+	unbind(br)
+	unbind(text.parentNode!) // Because we used it.
+	unbind(text2)
 }
