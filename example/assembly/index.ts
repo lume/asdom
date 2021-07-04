@@ -6,9 +6,11 @@ import {
 	HTMLTemplateElement,
 	unbind,
 } from '../node_modules/asdom/assembly/index'
+import {Text} from '../node_modules/asdom/assembly/Text'
 
 // TODO move these into asdom, because requestAnimationFrame is a DOM API.
 import {cancelAnimationFrame, requestAnimationFrame} from '../node_modules/ecmassembly/assembly/requestAnimationFrame'
+import {setTimeout} from '../node_modules/ecmassembly/assembly/setTimeout'
 
 let imgRotation: f32 = 0
 let img: Element // TODO: There's no HTMLImageElement yet.
@@ -26,6 +28,8 @@ const dotRotations: StaticArray<f32> = new StaticArray(dotsLength)
 const dotPositionDeltas: StaticArray<f32> = new StaticArray(dotsLength)
 let dotScale: f32 = 1.0
 let explosionLoopFrame: i32 = -1
+
+let text2: Text
 
 export function run(): void {
 	const style = document.createElement('div')
@@ -165,7 +169,7 @@ export function run(): void {
 
 	text.parentNode!.appendChild(br)
 
-	const text2 = document.createTextNode('Another text node, appended using parentNode!')
+	text2 = document.createTextNode('Another text node, appended using parentNode!')
 	text.parentNode!.appendChild(text2)
 
 	// Don't forget that in AssemblyScript (unlike in JavaScript or TypeScript)
@@ -183,5 +187,9 @@ export function run(): void {
 	unbind(text)
 	unbind(br)
 	unbind(text.parentNode!) // Because we used it.
-	unbind(text2)
+
+	setTimeout(() => {
+		document.body!.removeChild(text2)
+		unbind(text2)
+	}, 1000)
 }

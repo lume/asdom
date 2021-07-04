@@ -30,7 +30,8 @@ export class Asdom {
 
 	wasmImports = {
 		asDOM_Document: {
-			getUrl: () => {
+			getUrl: id => {
+				const document = this.__refs.get(id)
 				return this.__newString(document.URL)
 			},
 			setDocument: id => {

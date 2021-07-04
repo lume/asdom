@@ -22,6 +22,4 @@ export class HTMLTemplateElement extends HTMLElement {
 
 		return frag
 	}
-
-	// get firstChild
 }

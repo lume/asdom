@@ -1,6 +1,6 @@
 // @ts-expect-error
 @external('asDOM_Document', 'getUrl')
-export declare function getUrl(): string
+export declare function getUrl(id: usize): string
 
 // @ts-expect-error
 @external('asDOM_Document', 'setDocument')
@@ -43,7 +43,7 @@ export class Document extends Node {
 	}
 
 	get URL(): string {
-		return getUrl()
+		return getUrl(this.__ptr__)
 	}
 
 	// @ts-expect-error
@@ -60,7 +60,7 @@ export class Document extends Node {
 		return el
 	}
 	set body(el: HTMLBodyElement) {
-		throw new Error('TODO: document.body setter is not implemented yet.')
+		throw ERROR('TODO: document.body setter is not implemented yet.')
 	}
 
 	createElement(tag: string /*, TODO options */): Element {

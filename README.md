@@ -9,6 +9,10 @@ manipulate the DOM.
 
 Work in progress (probably may always be), but right now it's early and many APIs need to be added.
 
+# Supported APIs so far
+
+See the outline of [supported APIs](./supported-APIs.md).
+
 # Usage
 
 First you should get familiar with AssemblyScript and learn how to run
