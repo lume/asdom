@@ -65,7 +65,32 @@ enum ElementType {
 	h6 = 16,
 }
 
-export class Node extends Object {
+/** Node types: https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType */
+enum NodeType {
+	ELEMENT_NODE = 1,
+	ATTRIBUTE_NODE = 2,
+	TEXT_NODE = 3,
+	CDATA_SECTION_NODE = 4,
+	// 5 and 6 are deprecated and skipped.
+	PROCESSING_INSTRUCTION_NODE = 7,
+	COMMENT_NODE = 8,
+	DOCUMENT_NODE = 9,
+	DOCUMENT_TYPE_NODE = 10,
+	DOCUMENT_FRAGMENT_NODE = 11,
+	// 12 is deprecated and skipped.
+}
+
+export abstract class Node extends Object {
+	static ELEMENT_NODE: NodeType = NodeType.ELEMENT_NODE
+	static ATTRIBUTE_NODE: NodeType = NodeType.ATTRIBUTE_NODE
+	static TEXT_NODE: NodeType = NodeType.TEXT_NODE
+	static CDATA_SECTION_NODE: NodeType = NodeType.CDATA_SECTION_NODE
+	static PROCESSING_INSTRUCTION_NODE: NodeType = NodeType.PROCESSING_INSTRUCTION_NODE
+	static COMMENT_NODE: NodeType = NodeType.COMMENT_NODE
+	static DOCUMENT_NODE: NodeType = NodeType.DOCUMENT_NODE
+	static DOCUMENT_TYPE_NODE: NodeType = NodeType.DOCUMENT_TYPE_NODE
+	static DOCUMENT_FRAGMENT_NODE: NodeType = NodeType.DOCUMENT_FRAGMENT_NODE
+
 	appendChild<T extends Node>(child: T): T {
 		nodeAppendChild(this.__ptr__, child.__ptr__)
 		return child
@@ -75,6 +100,8 @@ export class Node extends Object {
 		nodeRemoveChild(this.__ptr__, child.__ptr__)
 		return child
 	}
+
+	abstract get nodeType(): NodeType
 
 	// This property exists only for a small optimization in the first early
 	// return of parentNode. Is it even worth it?

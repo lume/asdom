@@ -36,7 +36,9 @@ export declare function elOnClick(id: usize, ptr: number): void
 @external('asDOM_Element', 'remove')
 export declare function remove(id: usize): void
 
-export class Element extends Node {
+export abstract class Element extends Node {
+	get nodeType(): i32 { return 1 }
+
 	setAttribute(attr: string, value: string | null): void {
 		elSetAttribute(this.__ptr__, attr, value)
 	}

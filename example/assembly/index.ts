@@ -8,6 +8,10 @@ import {
 } from '../node_modules/asdom/assembly/index'
 import {Text} from '../node_modules/asdom/assembly/Text'
 
+// @ts-expect-error
+@external('asDOM_Node', 'log')
+declare function log(msg: string): void
+
 // TODO move these into asdom, because requestAnimationFrame is a DOM API.
 import {cancelAnimationFrame, requestAnimationFrame} from '../node_modules/ecmassembly/assembly/requestAnimationFrame'
 import {setTimeout} from '../node_modules/ecmassembly/assembly/setTimeout'
@@ -187,6 +191,10 @@ export function run(): void {
 	unbind(text)
 	unbind(br)
 	unbind(text.parentNode!) // Because we used it.
+
+
+	log('Text node type should be true:')
+	log((text.nodeType == 3).toString())
 
 	setTimeout(() => {
 		document.body!.removeChild(text2)

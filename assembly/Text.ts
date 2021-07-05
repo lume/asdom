@@ -6,7 +6,7 @@ import {Node} from './Node'
  * type CharacterData: it is implemented by other interfaces, like Text,
  * Comment, or ProcessingInstruction which aren't abstract.
  */
-export class CharacterData extends Node {
+export abstract class CharacterData extends Node {
 	// data: string
 	// readonly length: number
 	// readonly ownerDocument: Document
@@ -18,6 +18,9 @@ export class CharacterData extends Node {
 }
 
 export class Text extends CharacterData {
+	get nodeType(): i32 {
+		return 3
+	}
 	/**
 	 * Returns the combined data of all direct Text node siblings.
 	 */

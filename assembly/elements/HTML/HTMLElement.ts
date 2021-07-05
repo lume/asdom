@@ -1,3 +1,3 @@
 import {Element} from '../Element'
 
-export class HTMLElement extends Element {}
+export abstract class HTMLElement extends Element {}

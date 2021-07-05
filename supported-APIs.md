@@ -18,28 +18,38 @@ yet (or someone forgot to update this outline).
 - `Object`
   - Subclasses:
     - `Node`
-      - `.parentNode`
-      - `.firstChild`
-      - `.appendChild()`
-      - `.removeChild()`
-      - `.cloneNode()`
+      - `static ELEMENT_NODE`
+      - `static ATTRIBUTE_NODE`
+      - `static TEXT_NODE`
+      - `static CDATA_SECTION_NODE`
+      - `static PROCESSING_INSTRUCTION_NODE`
+      - `static COMMENT_NODE`
+      - `static DOCUMENT_NODE`
+      - `static DOCUMENT_TYPE_NODE`
+      - `static DOCUMENT_FRAGMENT_NODE`
+      - `nodeType`
+      - `parentNode`
+      - `firstChild`
+      - `appendChild()`
+      - `removeChild()`
+      - `cloneNode()`
       - Subclasses:
         - `DocumentFragment`
         - `CharacterData`
           - Subclasses:
             - `Text`
         - `Document`
-          - `.URL`
-          - `.body`
-          - `.createElement()`
-          - `.createTextNode()`
+          - `URL`
+          - `body`
+          - `createElement()`
+          - `createTextNode()`
         - `Element`
-          - `.setAttribute()`
-          - `.getAttribute()`
-          - `.remove()`
-          - `.click()`
-          - `.innerHTML`
-          - `.onclick` (No `Event` object is passed into the callback yet, but at least you can react to a click)
+          - `setAttribute()`
+          - `getAttribute()`
+          - `remove()`
+          - `click()`
+          - `innerHTML`
+          - `onclick` (No `Event` object is passed into the callback yet, but at least you can react to a click)
           - Subclasses:
             - `HTMLElement` (`<section>` and various other elements extend from this)
               - Subclasses:
@@ -51,12 +61,12 @@ yet (or someone forgot to update this outline).
                 - `HTMLScriptElement` (`<script>`)
                 - `HTMLImageElement`/`Image` (`<img>`)
                 - `HTMLAudioElement`/`Audio` (`<audio>`)
-                  - `.play()`
-                  - `.pause()`
-                  - `.autoplay`
+                  - `play()`
+                  - `pause()`
+                  - `autoplay`
                 - `HTMLHeadingElement` (`<h1>` - `<h6>`)
                 - `HTMLTemplateElement` (`<template>`)
-                  - `.content`
+                  - `content`
                 - `HTMLUnknownElement` (any unrecognized non-hyphenated element)
             - `SVGElement`
               - Subclasses:

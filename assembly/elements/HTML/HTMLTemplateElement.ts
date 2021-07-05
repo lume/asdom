@@ -1,11 +1,9 @@
-import { Node } from '../../Node'
+import {DocumentFragment} from '../../DocumentFragment'
 import {HTMLElement} from './HTMLElement'
 
 // @ts-expect-error
 @external('asDOM_HTMLTemplateElement', 'getContent')
 declare function getContent(id: usize, fragId: usize): void
-
-export class DocumentFragment extends Node { }
 
 export class HTMLTemplateElement extends HTMLElement {
 	private __frag: DocumentFragment | null = null
@@ -14,7 +12,7 @@ export class HTMLTemplateElement extends HTMLElement {
 		let frag = this.__frag
 
 		if (!frag) {
-			frag = new DocumentFragment
+			frag = new DocumentFragment()
 			this.__frag = frag
 		}
 

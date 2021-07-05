@@ -37,6 +37,8 @@ import {Node} from './Node'
 import {Text} from './Text'
 
 export class Document extends Node {
+	get nodeType(): i32 { return 9 }
+
 	constructor() {
 		super()
 		setDocument(this.__ptr__)

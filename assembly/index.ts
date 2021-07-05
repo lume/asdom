@@ -1,4 +1,5 @@
 export * from './Document'
+export * from './DocumentFragment'
 export * from './Node'
 export * from './Object'
 export * from './elements/index'
