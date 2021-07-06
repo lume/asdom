@@ -6,7 +6,7 @@ import {
 	HTMLTemplateElement,
 	unbind,
 	Text
-} from 'asdom/assembly/index'
+} from '../node_modules/asdom/assembly/index'
 
 // @ts-expect-error
 @external('asDOM_Node', 'log')
