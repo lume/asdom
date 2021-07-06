@@ -5,8 +5,8 @@ import {
 	HTMLDivElement,
 	HTMLTemplateElement,
 	unbind,
-} from '../node_modules/asdom/assembly/index'
-import {Text} from '../node_modules/asdom/assembly/Text'
+	Text
+} from 'asdom/assembly/index'
 
 // @ts-expect-error
 @external('asDOM_Node', 'log')
