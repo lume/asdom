@@ -1,9 +1,9 @@
 # asdom
 
-Use DOM APIs in AssemblyScript.
+Use DOM APIs in [AssemblyScript](https://assemblyscript.org) (TypeScript compiled to WebAssembly).
 
-This allows us to write WebAssembly applications (in AssemblyScript) that can
-manipulate the DOM.
+This allows us to write WebAssembly applications that can
+manipulate the DOM and, and with potential for more speed!
 
 # Early Stages!
 
