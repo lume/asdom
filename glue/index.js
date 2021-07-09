@@ -363,7 +363,7 @@ function getElementType(element) {
 	// Returning negative means the AS-side should create an instance to track the JS-side object.
 
 	if (element instanceof Element) {
-		const tag = child.tagName
+		const tag = element.tagName
 		if (tag === 'BODY') return -2
 		else if (tag === 'DIV') return -3
 		else if (tag === 'SPAN') return -4

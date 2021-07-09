@@ -68,7 +68,7 @@ style.innerHTML = `
 			top: 25%; left: 50%;
 		}
 		.selected {
-			background: #cfc;
+			background: #0fc;
 		}
 	</style>
 `
@@ -85,7 +85,7 @@ el.innerHTML = `
 document.body!.appendChild(el)
 
 const el2 = document.body!.querySelector('h1.hello')!
-el2.setAttribute('class', el2.getAttribute('class') + ' selected')
+// el2.setAttribute('class', 'selected')
 
 img = document.createElement('img') as HTMLImageElement
 
@@ -208,10 +208,10 @@ setTimeout(() => {
 customElements.define('seconds-counter', () => new SecondsCounter(), SecondsCounter.observedAttributes)
 
 container = document.createElement('div') as HTMLDivElement
-container.innerHTML = /*html*/ `
-	<seconds-counter></seconds-counter>
-	<seconds-counter some-attribute="foo"></seconds-counter>
-`
+container.innerHTML = /*html*/
+`<seconds-counter></seconds-counter>
+<seconds-counter some-attribute="foo"></seconds-counter>`
+
 document.body!.appendChild(container)
 
 log('--------------------')
