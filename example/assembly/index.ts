@@ -44,7 +44,7 @@ let container: HTMLElement
 
 const style = document.createElement('div')
 
-style.innerHTML = /*html*/ `
+style.innerHTML = `
 	<style>
 		body {
 			/* And there was 3D depth. */
@@ -67,6 +67,9 @@ style.innerHTML = /*html*/ `
 			position: absolute;
 			top: 25%; left: 50%;
 		}
+		.selected {
+			background: #0fc;
+		}
 	</style>
 `
 
@@ -75,11 +78,14 @@ document.body!.appendChild(style)
 const el = document.createElement('h1')
 el.setAttribute('class', 'hello')
 
-el.innerHTML = /*html*/ `
+el.innerHTML = `
 	<span><em>hello</em> from <strong>AssemblyScript</strong></span>
 `
 
 document.body!.appendChild(el)
+
+const el2 = document.body!.querySelector('h1.hello')!
+// el2.setAttribute('class', 'selected')
 
 img = document.createElement('img') as HTMLImageElement
 
@@ -202,10 +208,10 @@ setTimeout(() => {
 customElements.define('seconds-counter', () => new SecondsCounter(), SecondsCounter.observedAttributes)
 
 container = document.createElement('div') as HTMLDivElement
-container.innerHTML = /*html*/ `
-	<seconds-counter></seconds-counter>
-	<seconds-counter some-attribute="foo"></seconds-counter>
-`
+container.innerHTML = /*html*/
+`<seconds-counter></seconds-counter>
+<seconds-counter some-attribute="foo"></seconds-counter>`
+
 document.body!.appendChild(container)
 
 log('--------------------')
