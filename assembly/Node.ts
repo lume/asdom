@@ -39,9 +39,13 @@ export declare function cloneNode(id: usize, deep?: boolean): i32
 @external('asDOM_Node', 'log')
 declare function log(msg: string): void
 
+// // @ts-expect-error
+// @external('asDOM_Document', 'trackNextElement')
+// declare function trackNextElement(docId: usize, elId: usize): void
+
 // @ts-expect-error
-@external('asDOM_Document', 'trackNextElement')
-declare function trackNextElement(docId: usize, elId: usize): void
+@external('asDOM', 'trackNextRef')
+declare function trackNextRef(id: usize): void
 
 // TODO Put this in a file shared between glue code and AS code. We need to
 // convert the glue code to TypeScript first, or compile the shared file to
@@ -133,7 +137,8 @@ export abstract class Node extends Object {
 
 			// Associate the AS-side instance with the JS-side instance.
 			// TODO use this.ownerDocument.__ptr__ instead of document.__ptr__
-			trackNextElement(document.__ptr__, el.__ptr__)
+			// trackNextElement(document.__ptr__, el.__ptr__)
+			trackNextRef(el.__ptr__)
 
 			this.__parent = el
 			return el
@@ -157,7 +162,8 @@ export abstract class Node extends Object {
 
 			// Associate the AS-side instance with the JS-side instance.
 			// TODO use this.ownerDocument.__ptr__ instead of document.__ptr__
-			trackNextElement(document.__ptr__, el.__ptr__)
+			// trackNextElement(document.__ptr__, el.__ptr__)
+			trackNextRef(el.__ptr__)
 
 			return el
 		}
@@ -188,7 +194,8 @@ export abstract class Node extends Object {
 
 			// Associate the AS-side instance with the JS-side instance.
 			// TODO use this.ownerDocument.__ptr__ instead of document.__ptr__
-			trackNextElement(document.__ptr__, el.__ptr__)
+			// trackNextElement(document.__ptr__, el.__ptr__)
+			trackNextRef(el.__ptr__)
 
 			return el
 		}

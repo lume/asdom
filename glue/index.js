@@ -1,34 +1,157 @@
-class MapWithReverse extends Map {
+class Refs extends Map {
+	/** @type {Map<number, object>} */
 	__reverse = new Map()
 
+	/**
+	 * @param {number} a
+	 * @param {object} b
+	 * @return {this}
+	 */
 	set(a, b) {
-		super.set(a, b)
 		this.__reverse.set(b, a)
+		return super.set(a, b)
 	}
 
+	/**
+	 * @param {object} b
+	 * @return {number}
+	 */
 	keyFrom(b) {
 		return this.__reverse.get(b)
 	}
 }
 
 export class Asdom {
-	__refs = new MapWithReverse()
+	__refs = new Refs()
+	__nextRefToTrack
+
+	// Direct refs to the Wasm module's exports for convenience
 	__getString
 	__newString
-	__nextElementToTrack
+	__getArray
+	table
+	asdom_connectedCallback
+	asdom_disconnectedCallback
+	asdom_adoptedCallback
+	asdom_attributeChangedCallback
+
+	__exports = null
 
 	get wasmExports() {
-		return this._exports
+		return this.__exports
 	}
 	set wasmExports(e) {
+		this.__exports = e
+
 		this.__getString = e.__getString
 		this.__newString = e.__newString
-		this._exports = e
+		this.__getArray = e.__getArray
+		this.table = e.table
+		this.asdom_connectedCallback = e.asdom_connectedCallback
+		this.asdom_disconnectedCallback = e.asdom_disconnectedCallback
+		this.asdom_adoptedCallback = e.asdom_adoptedCallback
+		this.asdom_attributeChangedCallback = e.asdom_attributeChangedCallback
 	}
 
-	_exports = null
+	fn(fnIndex) {
+		return this.table.get(fnIndex)
+	}
+
+	/**
+	 * @param {number} arrayPtr
+	 * @returns {Array<string>}
+	 */
+	stringArray(arrayPtr) {
+		const array = this.__getArray(arrayPtr)
+		for (let i = 0, l = array.length; i < l; i += 1) array[i] = this.__getString(array[i])
+		return array
+	}
 
 	wasmImports = {
+		asDOM: {
+			trackNextRef: id => {
+				const ref = this.__nextRefToTrack
+
+				if (!ref) {
+					throw new Error(`
+						Bug: This should not happen, trackNextRef should have
+						been called synchronously right after an existing ref
+						was referenced on the JS-side and an AS-side objet
+						created to mirror it.
+					`)
+				}
+
+				this.__nextRefToTrack = undefined
+
+				// TODO elements need to be associated with documents on the AS-side so they can have ownerDocument properties.
+				this.__refs.set(id, ref)
+			},
+		},
+		asDOM_Window: {
+			trackWindow: id => {
+				this.__refs.set(id, window)
+			},
+			/**
+			 * @param {number} id
+			 * @param {number} ceId
+			 */
+			getCustomElements: (id, ceId) => {
+				/** @type {Window} */
+				const window = this.__refs.get(id)
+				const ce = window.customElements
+				let key = this.__refs.keyFrom(ce)
+				if (!key) this.__refs.set((key = ceId), ce)
+				return key
+			},
+		},
+		asDOM_CustomElementRegistry: {
+			// customElements.define()
+			define: (id, tag, factory, attributes) => {
+				tag = this.__getString(tag)
+
+				const customElements = this.__refs.get(id)
+
+				const asdom = this
+
+				class AsdomElement extends HTMLElement {
+					__asRef = -1
+
+					static get observedAttributes() {
+						return asdom.stringArray(attributes)
+					}
+
+					constructor() {
+						super()
+
+						this.__asRef = asdom.fn(factory)()
+						asdom.__refs.set(this.__asRef, this)
+					}
+
+					connectedCallback() {
+						asdom.asdom_connectedCallback(this.__asRef)
+					}
+
+					disconnectedCallback() {
+						asdom.asdom_disconnectedCallback(this.__asRef)
+					}
+
+					adoptedCallback() {
+						asdom.asdom_adoptedCallback(this.__asRef)
+					}
+
+					attributeChangedCallback(name, oldVal, newVal) {
+						asdom.asdom_attributeChangedCallback(
+							this.__asRef,
+							asdom.__newString(name),
+							asdom.__newString(oldVal),
+							asdom.__newString(newVal),
+						)
+					}
+				}
+
+				customElements.define(tag, AsdomElement)
+			},
+		},
 		asDOM_Document: {
 			getUrl: id => {
 				const document = this.__refs.get(id)
@@ -49,18 +172,19 @@ export class Asdom {
 						: this.wasmImports.asDOM_Document.documentCreateElement(docId, tag)
 				this.__refs.set(elId, el)
 			},
-			trackNextElement: (docId, elId) => {
-				const el = this.__nextElementToTrack
+			trackNextElement: (docId, id) => {
+				const ref = this.__nextRefToTrack
 
-				if (!el) {
+				if (!ref) {
 					throw new Error(
 						'Bug, this should not happen, trackNextElement should have been called synchronously right after an existing element was referenced and an AS-side objet created to mirror it.',
 					)
 				}
-				this.__nextElementToTrack = undefined
+
+				this.__nextRefToTrack = undefined
 
 				// TODO elements need to be associated with documents on the AS-side so they can have ownerDocument properties.
-				this.__refs.set(elId, el)
+				this.__refs.set(id, ref)
 			},
 			getElement: id => {
 				return this.__refs.get(id)
@@ -74,6 +198,7 @@ export class Asdom {
 				const document = this.__refs.get(id)
 				return document.body ? true : false
 			},
+			// document.createTextNode()
 			createTextNode: (docId, textId, data) => {
 				const document = this.__refs.get(docId)
 				const text = document.createTextNode(this.__getString(data))
@@ -113,10 +238,9 @@ export class Asdom {
 				return this.__newString(el.innerText)
 			},
 			// element.onclick
-			elOnClick: (id, ptr) => {
-				if (!this._exports.table) throw new Error('Table not exported. Add the --exportTable flag.')
+			elOnClick: (id, callback) => {
 				const el = this.__refs.get(id)
-				el.onclick = this._exports.table.get(ptr)
+				el.onclick = this.fn(callback)
 			},
 			// element.click()
 			elClick: id => {
@@ -130,7 +254,10 @@ export class Asdom {
 			},
 		},
 		asDOM_Node: {
-			log: str => console.log(this.__getString(str)),
+			log: str => {
+				if (this.__getString(str) == null || this.__getString(str) === 'null') debugger
+				console.log(this.__getString(str))
+			},
 			// node.appendChild()
 			nodeAppendChild: (parentId, childId) => {
 				const parent = this.__refs.get(parentId)
@@ -151,13 +278,12 @@ export class Asdom {
 				const node = this.__refs.get(id)
 				const child = node.firstChild
 
-				console.log('JS: first child:', child)
 				if (!child) return 0 // null
 
 				const key = this.__refs.keyFrom(child)
 
 				if (!key) {
-					this.__nextElementToTrack = child
+					this.__nextRefToTrack = child
 
 					// Returning negative means the AS-side should create an instance to track the JS-side object.
 					if (child instanceof Element) {
@@ -185,8 +311,6 @@ export class Asdom {
 					}
 				}
 
-				console.log('JS: first child key:', key)
-
 				return key
 			},
 			cloneNode: (id, deep = false) => {
@@ -195,12 +319,10 @@ export class Asdom {
 
 				const clone = node.cloneNode(deep)
 
-				console.log('JS: cloned node:', clone)
-
 				const key = this.__refs.keyFrom(clone)
 
 				if (!key) {
-					this.__nextElementToTrack = clone
+					this.__nextRefToTrack = clone
 
 					// Returning negative means the AS-side should create an instance to track the JS-side object.
 					if (clone instanceof Element) {
@@ -228,8 +350,6 @@ export class Asdom {
 					}
 				}
 
-				console.log('JS: cloned node key:', key)
-
 				return key
 			},
 			getParentNode: id => {
@@ -237,13 +357,12 @@ export class Asdom {
 				const node = this.__refs.get(id)
 				const parent = node.parentNode
 
-				console.log('JS: parent node:', parent)
 				if (!parent) return 0 // null
 
 				const key = this.__refs.keyFrom(parent)
 
 				if (!key) {
-					this.__nextElementToTrack = parent
+					this.__nextRefToTrack = parent
 
 					// Returning negative means the AS-side should create an instance to track the JS-side object.
 					if (parent instanceof Element) {
@@ -270,8 +389,6 @@ export class Asdom {
 						throw new Error('TODO: parentNode not yet supported for nodes besides Element nodes.')
 					}
 				}
-
-				console.log('JS: parent node key:', key)
 
 				return key
 			},

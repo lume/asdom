@@ -84,7 +84,7 @@ export class Document extends Node {
 		else if (tag == 'h4') el = new HTMLHeadingElement()
 		else if (tag == 'h5') el = new HTMLHeadingElement()
 		else if (tag == 'h6') el = new HTMLHeadingElement()
-		else if (tag.indexOf('-') > -1) throw ERROR('TODO: Elements with hyphens or custom elements not supported yet.')
+		else if (tag.indexOf('-') > -1) throw new Error('TODO: Elements with hyphens or custom elements not supported yet.')
 		else el = new HTMLUnknownElement()
 
 		setElement(this.__ptr__, el.__ptr__, tag)

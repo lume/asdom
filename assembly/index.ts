@@ -1,3 +1,4 @@
+export * from './Window'
 export * from './Document'
 export * from './DocumentFragment'
 export * from './Node'

@@ -3,14 +3,14 @@
 		"dev": "npm run build:untouched && npm run serve",
 		"build": "npm run build:untouched && npm run build:optimized",
 		"serve": "serve ./",
-		"build:untouched": "asc assembly/index.ts --target debug --exportRuntime --exportTable",
-		"build:optimized": "asc assembly/index.ts --target release --exportRuntime --exportTable",
+		"build:untouched": "asc assembly/index.ts --target debug --exportRuntime --exportTable --explicitStart",
+		"build:optimized": "asc assembly/index.ts --target release --exportRuntime --exportTable --explicitStart",
 		"test": "node tests"
 	},
 	"dependencies": {
 		"@assemblyscript/loader": "^0.18.32",
 		"asdom": "^0.1.12",
-		"ecmassembly": "^0.1.4"
+		"ecmassembly": "^0.1.8"
 	},
 	"devDependencies": {
 		"assemblyscript": "^0.19.5",
