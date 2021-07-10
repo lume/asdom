@@ -13,7 +13,7 @@ import {
 	Image,
 	HTMLHeadingElement,
 } from './elements/index'
-import {makeNode} from './ElementType'
+import {makeNode} from './utils'
 import {createTextNode, documentHasBody, getUrl, querySelector, setDocument, setElement, trackNextRef} from './imports'
 import {Node} from './Node'
 import {refs} from './refs'

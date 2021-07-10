@@ -343,13 +343,21 @@ export class Asdom {
 		},
 	}
 
+	/**
+	 * If an JS-side element is tracked, returns the ID of the AS-side element
+	 * if it exists, otherwise returns the negated type number of the
+	 * element that should be created on the AS-side.  The type number is
+	 * negative because the AS-side IDs are only ever positive, so negative
+	 * numbers won't collide with IDs within the first IDs between 0 and
+	 * 2^31.
+	 */
 	getKeyOrElementType(element) {
 		const key = this.__refs.keyFrom(element)
 
 		if (!key) {
 			this.__nextRefToTrack = element
 
-			return getElementType(element)
+			return -getElementType(element)
 		}
 
 		return key
@@ -359,28 +367,29 @@ export class Asdom {
 function thro(err) {
 	throw err
 }
+
 function getElementType(element) {
 	// Returning negative means the AS-side should create an instance to track the JS-side object.
 
 	if (element instanceof Element) {
 		const tag = element.tagName
-		if (tag === 'BODY') return -2
-		else if (tag === 'DIV') return -3
-		else if (tag === 'SPAN') return -4
-		else if (tag === 'P') return -5
-		else if (tag === 'A') return -6
-		else if (tag === 'SCRIPT') return -7
-		else if (tag === 'TEMPLATE') return -8
-		else if (tag === 'AUDIO') return -9
-		else if (tag === 'IMG') return -10
-		else if (tag === 'H1') return -11
-		else if (tag === 'H2') return -12
-		else if (tag === 'H3') return -13
-		else if (tag === 'H4') return -14
-		else if (tag === 'H5') return -15
-		else if (tag === 'H6') return -16
+		if (tag === 'BODY') return 2
+		else if (tag === 'DIV') return 3
+		else if (tag === 'SPAN') return 4
+		else if (tag === 'P') return 5
+		else if (tag === 'A') return 6
+		else if (tag === 'SCRIPT') return 7
+		else if (tag === 'TEMPLATE') return 8
+		else if (tag === 'AUDIO') return 9
+		else if (tag === 'IMG') return 10
+		else if (tag === 'H1') return 11
+		else if (tag === 'H2') return 12
+		else if (tag === 'H3') return 13
+		else if (tag === 'H4') return 14
+		else if (tag === 'H5') return 15
+		else if (tag === 'H6') return 16
 		else if (tag.includes('-')) throw new Error('Hyphenated (possibly-custom) element not supported yet.')
-		else return -1 // HTMLUnknownElement
+		else return 1 // HTMLUnknownElement
 	} else {
 		throw new Error('TODO: firstChild not yet supported for nodes besides Element nodes.')
 	}
