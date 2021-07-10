@@ -1,40 +1,7 @@
-
-import { makeNode } from './ElementType'
+import {makeNode} from './ElementType'
+import {nodeAppendChild, nodeRemoveChild, log, trackNextRef, getFirstChild, cloneNode, getParentNode} from './imports'
 import {Object} from './Object'
 import {refs} from './refs'
-
-// @ts-expect-error
-@external('asDOM_Node', 'nodeAppendChild')
-export declare function nodeAppendChild(parentId: usize, childId: usize): void
-
-// @ts-expect-error
-@external('asDOM_Node', 'nodeRemoveChild')
-export declare function nodeRemoveChild(parentId: usize, childId: usize): void
-
-// @ts-expect-error
-@external('asDOM_Node', 'getParentNode')
-declare function getParentNode(id: usize): i32
-
-// @ts-expect-error
-@external('asDOM_Node', 'getFirstChild')
-export declare function getFirstChild(id: usize): i32
-
-// @ts-expect-error
-@external('asDOM_Node', 'cloneNode')
-export declare function cloneNode(id: usize, deep?: boolean): i32
-
-// @ts-expect-error
-@external('asDOM_Node', 'log')
-declare function log(msg: string): void
-
-// // @ts-expect-error
-// @external('asDOM_Document', 'trackNextElement')
-// declare function trackNextElement(docId: usize, elId: usize): void
-
-// @ts-expect-error
-@external('asDOM', 'trackNextRef')
-declare function trackNextRef(id: usize): void
-
 
 /** Node types: https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType */
 enum NodeType {

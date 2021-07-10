@@ -1,23 +1,3 @@
-// @ts-expect-error
-@external('asDOM_Document', 'getUrl')
-export declare function getUrl(id: usize): string
-
-// @ts-expect-error
-@external('asDOM_Document', 'setDocument')
-export declare function setDocument(id: usize): void
-
-// @ts-expect-error
-@external('asDOM_Document', 'setElement')
-export declare function setElement(docId: usize, elId: usize, tag: string): void
-
-// @ts-expect-error
-@external('asDOM_Document', 'documentHasBody')
-export declare function documentHasBody(doc: usize): boolean
-
-// @ts-expect-error
-@external('asDOM_Document', 'createTextNode')
-export declare function createTextNode(docId: usize, textId: usize, data: string): void
-
 // TODO Perhaps put these on a new `window` object, to make it more like on the JS side.
 import {
 	Element,
@@ -33,11 +13,16 @@ import {
 	Image,
 	HTMLHeadingElement,
 } from './elements/index'
+import {makeNode} from './ElementType'
+import {createTextNode, documentHasBody, getUrl, querySelector, setDocument, setElement, trackNextRef} from './imports'
 import {Node} from './Node'
+import {refs} from './refs'
 import {Text} from './Text'
 
 export class Document extends Node {
-	get nodeType(): i32 { return 9 }
+	get nodeType(): i32 {
+		return 9
+	}
 
 	constructor() {
 		super()
@@ -84,7 +69,8 @@ export class Document extends Node {
 		else if (tag == 'h4') el = new HTMLHeadingElement()
 		else if (tag == 'h5') el = new HTMLHeadingElement()
 		else if (tag == 'h6') el = new HTMLHeadingElement()
-		else if (tag.indexOf('-') > -1) throw new Error('TODO: Elements with hyphens or custom elements not supported yet.')
+		else if (tag.indexOf('-') > -1)
+			throw new Error('TODO: Elements with hyphens or custom elements not supported yet.')
 		else el = new HTMLUnknownElement()
 
 		setElement(this.__ptr__, el.__ptr__, tag)
@@ -100,9 +86,41 @@ export class Document extends Node {
 	 * @param data String that specifies the nodeValue property of the text node.
 	 */
 	createTextNode(data: string): Text {
-		const text = new Text
+		const text = new Text()
 		createTextNode(this.__ptr__, text.__ptr__, data)
 		return text
+	}
+
+	querySelector(selectors: string): Element | null {
+		const id = querySelector(this.__ptr__, selectors)
+
+		// if null, it means there is no element on the JS-side.
+		if (id == 0) return null
+		// If negative, there is an element on the JS-side that doesn't have a
+		// corresponding AS-side instance yet. In this case we need to
+		// create a new instance based on its type.
+		else if (id < 0) {
+			const el = makeNode(-id)
+
+			// Associate the AS-side instance with the JS-side instance.
+			// TODO use this.ownerDocument.__ptr__ instead of document.__ptr__
+			// trackNextElement(document.__ptr__, el.__ptr__)
+			trackNextRef(el.__ptr__)
+
+			return el as Element
+		}
+
+		// If we reach here then there is already an AS-side instance
+		// associated with a JS-side instance, and the JS side gave us the ID
+		// (pointer) of our AS-side object to return. We might reach here, for
+		// example, if we use appendChild to pass an existing child within AS
+		// instead of using innerHTML. By using innerHTML and sending a string
+		// to JS, it can create a whole tree but none of those nodes will be
+		// tracked. Finally, if we do try to access them, we lazily associate
+		// new AS-side objects in the previous conditional block.
+		else {
+			return refs.get(id) as Element // It must be a Node.
+		}
 	}
 }
 

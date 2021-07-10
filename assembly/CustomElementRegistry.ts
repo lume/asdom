@@ -1,9 +1,6 @@
 import {HTMLElement} from './elements/HTML/HTMLElement'
+import {define} from './imports'
 import {Object} from './Object'
-
-// @ts-expect-error
-@external('asDOM_CustomElementRegistry', 'define')
-declare function define(id: usize, tag: string, factoryIndex: i32, attributes: string[]): void
 
 /*
  * Custom elements are a bit too dynamic to easily map an interface to them

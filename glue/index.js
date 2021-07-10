@@ -254,11 +254,11 @@ export class Asdom {
 			},
 
 			querySelector: (id, _selectors) => {
-				const el = this.__refs.get(id)
+				const node = this.__refs.get(id)
 				const selectors = this.__getString(_selectors)
-				const foundElem = el.querySelector(selectors)
+				const foundElem = node.querySelector(selectors)
 				return this.getKeyOrElementType(foundElem)
-			}
+			},
 		},
 		asDOM_Node: {
 			log: str => {
@@ -379,8 +379,7 @@ function getElementType(element) {
 		else if (tag === 'H4') return -14
 		else if (tag === 'H5') return -15
 		else if (tag === 'H6') return -16
-		else if (tag.includes('-'))
-			throw new Error('Hyphenated (possibly-custom) element not supported yet.')
+		else if (tag.includes('-')) throw new Error('Hyphenated (possibly-custom) element not supported yet.')
 		else return -1 // HTMLUnknownElement
 	} else {
 		throw new Error('TODO: firstChild not yet supported for nodes besides Element nodes.')

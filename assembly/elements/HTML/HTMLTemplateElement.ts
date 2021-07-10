@@ -1,9 +1,6 @@
 import {DocumentFragment} from '../../DocumentFragment'
+import {getContent} from '../../imports'
 import {HTMLElement} from './HTMLElement'
-
-// @ts-expect-error
-@external('asDOM_HTMLTemplateElement', 'getContent')
-declare function getContent(id: usize, fragId: usize): void
 
 export class HTMLTemplateElement extends HTMLElement {
 	private __frag: DocumentFragment | null = null

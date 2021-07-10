@@ -1,13 +1,6 @@
 import {CustomElementRegistry} from './CustomElementRegistry'
+import {getCustomElements, trackWindow} from './imports'
 import {Object} from './Object'
-
-// @ts-expect-error
-@external('asDOM_Window', 'getCustomElements')
-declare function getCustomElements(id: usize, ceId: usize): void
-
-// @ts-expect-error
-@external('asDOM_Window', 'trackWindow')
-declare function trackWindow(id: usize): void
 
 export class Window extends Object {
 	private __ceRegistry: CustomElementRegistry | null = null

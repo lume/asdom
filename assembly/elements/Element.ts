@@ -1,53 +1,24 @@
-import { makeNode } from "../ElementType"
-import { Node } from "../Node"
-import { refs } from "../refs"
-
-// @ts-expect-error
-@external('asDOM_Element', 'elSetAttribute')
-export declare function elSetAttribute(id: usize, attr: string, value: string | null): void
-
-// @ts-expect-error
-@external('asDOM_Element', 'elGetAttribute')
-export declare function elGetAttribute(id: usize, attr: string): string | null
-
-// @ts-expect-error
-@external('asDOM_Element', 'elSetInnerHTML')
-export declare function elSetInnerHTML(id: usize, value: string | null): void
-
-// @ts-expect-error
-@external('asDOM_Element', 'elGetInnerHTML')
-export declare function elGetInnerHTML(id: usize): string
-
-// @ts-expect-error
-@external('asDOM_Element', 'elSetInnerText')
-export declare function elSetInnerText(id: usize, value: string | null): void
-
-// @ts-expect-error
-@external('asDOM_Element', 'elGetInnerText')
-export declare function elGetInnerText(id: usize): string
-
-// @ts-expect-error
-@external('asDOM_Element', 'elClick')
-export declare function elClick(id: usize): void
-
-// @ts-expect-error
-@external('asDOM_Element', 'elOnClick')
-export declare function elOnClick(id: usize, ptr: number): void
-
-// @ts-expect-error
-@external('asDOM_Element', 'remove')
-export declare function remove(id: usize): void
-
-// @ts-expect-error
-@external('asDOM_Element', 'querySelector')
-export declare function querySelector(id: usize, selectors : string): i32
-
-// @ts-expect-error
-@external('asDOM', 'trackNextRef')
-declare function trackNextRef(id: usize): void
+import {
+	elClick,
+	elGetAttribute,
+	elGetInnerHTML,
+	elGetInnerText,
+	elOnClick,
+	elSetAttribute,
+	elSetInnerHTML,
+	elSetInnerText,
+	querySelector,
+	remove,
+	trackNextRef,
+} from '../imports'
+import {makeNode} from '../ElementType'
+import {Node} from '../Node'
+import {refs} from '../refs'
 
 export abstract class Element extends Node {
-	get nodeType(): i32 { return 1 }
+	get nodeType(): i32 {
+		return 1
+	}
 
 	setAttribute(attr: string, value: string | null): void {
 		elSetAttribute(this.__ptr__, attr, value)
@@ -74,15 +45,15 @@ export abstract class Element extends Node {
 		elClick(this.__ptr__)
 	}
 
-    set onclick(cb: () => void) {
-        elOnClick(this.__ptr__, cb.index)
-    }
+	set onclick(cb: () => void) {
+		elOnClick(this.__ptr__, cb.index)
+	}
 
 	remove(): void {
 		remove(this.__ptr__)
 	}
 
-	querySelector(selectors : string) : Element | null {
+	querySelector(selectors: string): Element | null {
 		const id = querySelector(this.__ptr__, selectors)
 
 		// if null, it means there is no element on the JS-side.
