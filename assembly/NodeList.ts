@@ -14,11 +14,15 @@ export class NodeList extends Object {
 	}
 
 	@operator('[]')
-	private accessOperator(index: i32): Node | null {
+	private arrayRead(index: i32): Node | null {
 		return this.item(index)
 	}
 
-	// The name must be "key" in AS (can be anything in TS).
-	// TODO open issue
-	[key: number]: Node | null
+	@operator('[]=')
+	private arrayWrite(index: i32, right: Node): void {
+		ERROR('NodeList is not writable.')
+	}
+
+	// The name must be "key" in AS (can be anything in TS). Open issue:
+	readonly [key: number]: Node | null
 }

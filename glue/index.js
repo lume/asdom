@@ -386,7 +386,7 @@ export class Asdom {
 		if (!key) {
 			this.__nextRefToTrack = element
 
-			return -getElementType(element)
+			return -getObjectType(element)
 		}
 
 		return key
@@ -397,11 +397,11 @@ function thro(err) {
 	throw err
 }
 
-function getElementType(element) {
+function getObjectType(obj) {
 	// Returning negative means the AS-side should create an instance to track the JS-side object.
 
-	if (element instanceof Element) {
-		const tag = element.tagName
+	if (obj instanceof Element) {
+		const tag = obj.tagName
 		if (tag === 'BODY') return 2
 		else if (tag === 'DIV') return 3
 		else if (tag === 'SPAN') return 4
@@ -419,9 +419,11 @@ function getElementType(element) {
 		else if (tag === 'H6') return 16
 		else if (tag.includes('-')) throw new Error('Hyphenated (possibly-custom) element not supported yet.')
 		else return 1 // HTMLUnknownElement
+	} else if (obj instanceof Text) {
+		return 100
 	} else {
 		throw new Error(
-			'TODO: nodes besides Element nodes not yet supported in the particular API that caused this error.',
+			'TODO: objects besides Element and Text instances not yet supported in the particular API that caused this error.',
 		)
 	}
 }
