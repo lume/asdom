@@ -25,3 +25,5 @@ export function asdom_attributeChangedCallback(
 	const el = refs.get(id) as HTMLElement
 	el.attributeChangedCallback(name, oldValue, newValue)
 }
+
+export const idof_Arrayi32 = idof<Array<i32>>()

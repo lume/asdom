@@ -67,7 +67,7 @@ style.innerHTML = `
 			position: absolute;
 			top: 25%; left: 50%;
 		}
-		.selected {
+		.selected * {
 			background: #0fc;
 		}
 	</style>
@@ -78,14 +78,23 @@ document.body!.appendChild(style)
 const el = document.createElement('h1')
 el.setAttribute('class', 'hello')
 
-el.innerHTML = `
-	<span><em>hello</em> from <strong>AssemblyScript</strong></span>
-`
-
+el.innerHTML = /*html*/ `<span><em>hello</em> from <strong>AssemblyScript</strong></span>`
 document.body!.appendChild(el)
+log('h1 child node count: ' + el.childNodes.length.toString())
+
+// TODO This will currently cause an error because it accesses a text node. Need to support Text nodes.
+// el.childNodes.item(0)!.childNodes.item(1)!
+
+let item = el.childNodes.item(0)!.childNodes.item(2)!
+if (!(item instanceof HTMLElement && (item as HTMLElement).innerHTML == 'AssemblyScript'))
+	throw new Error('Expected different result from childNodes.item()')
+
+item = el.childNodes[0]!.childNodes[2]!
+if (!(item instanceof HTMLElement && (item as HTMLElement).innerHTML == 'AssemblyScript'))
+	throw new Error('Expected different result from childNodes[]')
 
 const el2 = document.body!.querySelector('h1.hello')!
-// el2.setAttribute('class', 'selected')
+el2.setAttribute('class', 'hello selected')
 
 img = document.createElement('img') as HTMLImageElement
 
@@ -158,6 +167,7 @@ document.body!.onclick = () => {
 const audio = new Audio('../assets/audio2.mp3')
 
 audio.autoplay = true
+log('audio autoplay: ' + audio.autoplay.toString())
 
 const template = document.createElement('template') as HTMLTemplateElement
 document.body!.appendChild(template)
@@ -208,8 +218,7 @@ setTimeout(() => {
 customElements.define('seconds-counter', () => new SecondsCounter(), SecondsCounter.observedAttributes)
 
 container = document.createElement('div') as HTMLDivElement
-container.innerHTML = /*html*/
-`<seconds-counter></seconds-counter>
+container.innerHTML = /*html*/ `<seconds-counter></seconds-counter>
 <seconds-counter some-attribute="foo"></seconds-counter>`
 
 document.body!.appendChild(container)

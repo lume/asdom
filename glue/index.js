@@ -29,11 +29,13 @@ export class Asdom {
 	__getString
 	__newString
 	__getArray
+	__newArray
 	table
 	asdom_connectedCallback
 	asdom_disconnectedCallback
 	asdom_adoptedCallback
 	asdom_attributeChangedCallback
+	idof_Arrayi32
 
 	__exports = null
 
@@ -46,11 +48,13 @@ export class Asdom {
 		this.__getString = e.__getString
 		this.__newString = e.__newString
 		this.__getArray = e.__getArray
+		this.__newArray = e.__newArray
 		this.table = e.table
 		this.asdom_connectedCallback = e.asdom_connectedCallback
 		this.asdom_disconnectedCallback = e.asdom_disconnectedCallback
 		this.asdom_adoptedCallback = e.asdom_adoptedCallback
 		this.asdom_attributeChangedCallback = e.asdom_attributeChangedCallback
+		this.idof_Arrayi32 = e.idof_Arrayi32
 	}
 
 	fn(fnIndex) {
@@ -306,11 +310,16 @@ export class Asdom {
 
 				return this.getKeyOrElementType(parent)
 			},
+			getChildNodes: (nodeId, listId) => {
+				/** @type {Node} */
+				const el = this.__refs.get(nodeId)
+				const childNodes = el.childNodes
+				if (!this.__refs.keyFrom(childNodes)) this.__refs.set(listId, childNodes)
+			},
 		},
 		asDOM_Audio: {
-			initAudio: (srcPtr, id) => {
-				const src = this.__getString(srcPtr)
-				this.__refs.set(id, new Audio(src))
+			initAudio: (id, src) => {
+				this.__refs.set(id, new Audio(this.__getString(src)))
 			},
 			// element.play()
 			playAudio: id => {
@@ -323,14 +332,15 @@ export class Asdom {
 				el.pause()
 			},
 			// element.autoplay
-			setAutoplay: (toggle, id) => {
+			setAutoplay: (id, toggle) => {
 				const el = this.__refs.get(id)
-				el.autoplay = toggle ? true : false
+				el.autoplay = !!toggle
 			},
 			// element.autoplay
 			getAutoplay: id => {
+				/** @type {HTMLAudioElement} */
 				const el = this.__refs.get(id)
-				return el.autoplay ? 1 : 0
+				return el.autoplay
 			},
 		},
 		asDOM_HTMLTemplateElement: {
@@ -339,6 +349,25 @@ export class Asdom {
 				const el = this.__refs.get(id)
 				const frag = el.content
 				this.__refs.set(fragId, frag)
+			},
+		},
+		asDOM_NodeList: {
+			// list.length
+			getLength: id => {
+				/** @type {NodeList} */
+				const list = this.__refs.get(id)
+				return list.length
+			},
+			item: (id, index) => {
+				console.log('get child node item ', index)
+				/** @type {NodeList} */
+				const list = this.__refs.get(id)
+				const node = list.item(index)
+
+				if (!node) return 0 // null
+
+				// TODO this should be getKeyOrNodeType and consider non-element Nodes too.
+				return this.getKeyOrElementType(node)
 			},
 		},
 	}
@@ -391,6 +420,8 @@ function getElementType(element) {
 		else if (tag.includes('-')) throw new Error('Hyphenated (possibly-custom) element not supported yet.')
 		else return 1 // HTMLUnknownElement
 	} else {
-		throw new Error('TODO: firstChild not yet supported for nodes besides Element nodes.')
+		throw new Error(
+			'TODO: nodes besides Element nodes not yet supported in the particular API that caused this error.',
+		)
 	}
 }

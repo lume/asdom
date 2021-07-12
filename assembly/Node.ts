@@ -1,6 +1,7 @@
 import {idToNullOrNode} from './utils'
-import {nodeAppendChild, nodeRemoveChild, getFirstChild, cloneNode, getParentNode} from './imports'
+import {nodeAppendChild, nodeRemoveChild, getFirstChild, cloneNode, getParentNode, getChildNodes} from './imports'
 import {Object} from './Object'
+import {NodeList} from './NodeList'
 
 /** Node types: https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType */
 enum NodeType {
@@ -53,5 +54,17 @@ export abstract class Node extends Object {
 	cloneNode(deep: boolean = false): Node {
 		const id: i32 = cloneNode(this.__ptr__, deep)
 		return idToNullOrNode(id) as Node // The result must not be null if we just cloned a Node.
+	}
+
+	private __childNodes: NodeList | null = null
+
+	get childNodes(): NodeList {
+		let childNodes = this.__childNodes
+		if (!childNodes) {
+			childNodes = new NodeList()
+			this.__childNodes = childNodes
+		}
+		getChildNodes(this.__ptr__, childNodes.__ptr__)
+		return childNodes
 	}
 }

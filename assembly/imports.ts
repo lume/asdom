@@ -34,6 +34,10 @@ export declare function documentHasBody(doc: usize): boolean
 @external('asDOM_Document', 'createTextNode')
 export declare function createTextNode(docId: usize, textId: usize, data: string): void
 
+// // @ts-expect-error
+// @external('asDOM_Document', 'trackNextElement')
+// export declare function trackNextElement(docId: usize, elId: usize): void
+
 // @ts-expect-error
 @external('asDOM_Node', 'nodeAppendChild')
 export declare function nodeAppendChild(parentId: usize, childId: usize): void
@@ -58,9 +62,9 @@ export declare function cloneNode(id: usize, deep?: boolean): i32
 @external('asDOM_Node', 'log')
 export declare function log(msg: string): void
 
-// // @ts-expect-error
-// @external('asDOM_Document', 'trackNextElement')
-// export declare function trackNextElement(docId: usize, elId: usize): void
+// @ts-expect-error
+@external('asDOM_Node', 'getChildNodes')
+export declare function getChildNodes(nodeId: usize, listId: usize): void
 
 // @ts-expect-error
 @external('asDOM_Element', 'elSetAttribute')
@@ -104,7 +108,7 @@ export declare function querySelector(id: usize, selectors: string): i32
 
 // @ts-expect-error
 @external('asDOM_Audio', 'initAudio')
-export declare function initAudio(src: string, id: usize): void
+export declare function initAudio(id: usize, src: string): void
 
 // @ts-expect-error
 @external('asDOM_Audio', 'pauseAudio')
@@ -116,12 +120,20 @@ export declare function playAudio(id: usize): void
 
 // @ts-expect-error
 @external('asDOM_Audio', 'getAutoplay')
-export declare function getAutoplay(id: usize): u32
+export declare function getAutoplay(id: usize): boolean
 
 // @ts-expect-error
 @external('asDOM_Audio', 'setAutoplay')
-export declare function setAutoplay(toggle: u32, id: usize): void
+export declare function setAutoplay(id: usize, toggle: boolean): void
 
 // @ts-expect-error
 @external('asDOM_HTMLTemplateElement', 'getContent')
 export declare function getContent(id: usize, fragId: usize): void
+
+// @ts-expect-error
+@external('asDOM_NodeList', 'getLength')
+export declare function getLength(id: usize): i32
+
+// @ts-expect-error
+@external('asDOM_NodeList', 'item')
+export declare function item(id: usize, index: i32): i32
