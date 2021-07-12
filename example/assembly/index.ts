@@ -82,9 +82,6 @@ el.innerHTML = /*html*/ `<span><em>hello</em> from <strong>AssemblyScript</stron
 document.body!.appendChild(el)
 log('h1 child node count: ' + el.childNodes.length.toString())
 
-// TODO This will currently cause an error because it accesses a text node. Need to support Text nodes.
-// el.childNodes.item(0)!.childNodes.item(1)!
-
 let item = el.childNodes.item(0)!.childNodes.item(2)!
 if (!(item instanceof HTMLElement && (item as HTMLElement).innerHTML == 'AssemblyScript'))
 	throw new Error('Expected different result from childNodes.item()')
