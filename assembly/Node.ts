@@ -1,5 +1,14 @@
-import {idToNullOrNode} from './utils'
-import {nodeAppendChild, nodeRemoveChild, getFirstChild, cloneNode, getParentNode, getChildNodes} from './imports'
+import {DEBUG, idToNullOrObject} from './utils'
+import {
+	nodeAppendChild,
+	nodeRemoveChild,
+	getFirstChild,
+	cloneNode,
+	getParentNode,
+	getChildNodes,
+	getNextSibling,
+	log,
+} from './imports'
 import {Object} from './Object'
 import {NodeList} from './NodeList'
 
@@ -42,18 +51,33 @@ export abstract class Node extends Object {
 	abstract get nodeType(): NodeType
 
 	get parentNode(): Node | null {
+		if (DEBUG) log('AS DEBUG: Node.parentNode call getParentNode')
+
 		const id: i32 = getParentNode(this.__ptr__)
-		return idToNullOrNode(id)
+
+		if (DEBUG) log('AS DEBUG: Node.parentNode getParentNode result: ' + id.toString())
+
+		const result = idToNullOrObject(id) as Node | null
+
+		if (result) if (DEBUG) log('AS DEBUG: Node.parentNode result: Node')
+		if (!result) if (DEBUG) log('AS DEBUG: Node.parentNode result: null')
+
+		return result
 	}
 
 	get firstChild(): Node | null {
 		const id: i32 = getFirstChild(this.__ptr__)
-		return idToNullOrNode(id)
+		return idToNullOrObject(id) as Node | null
+	}
+
+	get nextSibling(): Node | null {
+		const id: i32 = getNextSibling(this.__ptr__)
+		return idToNullOrObject(id) as Node | null
 	}
 
 	cloneNode(deep: boolean = false): Node {
 		const id: i32 = cloneNode(this.__ptr__, deep)
-		return idToNullOrNode(id) as Node // The result must not be null if we just cloned a Node.
+		return idToNullOrObject(id) as Node // The result must not be null if we just cloned a Node.
 	}
 
 	private __childNodes: NodeList | null = null

@@ -13,7 +13,7 @@ import {
 	Image,
 	HTMLHeadingElement,
 } from './elements/index'
-import {makeNode} from './utils'
+import {makeObject} from './utils'
 import {createTextNode, documentHasBody, getUrl, querySelector, setDocument, setElement, trackNextRef} from './imports'
 import {Node} from './Node'
 import {refs} from './refs'
@@ -100,7 +100,7 @@ export class Document extends Node {
 		// corresponding AS-side instance yet. In this case we need to
 		// create a new instance based on its type.
 		else if (id < 0) {
-			const el = makeNode(-id)
+			const el = makeObject(-id)
 
 			// Associate the AS-side instance with the JS-side instance.
 			// TODO use this.ownerDocument.__ptr__ instead of document.__ptr__

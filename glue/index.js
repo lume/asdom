@@ -90,6 +90,10 @@ export class Asdom {
 				// TODO elements need to be associated with documents on the AS-side so they can have ownerDocument properties.
 				this.__refs.set(id, ref)
 			},
+			log: str => {
+				if (this.__getString(str) == null || this.__getString(str) === 'null') debugger
+				console.log('AS: ' + this.__getString(str))
+			},
 		},
 		asDOM_Window: {
 			trackWindow: id => {
@@ -261,14 +265,10 @@ export class Asdom {
 				const node = this.__refs.get(id)
 				const selectors = this.__getString(_selectors)
 				const foundElem = node.querySelector(selectors)
-				return this.getKeyOrElementType(foundElem)
+				return this.getKeyOrObjectType(foundElem)
 			},
 		},
 		asDOM_Node: {
-			log: str => {
-				if (this.__getString(str) == null || this.__getString(str) === 'null') debugger
-				console.log(this.__getString(str))
-			},
 			// node.appendChild()
 			nodeAppendChild: (parentId, childId) => {
 				const parent = this.__refs.get(parentId)
@@ -291,7 +291,16 @@ export class Asdom {
 
 				if (!child) return 0 // null
 
-				return this.getKeyOrElementType(child)
+				return this.getKeyOrObjectType(child)
+			},
+			getNextSibling: id => {
+				/** @type {Node} */
+				const node = this.__refs.get(id)
+				const sib = node.nextSibling
+
+				if (!sib) return 0 // null
+
+				return this.getKeyOrObjectType(sib)
 			},
 			cloneNode: (id, deep = false) => {
 				/** @type {Node} */
@@ -299,7 +308,7 @@ export class Asdom {
 
 				const clone = node.cloneNode(deep)
 
-				return this.getKeyOrElementType(clone)
+				return this.getKeyOrObjectType(clone)
 			},
 			getParentNode: id => {
 				/** @type {Node} */
@@ -308,7 +317,7 @@ export class Asdom {
 
 				if (!parent) return 0 // null
 
-				return this.getKeyOrElementType(parent)
+				return this.getKeyOrObjectType(parent)
 			},
 			getChildNodes: (nodeId, listId) => {
 				/** @type {Node} */
@@ -359,7 +368,6 @@ export class Asdom {
 				return list.length
 			},
 			item: (id, index) => {
-				console.log('get child node item ', index)
 				/** @type {NodeList} */
 				const list = this.__refs.get(id)
 				const node = list.item(index)
@@ -367,7 +375,7 @@ export class Asdom {
 				if (!node) return 0 // null
 
 				// TODO this should be getKeyOrNodeType and consider non-element Nodes too.
-				return this.getKeyOrElementType(node)
+				return this.getKeyOrObjectType(node)
 			},
 		},
 	}
@@ -380,7 +388,7 @@ export class Asdom {
 	 * numbers won't collide with IDs within the first IDs between 0 and
 	 * 2^31.
 	 */
-	getKeyOrElementType(element) {
+	getKeyOrObjectType(element) {
 		const key = this.__refs.keyFrom(element)
 
 		if (!key) {

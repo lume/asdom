@@ -1,8 +1,11 @@
 // TODO Put this in a file shared between glue code and AS code. We need to
 // convert the glue code to TypeScript first, or compile the shared file to
 // plain JS.
-export enum ElementType {
+export enum ObjectType {
+	// 0 is intentionally skipped, do not use 0
+
 	unknown = 1,
+
 	body = 2,
 	div = 3,
 	span = 4,
@@ -18,4 +21,6 @@ export enum ElementType {
 	h4 = 14,
 	h5 = 15,
 	h6 = 16,
+
+	text = 100, // Text
 }

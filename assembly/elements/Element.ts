@@ -10,7 +10,7 @@ import {
 	querySelector,
 	remove,
 } from '../imports'
-import {idToNullOrNode} from '../utils'
+import {idToNullOrObject} from '../utils'
 import {Node} from '../Node'
 
 export abstract class Element extends Node {
@@ -53,6 +53,6 @@ export abstract class Element extends Node {
 
 	querySelector(selectors: string): Element | null {
 		const id = querySelector(this.__ptr__, selectors)
-		return idToNullOrNode(id) as Element | null
+		return idToNullOrObject(id) as Element | null
 	}
 }

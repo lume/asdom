@@ -1,5 +1,5 @@
-import {ElementType} from './ElementType'
-import {trackNextRef} from './imports'
+import {ObjectType} from './ObjectType'
+import {log, trackNextRef} from './imports'
 import {refs} from './refs'
 import {
 	Node,
@@ -14,48 +14,64 @@ import {
 	Image,
 	HTMLHeadingElement,
 	HTMLUnknownElement,
+	Text,
+	Object,
 } from './index'
 
-export function makeNode(type: ElementType): Node {
-	let el: Node
+export const DEBUG: boolean = true
 
-	if (type == ElementType.body) el = new HTMLBodyElement()
-	else if (type == ElementType.div) el = new HTMLDivElement()
-	else if (type == ElementType.span) el = new HTMLSpanElement()
-	else if (type == ElementType.p) el = new HTMLParagraphElement()
-	else if (type == ElementType.a) el = new HTMLAnchorElement()
-	else if (type == ElementType.script) el = new HTMLScriptElement()
-	else if (type == ElementType.template) el = new HTMLTemplateElement()
-	else if (type == ElementType.audio) el = new Audio()
-	else if (type == ElementType.img) el = new Image()
-	else if (type == ElementType.h1) el = new HTMLHeadingElement()
-	else if (type == ElementType.h2) el = new HTMLHeadingElement()
-	else if (type == ElementType.h3) el = new HTMLHeadingElement()
-	else if (type == ElementType.h4) el = new HTMLHeadingElement()
-	else if (type == ElementType.h5) el = new HTMLHeadingElement()
-	else if (type == ElementType.h6) el = new HTMLHeadingElement()
-	else if (type === ElementType.unknown) el = new HTMLUnknownElement()
+export function makeObject(type: ObjectType): Object {
+	let obj: Node
+
+	// Elements
+	if (type == ObjectType.body) obj = new HTMLBodyElement()
+	else if (type == ObjectType.div) obj = new HTMLDivElement()
+	else if (type == ObjectType.span) obj = new HTMLSpanElement()
+	else if (type == ObjectType.p) obj = new HTMLParagraphElement()
+	else if (type == ObjectType.a) obj = new HTMLAnchorElement()
+	else if (type == ObjectType.script) obj = new HTMLScriptElement()
+	else if (type == ObjectType.template) obj = new HTMLTemplateElement()
+	else if (type == ObjectType.audio) obj = new Audio()
+	else if (type == ObjectType.img) obj = new Image()
+	else if (type == ObjectType.h1) obj = new HTMLHeadingElement()
+	else if (type == ObjectType.h2) obj = new HTMLHeadingElement()
+	else if (type == ObjectType.h3) obj = new HTMLHeadingElement()
+	else if (type == ObjectType.h4) obj = new HTMLHeadingElement()
+	else if (type == ObjectType.h5) obj = new HTMLHeadingElement()
+	else if (type == ObjectType.h6) obj = new HTMLHeadingElement()
+	else if (type === ObjectType.unknown) obj = new HTMLUnknownElement()
+	// Text nodes
+	else if (type === ObjectType.text) obj = new Text()
+	// Anything else
 	else throw new Error('Hyphenated or custom elements not yet supported.')
 
-	return el
+	return obj
 }
 
-// Use idToNullOrNode only for APIs that return Node or Node|null!
-export function idToNullOrNode(id: i32): Node | null {
+// Use this only for APIs that return Node or Node|null!
+export function idToNullOrObject(id: i32): Object | null {
+	if (DEBUG) log('AS DEBUG: idToNullOrObject, ' + id.toString())
+
 	// if null, it means there is no element on the JS-side.
-	if (id == 0) return null
+	if (id == 0) {
+		if (DEBUG) log('AS DEBUG: idToNullOrObject returning null')
+
+		return null
+	}
 	// If negative, there is an element on the JS-side that doesn't have a
 	// corresponding AS-side instance yet. In this case we need to
 	// create a new instance based on its type.
 	else if (id < 0) {
-		const el = makeNode(-id)
+		if (DEBUG) log('AS DEBUG: idToNullOrObject id < 0')
+
+		const obj = makeObject(-id)
 
 		// Associate the AS-side instance with the JS-side instance.
 		// TODO use this.ownerDocument.__ptr__ instead of document.__ptr__
 		// trackNextElement(document.__ptr__, el.__ptr__)
-		trackNextRef(el.__ptr__)
+		trackNextRef(obj.__ptr__)
 
-		return el
+		return obj
 	}
 
 	// If we reach here then there is already an AS-side instance
@@ -67,6 +83,8 @@ export function idToNullOrNode(id: i32): Node | null {
 	// tracked. Finally, if we do try to access them, we lazily associate
 	// new AS-side objects in the previous conditional block.
 	else {
-		return refs.get(id) as Node // It must be a Node. Use idToNullOrNode only for APIs that return Node or Node|null.
+		if (DEBUG) log('AS DEBUG: idToNullOrObject got reference ID: ' + id.toString())
+
+		return refs.get(id) as Node // It must be a Node. Use this function only for APIs that return Object or Object|null.
 	}
 }

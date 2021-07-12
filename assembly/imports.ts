@@ -3,6 +3,10 @@
 export declare function trackNextRef(id: usize): void
 
 // @ts-expect-error
+@external('asDOM', 'log')
+export declare function log(msg: string): void
+
+// @ts-expect-error
 @external('asDOM_Window', 'getCustomElements')
 export declare function getCustomElements(id: usize, ceId: usize): void
 
@@ -55,12 +59,12 @@ export declare function getParentNode(id: usize): i32
 export declare function getFirstChild(id: usize): i32
 
 // @ts-expect-error
-@external('asDOM_Node', 'cloneNode')
-export declare function cloneNode(id: usize, deep?: boolean): i32
+@external('asDOM_Node', 'getNextSibling')
+export declare function getNextSibling(id: usize): i32
 
 // @ts-expect-error
-@external('asDOM_Node', 'log')
-export declare function log(msg: string): void
+@external('asDOM_Node', 'cloneNode')
+export declare function cloneNode(id: usize, deep?: boolean): i32
 
 // @ts-expect-error
 @external('asDOM_Node', 'getChildNodes')
