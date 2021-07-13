@@ -15,6 +15,7 @@ import {
 	querySelector,
 	querySelectorAll,
 	remove,
+	getTagName,
 } from '../imports'
 import {idToNullOrObject} from '../utils'
 import {Node} from '../Node'
@@ -24,6 +25,10 @@ import {NodeList} from '../NodeList'
 export abstract class Element extends Node {
 	get nodeType(): i32 {
 		return 1
+	}
+
+	get tagName(): string {
+		return getTagName(this.__ptr__)
 	}
 
 	setAttribute(attr: string, value: string | null): void {

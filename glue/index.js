@@ -214,34 +214,45 @@ export class Asdom {
 			},
 		},
 		asDOM_Element: {
+			// element.innerHTML
+			getTagName: id => {
+				/** @type {Element} */
+				const el = this.__refs.get(id)
+				return this.__newString(el.tagName)
+			},
 			// element.setAttribute
 			elSetAttribute: (id, attr, value) => {
+				/** @type {Element} */
 				const el = this.__refs.get(id)
 				el.setAttribute(this.__getString(attr), this.__getString(value))
 			},
 			// element.getAttribute
 			elGetAttribute: (id, attr) => {
+				/** @type {Element} */
 				const el = this.__refs.get(id)
 				return this.__newString(el.getAttribute(this.__getString(attr)))
 			},
 			// element.innerHTML
 			elSetInnerHTML: (id, value) => {
+				/** @type {Element} */
 				const el = this.__refs.get(id)
 				el.innerHTML = this.__getString(value)
 			},
 			// element.innerHTML
 			elGetInnerHTML: id => {
+				/** @type {Element} */
 				const el = this.__refs.get(id)
 				return this.__newString(el.innerHTML)
 			},
 			// element.innerText
 			elSetInnerText: (id, value) => {
+				/** @type {Element} */
 				const el = this.__refs.get(id)
 				el.innerText = this.__getString(value)
 			},
 			// element.innerText
 			elGetInnerText: id => {
-				new Audio()
+				/** @type {Element} */
 				const el = this.__refs.get(id)
 				return this.__newString(el.innerText)
 			},
@@ -289,16 +300,19 @@ export class Asdom {
 			},
 			// element.onclick
 			elOnClick: (id, callback) => {
+				/** @type {Element} */
 				const el = this.__refs.get(id)
 				el.onclick = this.fn(callback)
 			},
 			// element.click()
 			elClick: id => {
+				/** @type {Element} */
 				const el = this.__refs.get(id)
 				el.click()
 			},
 			// element.remove()
 			remove: id => {
+				/** @type {Element} */
 				const el = this.__refs.get(id)
 				el.remove()
 			},

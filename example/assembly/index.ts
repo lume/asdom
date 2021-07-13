@@ -146,32 +146,34 @@ if (i != 2) throw new Error('Unexpected number of child elements.')
 // }}
 
 // TEST querySelector / querySelectorAll {{
+{
+	const el2 = document.body!.querySelector('h1.hello')!
+	el2.setAttribute('class', 'hello selected')
 
-const el2 = document.body!.querySelector('h1.hello')!
-el2.setAttribute('class', 'hello selected')
+	let query = el.querySelectorAll('*')
+	if (query.length != 3) throw new Error('Wrong number of queried elements.')
+	if (!(query[0]! instanceof HTMLSpanElement)) throw new Error('Expected a span element.')
+	if (!(query[1]! instanceof HTMLElement && query[1]!.tagName == 'EM')) throw new Error('Expected an em element.')
+	if (!(query[2]! instanceof HTMLElement && query[2]!.tagName == 'STRONG'))
+		throw new Error('Expected a strong element.')
+	if (query[3] != null) throw new Error('There should be no more elements.')
 
-let queryResult = el.querySelectorAll('*')
-if (queryResult.length != 3) throw new Error('Wrong number of queried elements.')
-if (!(queryResult[0]! instanceof HTMLSpanElement)) throw new Error('Expected a different type of element.')
-if (!(queryResult[1]! instanceof HTMLElement)) throw new Error('Expected a different type of element.')
-if (!(queryResult[2]! instanceof HTMLElement)) throw new Error('Expected a different type of element.')
-if (queryResult[3] != null) throw new Error('There should be no more elements.')
+	let query2 = el.querySelectorAll('span > *')
+	if (query2.length != 2) throw new Error('Wrong number of queried elements.')
+	if (!(query2[0]! instanceof HTMLElement && query2[0]!.tagName == 'EM')) throw new Error('Expected an em element.')
+	if (!(query2[1]! instanceof HTMLElement && query2[1]!.tagName == 'STRONG'))
+		throw new Error('Expected a strong element.')
+	if (query2[2] != null) throw new Error('There should be no more elements.')
 
-queryResult = el.querySelectorAll('span > *')
-if (queryResult.length != 2) throw new Error('Wrong number of queried elements.')
-if (!(queryResult[0]! instanceof HTMLElement)) throw new Error('Expected a different type of element.')
-if (!(queryResult[1]! instanceof HTMLElement)) throw new Error('Expected a different type of element.')
-if (queryResult[2] != null) throw new Error('There should be no more elements.')
+	let query3 = el.querySelectorAll('.hellospan')
+	if (query3.length != 1) throw new Error('Wrong number of queried elements.')
+	if (!(query3[0]! instanceof HTMLSpanElement)) throw new Error('Expected a span element.')
+	if (query3[1] != null) throw new Error('There should be no more elements.')
 
-queryResult = el.querySelectorAll('.hellospan')
-if (queryResult.length != 1) throw new Error('Wrong number of queried elements.')
-if (!(queryResult[0]! instanceof HTMLSpanElement)) throw new Error('Expected a different type of element.')
-if (queryResult[1] != null) throw new Error('There should be no more elements.')
-
-queryResult = el.querySelectorAll('.nothing')
-if (queryResult.length != 0) throw new Error('Wrong number of queried elements.')
-if (queryResult[0] != null) throw new Error('There should be no more elements.')
-
+	let query4 = el.querySelectorAll('.nothing')
+	if (query4.length != 0) throw new Error('Wrong number of queried elements.')
+	if (query4[0] != null) throw new Error('There should be no more elements.')
+}
 // }}
 
 img = document.createElement('img') as HTMLImageElement

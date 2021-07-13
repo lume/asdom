@@ -83,6 +83,10 @@ export declare function cloneNode(id: usize, deep?: boolean): i32
 export declare function getChildNodes(nodeId: usize, listId: usize): void
 
 // @ts-expect-error
+@external('asDOM_Element', 'getTagName')
+export declare function getTagName(id: usize): string
+
+// @ts-expect-error
 @external('asDOM_Element', 'elSetAttribute')
 export declare function elSetAttribute(id: usize, attr: string, value: string | null): void
 
