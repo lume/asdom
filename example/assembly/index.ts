@@ -13,6 +13,7 @@ import {
 	HTMLElement,
 	HTMLImageElement,
 	Node,
+	HTMLHeadingElement,
 } from '../node_modules/asdom/assembly/index'
 
 // TODO move these into asdom, because requestAnimationFrame is a DOM API.
@@ -76,7 +77,7 @@ style.innerHTML = `
 
 document.body!.appendChild(style)
 
-const el = document.createElement('h1')
+const el = document.createElement('h1') as HTMLHeadingElement
 el.setAttribute('class', 'hello')
 
 el.innerHTML = /*html*/ `<span><em>hello</em> from <strong>AssemblyScript</strong></span>`
@@ -112,16 +113,34 @@ for (let node: Node | null = el.childNodes[0]!.firstChild; node; node = node!.ne
 // while (node != null) { node = node.nextSibling; i++ } // ERROR
 // while (node != null) { node = node!.nextSibling; i++ } // OK
 
-if (i != 3) throw new Error('Unexpected number of children.')
+if (i != 3) throw new Error('Unexpected number of child nodes.')
 
 // }}
 
 // TEST Node.lastChild / Node.previousSibling {{
 
 i = 0
-for (let node: Node | null = el.childNodes[0]!.lastChild; node; node = node!.previousSibling) i++ // OK
+for (let node: Node | null = el.childNodes[0]!.lastChild; node; node = node!.previousSibling) i++
 
-if (i != 3) throw new Error('Unexpected number of children.')
+if (i != 3) throw new Error('Unexpected number of child nodes.')
+
+// }}
+
+// TEST Element.lastElementChild / Element.previousElementSibling {{
+
+i = 0
+for (let node: Element | null = el.children[0]!.firstElementChild; node; node = node!.nextElementSibling) i++
+
+if (i != 2) throw new Error('Unexpected number of child elements.')
+
+// }}
+
+// TEST Element.lastElementChild / Element.previousElementSibling {{
+
+i = 0
+for (let node: Element | null = el.children[0]!.lastElementChild; node; node = node!.previousElementSibling) i++
+
+if (i != 2) throw new Error('Unexpected number of child elements.')
 
 // }}
 
@@ -220,17 +239,23 @@ document.body!.appendChild(cloned)
 
 const text = document.createTextNode('This is a text node!')
 
-let textParent = text.parentNode
-if (textParent) throw new Error('There should not be a parent yet!')
+let textParentElement = text.parentElement
+if (textParentElement) throw new Error('There should not be a parent element yet!')
+
+let textParentNode = text.parentNode
+if (textParentNode) throw new Error('There should not be a parent node yet!')
 
 document.body!.appendChild(text)
 
-textParent = text.parentNode
-if (!textParent) throw new Error('There should be a parent!')
+textParentElement = text.parentElement
+if (!textParentElement) throw new Error('There should be a parent element!')
+
+textParentNode = text.parentNode
+if (!textParentNode) throw new Error('There should be a parent node!')
 
 const br = document.createElement('br')
 
-text.parentNode!.appendChild(br)
+text.parentElement!.appendChild(br)
 
 text2 = document.createTextNode('Another text node, appended using parentNode!')
 text.parentNode!.appendChild(text2)

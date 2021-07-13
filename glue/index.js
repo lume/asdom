@@ -245,6 +245,48 @@ export class Asdom {
 				const el = this.__refs.get(id)
 				return this.__newString(el.innerText)
 			},
+			getChildren: (id, listId) => {
+				/** @type {Element} */
+				const obj = this.__refs.get(id)
+				const list = obj.children
+				if (!this.__refs.keyFrom(list)) this.__refs.set(listId, list)
+			},
+			getFirstElementChild: id => {
+				/** @type {Element} */
+				const node = this.__refs.get(id)
+				const result = node.firstElementChild
+
+				if (!result) return 0 // null
+
+				return this.getKeyOrObjectType(result)
+			},
+			getLastElementChild: id => {
+				/** @type {Element} */
+				const node = this.__refs.get(id)
+				const result = node.lastElementChild
+
+				if (!result) return 0 // null
+
+				return this.getKeyOrObjectType(result)
+			},
+			getNextElementSibling: id => {
+				/** @type {Element} */
+				const node = this.__refs.get(id)
+				const result = node.nextElementSibling
+
+				if (!result) return 0 // null
+
+				return this.getKeyOrObjectType(result)
+			},
+			getPreviousElementSibling: id => {
+				/** @type {Element} */
+				const node = this.__refs.get(id)
+				const result = node.previousElementSibling
+
+				if (!result) return 0 // null
+
+				return this.getKeyOrObjectType(result)
+			},
 			// element.onclick
 			elOnClick: (id, callback) => {
 				const el = this.__refs.get(id)
@@ -282,6 +324,24 @@ export class Asdom {
 				const child = this.__refs.get(childId)
 				// We'd actually return the object here when we switch to `externref`.
 				/*return*/ parent.removeChild(child)
+			},
+			getParentNode: id => {
+				/** @type {Node} */
+				const node = this.__refs.get(id)
+				const result = node.parentNode
+
+				if (!result) return 0 // null
+
+				return this.getKeyOrObjectType(result)
+			},
+			getParentElement: id => {
+				/** @type {Node} */
+				const node = this.__refs.get(id)
+				const result = node.parentElement
+
+				if (!result) return 0 // null
+
+				return this.getKeyOrObjectType(result)
 			},
 			// node.firstChild (readonly)
 			getFirstChild: id => {
@@ -328,20 +388,11 @@ export class Asdom {
 
 				return this.getKeyOrObjectType(result)
 			},
-			getParentNode: id => {
+			getChildNodes: (id, listId) => {
 				/** @type {Node} */
-				const node = this.__refs.get(id)
-				const result = node.parentNode
-
-				if (!result) return 0 // null
-
-				return this.getKeyOrObjectType(result)
-			},
-			getChildNodes: (nodeId, listId) => {
-				/** @type {Node} */
-				const el = this.__refs.get(nodeId)
-				const childNodes = el.childNodes
-				if (!this.__refs.keyFrom(childNodes)) this.__refs.set(listId, childNodes)
+				const obj = this.__refs.get(id)
+				const list = obj.childNodes
+				if (!this.__refs.keyFrom(list)) this.__refs.set(listId, list)
 			},
 		},
 		asDOM_Audio: {

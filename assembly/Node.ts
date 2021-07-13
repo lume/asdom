@@ -9,6 +9,7 @@ import {
 	getNextSibling,
 	getPreviousSibling,
 	getLastChild,
+	getParentElement,
 } from './imports'
 import {Object} from './Object'
 import {NodeList} from './NodeList'
@@ -53,15 +54,22 @@ export abstract class Node extends Object {
 
 	get parentNode(): Node | null {
 		const id: i32 = getParentNode(this.__ptr__)
-		const result = idToNullOrObject(id)
 
 		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
-		// This doesn't work in AS (but works in TS):
-		//return result as Node | null
-		// So instead we need to do this for now:
+		// return idToNullOrObject(id) as Node | null
+		const result = idToNullOrObject(id)
 		if (!result) return null
 		else return result as Node
-		// ^ issue: https://github.com/AssemblyScript/assemblyscript/issues/1976
+	}
+
+	get parentElement(): Node | null {
+		const id: i32 = getParentElement(this.__ptr__)
+
+		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
+		// return idToNullOrObject(id) as Node | null
+		const result = idToNullOrObject(id)
+		if (!result) return null
+		else return result as Node
 	}
 
 	get firstChild(): Node | null {

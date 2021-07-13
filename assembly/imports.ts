@@ -55,6 +55,10 @@ export declare function nodeRemoveChild(parentId: usize, childId: usize): void
 export declare function getParentNode(id: usize): i32
 
 // @ts-expect-error
+@external('asDOM_Node', 'getParentElement')
+export declare function getParentElement(id: usize): i32
+
+// @ts-expect-error
 @external('asDOM_Node', 'getFirstChild')
 export declare function getFirstChild(id: usize): i32
 
@@ -101,6 +105,26 @@ export declare function elSetInnerText(id: usize, value: string | null): void
 // @ts-expect-error
 @external('asDOM_Element', 'elGetInnerText')
 export declare function elGetInnerText(id: usize): string
+
+// @ts-expect-error
+@external('asDOM_Element', 'getChildren')
+export declare function getChildren(nodeId: usize, listId: usize): void
+
+// @ts-expect-error
+@external('asDOM_Element', 'getFirstElementChild')
+export declare function getFirstElementChild(id: usize): i32
+
+// @ts-expect-error
+@external('asDOM_Element', 'getLastElementChild')
+export declare function getLastElementChild(id: usize): i32
+
+// @ts-expect-error
+@external('asDOM_Element', 'getNextElementSibling')
+export declare function getNextElementSibling(id: usize): i32
+
+// @ts-expect-error
+@external('asDOM_Element', 'getPreviousElementSibling')
+export declare function getPreviousElementSibling(id: usize): i32
 
 // @ts-expect-error
 @external('asDOM_Element', 'elClick')
