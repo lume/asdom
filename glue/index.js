@@ -264,8 +264,8 @@ export class Asdom {
 			querySelector: (id, _selectors) => {
 				const node = this.__refs.get(id)
 				const selectors = this.__getString(_selectors)
-				const foundElem = node.querySelector(selectors)
-				return this.getKeyOrObjectType(foundElem)
+				const result = node.querySelector(selectors)
+				return this.getKeyOrObjectType(result)
 			},
 		},
 		asDOM_Node: {
@@ -287,37 +287,55 @@ export class Asdom {
 			getFirstChild: id => {
 				/** @type {Node} */
 				const node = this.__refs.get(id)
-				const child = node.firstChild
+				const result = node.firstChild
 
-				if (!child) return 0 // null
+				if (!result) return 0 // null
 
-				return this.getKeyOrObjectType(child)
+				return this.getKeyOrObjectType(result)
+			},
+			getLastChild: id => {
+				/** @type {Node} */
+				const node = this.__refs.get(id)
+				const result = node.lastChild
+
+				if (!result) return 0 // null
+
+				return this.getKeyOrObjectType(result)
 			},
 			getNextSibling: id => {
 				/** @type {Node} */
 				const node = this.__refs.get(id)
-				const sib = node.nextSibling
+				const result = node.nextSibling
 
-				if (!sib) return 0 // null
+				if (!result) return 0 // null
 
-				return this.getKeyOrObjectType(sib)
+				return this.getKeyOrObjectType(result)
+			},
+			getPreviousSibling: id => {
+				/** @type {Node} */
+				const node = this.__refs.get(id)
+				const result = node.previousSibling
+
+				if (!result) return 0 // null
+
+				return this.getKeyOrObjectType(result)
 			},
 			cloneNode: (id, deep = false) => {
 				/** @type {Node} */
 				const node = this.__refs.get(id)
 
-				const clone = node.cloneNode(deep)
+				const result = node.cloneNode(deep)
 
-				return this.getKeyOrObjectType(clone)
+				return this.getKeyOrObjectType(result)
 			},
 			getParentNode: id => {
 				/** @type {Node} */
 				const node = this.__refs.get(id)
-				const parent = node.parentNode
+				const result = node.parentNode
 
-				if (!parent) return 0 // null
+				if (!result) return 0 // null
 
-				return this.getKeyOrObjectType(parent)
+				return this.getKeyOrObjectType(result)
 			},
 			getChildNodes: (nodeId, listId) => {
 				/** @type {Node} */
@@ -370,12 +388,12 @@ export class Asdom {
 			item: (id, index) => {
 				/** @type {NodeList} */
 				const list = this.__refs.get(id)
-				const node = list.item(index)
+				const result = list.item(index)
 
-				if (!node) return 0 // null
+				if (!result) return 0 // null
 
 				// TODO this should be getKeyOrNodeType and consider non-element Nodes too.
-				return this.getKeyOrObjectType(node)
+				return this.getKeyOrObjectType(result)
 			},
 		},
 	}

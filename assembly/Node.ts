@@ -7,6 +7,8 @@ import {
 	getParentNode,
 	getChildNodes,
 	getNextSibling,
+	getPreviousSibling,
+	getLastChild,
 } from './imports'
 import {Object} from './Object'
 import {NodeList} from './NodeList'
@@ -72,8 +74,28 @@ export abstract class Node extends Object {
 		else return result as Node
 	}
 
+	get lastChild(): Node | null {
+		const id: i32 = getLastChild(this.__ptr__)
+
+		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
+		// return idToNullOrObject(id) as Node | null
+		const result = idToNullOrObject(id)
+		if (!result) return null
+		else return result as Node
+	}
+
 	get nextSibling(): Node | null {
 		const id: i32 = getNextSibling(this.__ptr__)
+
+		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
+		// return idToNullOrObject(id) as Node | null
+		const result = idToNullOrObject(id)
+		if (!result) return null
+		else return result as Node
+	}
+
+	get previousSibling(): Node | null {
+		const id: i32 = getPreviousSibling(this.__ptr__)
 
 		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
 		// return idToNullOrObject(id) as Node | null

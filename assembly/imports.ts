@@ -59,8 +59,16 @@ export declare function getParentNode(id: usize): i32
 export declare function getFirstChild(id: usize): i32
 
 // @ts-expect-error
+@external('asDOM_Node', 'getLastChild')
+export declare function getLastChild(id: usize): i32
+
+// @ts-expect-error
 @external('asDOM_Node', 'getNextSibling')
 export declare function getNextSibling(id: usize): i32
+
+// @ts-expect-error
+@external('asDOM_Node', 'getPreviousSibling')
+export declare function getPreviousSibling(id: usize): i32
 
 // @ts-expect-error
 @external('asDOM_Node', 'cloneNode')

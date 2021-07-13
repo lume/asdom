@@ -91,6 +91,8 @@ item = el.childNodes[0]!.childNodes[2]!
 if (!(item instanceof HTMLElement && (item as HTMLElement).innerHTML == 'AssemblyScript'))
 	throw new Error('Expected different result from childNodes[]')
 
+// TEST Node.lastChild / Node.previousSibling {{
+
 let i: i32 = 0
 
 // All these should work. Github issue: https://github.com/AssemblyScript/assemblyscript/issues/1973
@@ -110,8 +112,18 @@ for (let node: Node | null = el.childNodes[0]!.firstChild; node; node = node!.ne
 // while (node != null) { node = node.nextSibling; i++ } // ERROR
 // while (node != null) { node = node!.nextSibling; i++ } // OK
 
-log('------- child count: ' + i.toString())
 if (i != 3) throw new Error('Unexpected number of children.')
+
+// }}
+
+// TEST Node.lastChild / Node.previousSibling {{
+
+i = 0
+for (let node: Node | null = el.childNodes[0]!.lastChild; node; node = node!.previousSibling) i++ // OK
+
+if (i != 3) throw new Error('Unexpected number of children.')
+
+// }}
 
 const el2 = document.body!.querySelector('h1.hello')!
 el2.setAttribute('class', 'hello selected')
