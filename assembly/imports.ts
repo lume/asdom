@@ -143,6 +143,10 @@ export declare function remove(id: usize): void
 export declare function querySelector(id: usize, selectors: string): i32
 
 // @ts-expect-error
+@external('asDOM_Element', 'querySelectorAll')
+export declare function querySelectorAll(id: usize, selectors: string): i32
+
+// @ts-expect-error
 @external('asDOM_Audio', 'initAudio')
 export declare function initAudio(id: usize, src: string): void
 

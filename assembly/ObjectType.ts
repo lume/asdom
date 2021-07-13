@@ -22,5 +22,11 @@ export enum ObjectType {
 	h5 = 15,
 	h6 = 16,
 
-	text = 100, // Text
+	// Text nodes
+	text = 100,
+
+	// Node lists
+	htmlCollection = 200,
+	nodeListOfNode = 201,
+	nodeListOfElement = 202,
 }

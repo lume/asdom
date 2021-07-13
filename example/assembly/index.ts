@@ -14,6 +14,7 @@ import {
 	HTMLImageElement,
 	Node,
 	HTMLHeadingElement,
+	HTMLSpanElement,
 } from '../node_modules/asdom/assembly/index'
 
 // TODO move these into asdom, because requestAnimationFrame is a DOM API.
@@ -80,7 +81,7 @@ document.body!.appendChild(style)
 const el = document.createElement('h1') as HTMLHeadingElement
 el.setAttribute('class', 'hello')
 
-el.innerHTML = /*html*/ `<span><em>hello</em> from <strong>AssemblyScript</strong></span>`
+el.innerHTML = /*html*/ `<span class="hellospan"><em>hello</em> from <strong>AssemblyScript</strong></span>`
 document.body!.appendChild(el)
 log('h1 child node count: ' + el.childNodes.length.toString())
 
@@ -144,8 +145,34 @@ if (i != 2) throw new Error('Unexpected number of child elements.')
 
 // }}
 
+// TEST querySelector / querySelectorAll {{
+
 const el2 = document.body!.querySelector('h1.hello')!
 el2.setAttribute('class', 'hello selected')
+
+let queryResult = el.querySelectorAll('*')
+if (queryResult.length != 3) throw new Error('Wrong number of queried elements.')
+if (!(queryResult[0]! instanceof HTMLSpanElement)) throw new Error('Expected a different type of element.')
+if (!(queryResult[1]! instanceof HTMLElement)) throw new Error('Expected a different type of element.')
+if (!(queryResult[2]! instanceof HTMLElement)) throw new Error('Expected a different type of element.')
+if (queryResult[3] != null) throw new Error('There should be no more elements.')
+
+queryResult = el.querySelectorAll('span > *')
+if (queryResult.length != 2) throw new Error('Wrong number of queried elements.')
+if (!(queryResult[0]! instanceof HTMLElement)) throw new Error('Expected a different type of element.')
+if (!(queryResult[1]! instanceof HTMLElement)) throw new Error('Expected a different type of element.')
+if (queryResult[2] != null) throw new Error('There should be no more elements.')
+
+queryResult = el.querySelectorAll('.hellospan')
+if (queryResult.length != 1) throw new Error('Wrong number of queried elements.')
+if (!(queryResult[0]! instanceof HTMLSpanElement)) throw new Error('Expected a different type of element.')
+if (queryResult[1] != null) throw new Error('There should be no more elements.')
+
+queryResult = el.querySelectorAll('.nothing')
+if (queryResult.length != 0) throw new Error('Wrong number of queried elements.')
+if (queryResult[0] != null) throw new Error('There should be no more elements.')
+
+// }}
 
 img = document.createElement('img') as HTMLImageElement
 

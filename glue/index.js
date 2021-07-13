@@ -302,12 +302,17 @@ export class Asdom {
 				const el = this.__refs.get(id)
 				el.remove()
 			},
-
-			querySelector: (id, _selectors) => {
+			querySelector: (id, selectors) => {
+				/** @type {Document | Element | DocumentFragment | ShadowRoot} */
 				const node = this.__refs.get(id)
-				const selectors = this.__getString(_selectors)
-				const result = node.querySelector(selectors)
+				const result = node.querySelector(this.__getString(selectors))
 				return this.getKeyOrObjectType(result)
+			},
+			querySelectorAll: (id, selectors) => {
+				/** @type {Document | Element | DocumentFragment | ShadowRoot} */
+				const node = this.__refs.get(id)
+				const result = node.querySelectorAll(this.__getString(selectors))
+				return this.getKeyOrObjectType(result, 202)
 			},
 		},
 		asDOM_Node: {
@@ -457,13 +462,13 @@ export class Asdom {
 	 * numbers won't collide with IDs within the first IDs between 0 and
 	 * 2^31.
 	 */
-	getKeyOrObjectType(obj) {
+	getKeyOrObjectType(obj, explicitTypeOverride) {
 		const key = this.__refs.keyFrom(obj)
 
 		if (!key) {
 			this.__nextRefToTrack = obj
 
-			return -getObjectType(obj)
+			return -(explicitTypeOverride ?? getObjectType(obj))
 		}
 
 		return key
@@ -498,7 +503,15 @@ function getObjectType(obj) {
 		else return 1 // HTMLUnknownElement
 	} else if (obj instanceof Text) {
 		return 100
-	} else {
+	} else if (obj instanceof HTMLCollection) {
+		return 200
+	} else if (obj instanceof NodeList) {
+		return 201
+	}
+	// else if (obj instanceof NodeList<Element>) {
+	// 	return 202
+	// }
+	else {
 		throw new Error(
 			'TODO: objects besides Element and Text instances not yet supported in the particular API that caused this error.',
 		)

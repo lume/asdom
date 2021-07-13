@@ -13,11 +13,13 @@ import {
 	getNextElementSibling,
 	getPreviousElementSibling,
 	querySelector,
+	querySelectorAll,
 	remove,
 } from '../imports'
 import {idToNullOrObject} from '../utils'
 import {Node} from '../Node'
 import {HTMLCollection} from '../HTMLCollection'
+import {NodeList} from '../NodeList'
 
 export abstract class Element extends Node {
 	get nodeType(): i32 {
@@ -117,5 +119,10 @@ export abstract class Element extends Node {
 		const result = idToNullOrObject(id)
 		if (!result) return null
 		else return result as Element
+	}
+
+	querySelectorAll(selectors: string): NodeList<Element> {
+		const id = querySelectorAll(this.__ptr__, selectors)
+		return idToNullOrObject(id) as NodeList<Element>
 	}
 }

@@ -16,6 +16,9 @@ import {
 	HTMLUnknownElement,
 	Text,
 	Object,
+	NodeList,
+	HTMLCollection,
+	Element,
 } from './index'
 
 export const DEBUG: boolean = false
@@ -25,7 +28,7 @@ export function logDebug(s: string): void {
 }
 
 export function makeObject(type: ObjectType): Object {
-	let obj: Node
+	let obj: Object
 
 	// Elements
 	if (type == ObjectType.body) obj = new HTMLBodyElement()
@@ -46,6 +49,10 @@ export function makeObject(type: ObjectType): Object {
 	else if (type === ObjectType.unknown) obj = new HTMLUnknownElement()
 	// Text nodes
 	else if (type === ObjectType.text) obj = new Text()
+	// Node lists
+	else if (type === ObjectType.htmlCollection) obj = new HTMLCollection()
+	else if (type === ObjectType.nodeListOfNode) obj = new NodeList<Node>()
+	else if (type === ObjectType.nodeListOfElement) obj = new NodeList<Element>()
 	// Anything else
 	else throw new Error('Hyphenated or custom elements not yet supported.')
 
@@ -89,6 +96,6 @@ export function idToNullOrObject(id: i32): Object | null {
 	else {
 		logDebug('idToNullOrObject got reference ID: ' + id.toString())
 
-		return refs.get(id) as Node // It must be a Node. Use this function only for APIs that return Object or Object|null.
+		return refs.get(id) as Object // It must be a Object. Use this function only for APIs that return Object or Object|null.
 	}
 }

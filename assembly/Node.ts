@@ -117,9 +117,9 @@ export abstract class Node extends Object {
 		return idToNullOrObject(id) as Node // The result must not be null if we just cloned a Node.
 	}
 
-	private __childNodes: NodeList | null = null
+	private __childNodes: NodeList<Node> | null = null
 
-	get childNodes(): NodeList {
+	get childNodes(): NodeList<Node> {
 		let childNodes = this.__childNodes
 		if (!childNodes) {
 			childNodes = new NodeList()

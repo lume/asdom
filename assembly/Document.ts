@@ -1,3 +1,12 @@
+import {
+	createTextNode,
+	documentHasBody,
+	getUrl,
+	querySelector,
+	querySelectorAll,
+	setDocument,
+	setElement,
+} from './imports'
 // TODO Perhaps put these on a new `window` object, to make it more like on the JS side.
 import {
 	Element,
@@ -13,11 +22,10 @@ import {
 	Image,
 	HTMLHeadingElement,
 } from './elements/index'
-import {makeObject} from './utils'
-import {createTextNode, documentHasBody, getUrl, querySelector, setDocument, setElement, trackNextRef} from './imports'
+import {idToNullOrObject} from './utils'
 import {Node} from './Node'
-import {refs} from './refs'
 import {Text} from './Text'
+import {NodeList} from './NodeList'
 
 export class Document extends Node {
 	get nodeType(): i32 {
@@ -94,33 +102,16 @@ export class Document extends Node {
 	querySelector(selectors: string): Element | null {
 		const id = querySelector(this.__ptr__, selectors)
 
-		// if null, it means there is no element on the JS-side.
-		if (id == 0) return null
-		// If negative, there is an element on the JS-side that doesn't have a
-		// corresponding AS-side instance yet. In this case we need to
-		// create a new instance based on its type.
-		else if (id < 0) {
-			const el = makeObject(-id)
+		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
+		// return idToNullOrObject(id) as Node | null
+		const result = idToNullOrObject(id)
+		if (!result) return null
+		else return result as Element
+	}
 
-			// Associate the AS-side instance with the JS-side instance.
-			// TODO use this.ownerDocument.__ptr__ instead of document.__ptr__
-			// trackNextElement(document.__ptr__, el.__ptr__)
-			trackNextRef(el.__ptr__)
-
-			return el as Element
-		}
-
-		// If we reach here then there is already an AS-side instance
-		// associated with a JS-side instance, and the JS side gave us the ID
-		// (pointer) of our AS-side object to return. We might reach here, for
-		// example, if we use appendChild to pass an existing child within AS
-		// instead of using innerHTML. By using innerHTML and sending a string
-		// to JS, it can create a whole tree but none of those nodes will be
-		// tracked. Finally, if we do try to access them, we lazily associate
-		// new AS-side objects in the previous conditional block.
-		else {
-			return refs.get(id) as Element // It must be a Node.
-		}
+	querySelectorAll(selectors: string): NodeList<Element> {
+		const id = querySelectorAll(this.__ptr__, selectors)
+		return idToNullOrObject(id) as NodeList<Element>
 	}
 }
 
