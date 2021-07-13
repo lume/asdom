@@ -1,14 +1,15 @@
 # Suported APIs
 
-The following APIs are supported, and in some cases only partially. For
-example, document.createElement() can create currently any type of element,
+The following APIs are supported , and in some cases only partially. For
+example, `document.createElement()` can create currently any type of element,
 however only a subset of available classes is supported (listed below). For any
 elements that don't yet have a supporting class, an `HTMLUnknownElement`
 instance will be returned. For example, `document.createElement('video')` will
 currently return an instance of `HTMLUnknownElement` and you will not be able
-to use video-specific properties or methods, although you can still pass it
-around to other DOM APIs (please open an issue or PR for any APIs you may need,
-and we'll prioritize that way).
+to use video-specific properties or methods, but you can still set attributes
+on the element and you can still pass it around to other DOM APIs.
+
+Please open an issue or PR for any APIs you may need, and we'll prioritize that way.
 
 # Class hierarchy
 
@@ -17,6 +18,12 @@ yet (or someone forgot to update this outline).
 
 - `Object`
   - Subclasses:
+    - `Window`
+      - `customElements`
+    - `CustomElementRegistry`
+      - `define()`
+    - `NodeList`
+    - `HTMLCollection`
     - `Node`
       - `static ELEMENT_NODE`
       - `static ATTRIBUTE_NODE`
@@ -29,7 +36,12 @@ yet (or someone forgot to update this outline).
       - `static DOCUMENT_FRAGMENT_NODE`
       - `nodeType`
       - `parentNode`
+      - `parentElement`
+      - `childNodes`
       - `firstChild`
+      - `lastChild`
+      - `nextSibling`
+      - `previousSibling`
       - `appendChild()`
       - `removeChild()`
       - `cloneNode()`
@@ -43,13 +55,23 @@ yet (or someone forgot to update this outline).
           - `body`
           - `createElement()`
           - `createTextNode()`
+          - `querySelector()`
+          - `querySelectorAll()`
         - `Element`
+          - `tagName`
           - `setAttribute()`
           - `getAttribute()`
-          - `remove()`
-          - `click()`
           - `innerHTML`
+          - `children`
+          - `firstElementChild`
+          - `lastElementChild`
+          - `nextElementSibling`
+          - `previousElementSibling`
+          - `click()`
           - `onclick` (No `Event` object is passed into the callback yet, but at least you can react to a click)
+          - `remove()`
+          - `querySelector()`
+          - `querySelectorAll()`
           - Subclasses:
             - `HTMLElement` (`<section>` and various other elements extend from this)
               - Subclasses:
