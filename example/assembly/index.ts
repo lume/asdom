@@ -12,6 +12,7 @@ import {
 	Text,
 	HTMLElement,
 	HTMLImageElement,
+	Node,
 } from '../node_modules/asdom/assembly/index'
 
 // TODO move these into asdom, because requestAnimationFrame is a DOM API.
@@ -89,6 +90,28 @@ if (!(item instanceof HTMLElement && (item as HTMLElement).innerHTML == 'Assembl
 item = el.childNodes[0]!.childNodes[2]!
 if (!(item instanceof HTMLElement && (item as HTMLElement).innerHTML == 'AssemblyScript'))
 	throw new Error('Expected different result from childNodes[]')
+
+let i: i32 = 0
+
+// All these should work. Github issue: https://github.com/AssemblyScript/assemblyscript/issues/1973
+// for (let node: Node | null = el.childNodes[0]!.firstChild; node; node = node.nextSibling) i++ // COMPILE ERROR
+for (let node: Node | null = el.childNodes[0]!.firstChild; node; node = node!.nextSibling) i++ // OK
+// for (let node: Node | null = el.childNodes[0]!.firstChild; node!; node = node.nextSibling) i++ // COMPILE ERROR
+// for (let node: Node | null = el.childNodes[0]!.firstChild; node!; node = node!.nextSibling) i++ // RUNTIME ERROR
+// for (let node: Node | null = el.childNodes[0]!.firstChild; node != null; node = node.nextSibling) i++ // COMPILE ERROR
+// for (let node: Node | null = el.childNodes[0]!.firstChild; node != null; node = node!.nextSibling) i++ // OK
+//
+// These while-loop variants should all work the same too.
+// let node: Node | null = el.childNodes[0]!.firstChild
+// while (node) { node = node.nextSibling; i++ } // ERROR
+// while (node) { node = node!.nextSibling; i++ } // OK
+// while (node!) { node = node.nextSibling; i++ } // ERROR
+// while (node!) { node = node!.nextSibling; i++ } // ERROR
+// while (node != null) { node = node.nextSibling; i++ } // ERROR
+// while (node != null) { node = node!.nextSibling; i++ } // OK
+
+log('------- child count: ' + i.toString())
+if (i != 3) throw new Error('Unexpected number of children.')
 
 const el2 = document.body!.querySelector('h1.hello')!
 el2.setAttribute('class', 'hello selected')
@@ -185,9 +208,13 @@ document.body!.appendChild(cloned)
 
 const text = document.createTextNode('This is a text node!')
 
-if (text.parentNode) throw new Error('There should not be a parent yet!')
+let textParent = text.parentNode
+if (textParent) throw new Error('There should not be a parent yet!')
 
 document.body!.appendChild(text)
+
+textParent = text.parentNode
+if (!textParent) throw new Error('There should be a parent!')
 
 const br = document.createElement('br')
 

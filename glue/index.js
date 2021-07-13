@@ -388,13 +388,13 @@ export class Asdom {
 	 * numbers won't collide with IDs within the first IDs between 0 and
 	 * 2^31.
 	 */
-	getKeyOrObjectType(element) {
-		const key = this.__refs.keyFrom(element)
+	getKeyOrObjectType(obj) {
+		const key = this.__refs.keyFrom(obj)
 
 		if (!key) {
-			this.__nextRefToTrack = element
+			this.__nextRefToTrack = obj
 
-			return -getObjectType(element)
+			return -getObjectType(obj)
 		}
 
 		return key

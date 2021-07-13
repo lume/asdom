@@ -53,6 +53,11 @@ export abstract class Element extends Node {
 
 	querySelector(selectors: string): Element | null {
 		const id = querySelector(this.__ptr__, selectors)
-		return idToNullOrObject(id) as Element | null
+
+		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
+		// return idToNullOrObject(id) as Element | null
+		const result = idToNullOrObject(id)
+		if (!result) return null
+		else return result as Element
 	}
 }

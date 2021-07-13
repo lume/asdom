@@ -18,7 +18,11 @@ import {
 	Object,
 } from './index'
 
-export const DEBUG: boolean = true
+export const DEBUG: boolean = false
+
+export function logDebug(s: string): void {
+	if (DEBUG) log('AS DEBUG: ' + s)
+}
 
 export function makeObject(type: ObjectType): Object {
 	let obj: Node
@@ -48,13 +52,13 @@ export function makeObject(type: ObjectType): Object {
 	return obj
 }
 
-// Use this only for APIs that return Node or Node|null!
+// Use this only for APIs that return Object or Object|null!
 export function idToNullOrObject(id: i32): Object | null {
-	if (DEBUG) log('AS DEBUG: idToNullOrObject, ' + id.toString())
+	logDebug('idToNullOrObject, ' + id.toString())
 
 	// if null, it means there is no element on the JS-side.
 	if (id == 0) {
-		if (DEBUG) log('AS DEBUG: idToNullOrObject returning null')
+		logDebug('idToNullOrObject returning null')
 
 		return null
 	}
@@ -62,7 +66,7 @@ export function idToNullOrObject(id: i32): Object | null {
 	// corresponding AS-side instance yet. In this case we need to
 	// create a new instance based on its type.
 	else if (id < 0) {
-		if (DEBUG) log('AS DEBUG: idToNullOrObject id < 0')
+		logDebug('idToNullOrObject id < 0')
 
 		const obj = makeObject(-id)
 
@@ -83,7 +87,7 @@ export function idToNullOrObject(id: i32): Object | null {
 	// tracked. Finally, if we do try to access them, we lazily associate
 	// new AS-side objects in the previous conditional block.
 	else {
-		if (DEBUG) log('AS DEBUG: idToNullOrObject got reference ID: ' + id.toString())
+		logDebug('idToNullOrObject got reference ID: ' + id.toString())
 
 		return refs.get(id) as Node // It must be a Node. Use this function only for APIs that return Object or Object|null.
 	}

@@ -10,7 +10,12 @@ export class NodeList extends Object {
 
 	item(index: i32): Node | null {
 		const id: i32 = item(this.__ptr__, index)
-		return idToNullOrObject(id) as Node | null
+
+		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
+		// return idToNullOrObject(id) as Node | null
+		const result = idToNullOrObject(id)
+		if (!result) return null
+		else return result as Node
 	}
 
 	@operator('[]')
@@ -19,10 +24,11 @@ export class NodeList extends Object {
 	}
 
 	@operator('[]=')
-	private arrayWrite(index: i32, right: Node): void {
+	private arrayWrite(index: i32, value: Node): void {
 		ERROR('NodeList is not writable.')
 	}
 
+	// This makes TypeScript happy.
 	// The name must be "key" in AS (can be anything in TS). Open issue: https://github.com/AssemblyScript/assemblyscript/issues/1972
 	readonly [key: number]: Node | null
 }

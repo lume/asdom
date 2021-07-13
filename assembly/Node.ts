@@ -1,4 +1,4 @@
-import {DEBUG, idToNullOrObject} from './utils'
+import {idToNullOrObject} from './utils'
 import {
 	nodeAppendChild,
 	nodeRemoveChild,
@@ -7,7 +7,6 @@ import {
 	getParentNode,
 	getChildNodes,
 	getNextSibling,
-	log,
 } from './imports'
 import {Object} from './Object'
 import {NodeList} from './NodeList'
@@ -51,28 +50,36 @@ export abstract class Node extends Object {
 	abstract get nodeType(): NodeType
 
 	get parentNode(): Node | null {
-		if (DEBUG) log('AS DEBUG: Node.parentNode call getParentNode')
-
 		const id: i32 = getParentNode(this.__ptr__)
+		const result = idToNullOrObject(id)
 
-		if (DEBUG) log('AS DEBUG: Node.parentNode getParentNode result: ' + id.toString())
-
-		const result = idToNullOrObject(id) as Node | null
-
-		if (result) if (DEBUG) log('AS DEBUG: Node.parentNode result: Node')
-		if (!result) if (DEBUG) log('AS DEBUG: Node.parentNode result: null')
-
-		return result
+		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
+		// This doesn't work in AS (but works in TS):
+		//return result as Node | null
+		// So instead we need to do this for now:
+		if (!result) return null
+		else return result as Node
+		// ^ issue: https://github.com/AssemblyScript/assemblyscript/issues/1976
 	}
 
 	get firstChild(): Node | null {
 		const id: i32 = getFirstChild(this.__ptr__)
-		return idToNullOrObject(id) as Node | null
+
+		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
+		// return idToNullOrObject(id) as Node | null
+		const result = idToNullOrObject(id)
+		if (!result) return null
+		else return result as Node
 	}
 
 	get nextSibling(): Node | null {
 		const id: i32 = getNextSibling(this.__ptr__)
-		return idToNullOrObject(id) as Node | null
+
+		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
+		// return idToNullOrObject(id) as Node | null
+		const result = idToNullOrObject(id)
+		if (!result) return null
+		else return result as Node
 	}
 
 	cloneNode(deep: boolean = false): Node {
