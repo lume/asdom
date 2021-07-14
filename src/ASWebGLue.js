@@ -1752,7 +1752,7 @@ export function initASWebGLue(importObject) {
   // expiramental WebGL2
   importObject.WebGL.vertexAttribDivisor = (ctx, index, divisor) => {
     try {
-      return WebGL.contextArray[ctx].vertexAttribDivisor(ctx, index, divisor);
+      return WebGL.contextArray[ctx].vertexAttribDivisor(index, divisor);
     } catch (err) {
       console.trace("vertexAttribDivisor error");
       console.error(err);
