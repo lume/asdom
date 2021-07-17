@@ -15,7 +15,13 @@ import {
 	Node,
 	HTMLHeadingElement,
 	HTMLSpanElement,
+	ShadowRootInit,
 } from '../node_modules/asdom/assembly/index'
+
+if (document.children.length != 1) throw new Error('document.children.length should be 1')
+if (document.children[0]!.tagName != 'HTML') throw new Error('document.children[0] should be <html>')
+if (document.firstElementChild!.tagName != 'HTML') throw new Error('document.firstElementChild should be <html>')
+if (document.lastElementChild!.tagName != 'HTML') throw new Error('document.lastElementChild should be <html>')
 
 // TODO move these into asdom, because requestAnimationFrame is a DOM API.
 import {cancelAnimationFrame, requestAnimationFrame} from '../node_modules/ecmassembly/assembly/requestAnimationFrame'
@@ -308,15 +314,17 @@ setTimeout(() => {
 customElements.define('seconds-counter', () => new SecondsCounter(), SecondsCounter.observedAttributes)
 
 container = document.createElement('div') as HTMLDivElement
-container.innerHTML = /*html*/ `<seconds-counter></seconds-counter>
-<seconds-counter some-attribute="foo"></seconds-counter>`
+container.innerHTML = /*html*/ `
+	<seconds-counter></seconds-counter>
+	<seconds-counter some-attribute="foo">Yes!</seconds-counter>
+`
 
 document.body!.appendChild(container)
 
 log('--------------------')
 
 setTimeout(() => {
-	const el = container.firstChild as SecondsCounter
+	const el = container.firstElementChild as SecondsCounter
 
 	// This causes the custom element's attributeChangedCallback to run,
 	// and it logs to the console.

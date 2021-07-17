@@ -47,6 +47,14 @@ yet (or someone forgot to update this outline).
       - `cloneNode()`
       - Subclasses:
         - `DocumentFragment`
+          - `children`
+          - `firstElementChild`
+          - `lastElementChild`
+          - `querySelector()`
+          - `querySelectorAll()`
+          - Subclasses:
+            - `ShadowRoot`
+              - `innerHTML`
         - `CharacterData`
           - Subclasses:
             - `Text`
@@ -55,6 +63,9 @@ yet (or someone forgot to update this outline).
           - `body`
           - `createElement()`
           - `createTextNode()`
+          - `children`
+          - `firstElementChild`
+          - `lastElementChild`
           - `querySelector()`
           - `querySelectorAll()`
         - `Element`
@@ -72,6 +83,8 @@ yet (or someone forgot to update this outline).
           - `remove()`
           - `querySelector()`
           - `querySelectorAll()`
+          - `shadowRoot`
+          - `attachShadow()`
           - Subclasses:
             - `HTMLElement` (`<section>` and various other elements extend from this)
               - Subclasses:

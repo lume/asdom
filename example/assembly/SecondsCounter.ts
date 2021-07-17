@@ -1,5 +1,5 @@
 import {setInterval} from '../node_modules/ecmassembly/assembly/setInterval'
-import {HTMLElement} from '../node_modules/asdom/assembly/index'
+import {HTMLElement, ShadowRootInit} from '../node_modules/asdom/assembly/index'
 import {log} from './imports'
 
 let count: i32 = 0
@@ -7,9 +7,7 @@ const elements: SecondsCounter[] = []
 
 setInterval(() => {
 	count++
-	for (let i = 0, l = elements.length; i < l; i++) {
-		elements[i].render()
-	}
+	for (let i = 0, l = elements.length; i < l; i++) elements[i].update()
 }, 1000)
 
 export class SecondsCounter extends HTMLElement {
@@ -24,17 +22,14 @@ export class SecondsCounter extends HTMLElement {
 
 	connectedCallback(): void {
 		log('AS: <seconds-counter> connected')
-
-		this.setAttribute('style', 'display: block')
-
 		elements.push(this)
-
-		this.render()
+		if (!this.shadowRoot) this.attachShadow({mode: 'open'} as ShadowRootInit)
+		this.shadowRoot!.innerHTML = this.template()
+		this.countOutput = this.shadowRoot!.querySelector('strong') as HTMLElement
 	}
 
 	disconnectedCallback(): void {
 		log('AS: <seconds-counter> disconnected')
-
 		elements.splice(elements.indexOf(this), 1)
 	}
 
@@ -46,9 +41,22 @@ export class SecondsCounter extends HTMLElement {
 		}
 	}
 
-	render(): void {
-		this.innerHTML = /*html*/ `
-			<span>I am a custom &lt;seconds-counter&gt; element. The seconds count is <strong>${count}</strong>!</span>
+	countOutput: HTMLElement | null = null
+
+	template(): string {
+		return /*html*/ `
+			<style>
+				:host { display: block; }
+				.content { padding: 3px; color: white; background: deeppink; }
+			</style>
+			<span>
+				I am a custom &lt;seconds-counter&gt; element. The seconds count is <strong>${count}</strong>!
+				${this.childNodes.length ? /*html*/ `Distributed content: <span class="content"><slot></slot></span>` : ''}
+			</span>
 		`
+	}
+
+	update(): void {
+		this.countOutput!.innerText = count.toString()
 	}
 }

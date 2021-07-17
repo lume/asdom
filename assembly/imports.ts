@@ -95,12 +95,12 @@ export declare function elSetAttribute(id: usize, attr: string, value: string | 
 export declare function elGetAttribute(id: usize, attr: string): string | null
 
 // @ts-expect-error
-@external('asDOM_Element', 'elSetInnerHTML')
-export declare function elSetInnerHTML(id: usize, value: string | null): void
+@external('asDOM_Element', 'setInnerHTML')
+export declare function setInnerHTML(id: usize, value: string | null): void
 
 // @ts-expect-error
-@external('asDOM_Element', 'elGetInnerHTML')
-export declare function elGetInnerHTML(id: usize): string
+@external('asDOM_Element', 'getInnerHTML')
+export declare function getInnerHTML(id: usize): string
 
 // @ts-expect-error
 @external('asDOM_Element', 'elSetInnerText')
@@ -149,6 +149,14 @@ export declare function querySelector(id: usize, selectors: string): i32
 // @ts-expect-error
 @external('asDOM_Element', 'querySelectorAll')
 export declare function querySelectorAll(id: usize, selectors: string): i32
+
+// @ts-expect-error
+@external('asDOM_Element', 'getShadowRoot')
+export declare function getShadowRoot(id: usize): i32
+
+// @ts-expect-error
+@external('asDOM_Element', 'attachShadow')
+export declare function attachShadow(id: usize, rootId: usize, mode: string): i32
 
 // @ts-expect-error
 @external('asDOM_Audio', 'initAudio')

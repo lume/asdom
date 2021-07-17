@@ -1,11 +1,11 @@
 import {
 	elClick,
 	elGetAttribute,
-	elGetInnerHTML,
+	getInnerHTML,
 	elGetInnerText,
 	elOnClick,
 	elSetAttribute,
-	elSetInnerHTML,
+	setInnerHTML,
 	elSetInnerText,
 	getChildren,
 	getFirstElementChild,
@@ -16,11 +16,13 @@ import {
 	querySelectorAll,
 	remove,
 	getTagName,
+	attachShadow,
 } from '../imports'
 import {idToNullOrObject} from '../utils'
 import {Node} from '../Node'
 import {HTMLCollection} from '../HTMLCollection'
 import {NodeList} from '../NodeList'
+import {ShadowRoot} from '../nodes/ShadowRoot'
 
 export abstract class Element extends Node {
 	get nodeType(): i32 {
@@ -39,10 +41,10 @@ export abstract class Element extends Node {
 	}
 
 	get innerHTML(): string {
-		return elGetInnerHTML(this.__ptr__)
+		return getInnerHTML(this.__ptr__)
 	}
 	set innerHTML(value: string | null) {
-		elSetInnerHTML(this.__ptr__, value)
+		setInnerHTML(this.__ptr__, value)
 	}
 
 	get innerText(): string {
@@ -130,4 +132,21 @@ export abstract class Element extends Node {
 		const id = querySelectorAll(this.__ptr__, selectors)
 		return idToNullOrObject(id) as NodeList<Element>
 	}
+
+	private __shadowRoot: ShadowRoot | null = null
+
+	get shadowRoot(): ShadowRoot | null {
+		return this.__shadowRoot
+	}
+
+	attachShadow(options: ShadowRootInit): ShadowRoot {
+		const root = new ShadowRoot()
+		attachShadow(this.__ptr__, root.__ptr__, options.mode)
+		if (options.mode == 'open') this.__shadowRoot = root
+		return root
+	}
+}
+
+export class ShadowRootInit {
+	mode: string
 }

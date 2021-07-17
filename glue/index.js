@@ -233,14 +233,14 @@ export class Asdom {
 				return this.__newString(el.getAttribute(this.__getString(attr)))
 			},
 			// element.innerHTML
-			elSetInnerHTML: (id, value) => {
-				/** @type {Element} */
+			setInnerHTML: (id, value) => {
+				/** @type {Element | ShadowRoot} */
 				const el = this.__refs.get(id)
 				el.innerHTML = this.__getString(value)
 			},
 			// element.innerHTML
-			elGetInnerHTML: id => {
-				/** @type {Element} */
+			getInnerHTML: id => {
+				/** @type {Element | ShadowRoot} */
 				const el = this.__refs.get(id)
 				return this.__newString(el.innerHTML)
 			},
@@ -257,13 +257,13 @@ export class Asdom {
 				return this.__newString(el.innerText)
 			},
 			getChildren: (id, listId) => {
-				/** @type {Element} */
+				/** @type {Element | Document | DocumentFragment} */
 				const obj = this.__refs.get(id)
 				const list = obj.children
 				if (!this.__refs.keyFrom(list)) this.__refs.set(listId, list)
 			},
 			getFirstElementChild: id => {
-				/** @type {Element} */
+				/** @type {Element | Document | DocumentFragment} */
 				const node = this.__refs.get(id)
 				const result = node.firstElementChild
 
@@ -272,7 +272,7 @@ export class Asdom {
 				return this.getKeyOrObjectType(result)
 			},
 			getLastElementChild: id => {
-				/** @type {Element} */
+				/** @type {Element | Document | DocumentFragment} */
 				const node = this.__refs.get(id)
 				const result = node.lastElementChild
 
@@ -317,16 +317,29 @@ export class Asdom {
 				el.remove()
 			},
 			querySelector: (id, selectors) => {
-				/** @type {Document | Element | DocumentFragment | ShadowRoot} */
+				/** @type {Element | Document | DocumentFragment} */
 				const node = this.__refs.get(id)
 				const result = node.querySelector(this.__getString(selectors))
 				return this.getKeyOrObjectType(result)
 			},
 			querySelectorAll: (id, selectors) => {
-				/** @type {Document | Element | DocumentFragment | ShadowRoot} */
+				/** @type {Element | Document | DocumentFragment} */
 				const node = this.__refs.get(id)
 				const result = node.querySelectorAll(this.__getString(selectors))
 				return this.getKeyOrObjectType(result, 202)
+			},
+			getShadowRoot: id => {
+				/** @type {Element} */
+				const el = this.__refs.get(id)
+				const root = el.shadowRoot
+				if (!root) return 0 // null
+				return this.__refs.keyFrom(root)
+			},
+			attachShadow: (id, rootId, mode) => {
+				/** @type {Element} */
+				const el = this.__refs.get(id)
+				const root = el.attachShadow({mode: this.__getString(mode)})
+				this.__refs.set(rootId, root)
 			},
 		},
 		asDOM_Node: {
