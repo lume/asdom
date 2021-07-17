@@ -3,7 +3,6 @@ export * from '../node_modules/asdom/assembly/glue'
 
 import {
 	document,
-	customElements,
 	Audio,
 	Element,
 	HTMLDivElement,
@@ -15,7 +14,6 @@ import {
 	Node,
 	HTMLHeadingElement,
 	HTMLSpanElement,
-	ShadowRootInit,
 } from '../node_modules/asdom/assembly/index'
 
 if (document.children.length != 1) throw new Error('document.children.length should be 1')
@@ -28,7 +26,8 @@ import {cancelAnimationFrame, requestAnimationFrame} from '../node_modules/ecmas
 import {setTimeout} from '../node_modules/ecmassembly/assembly/setTimeout'
 
 import {log} from './imports'
-import {SecondsCounter} from './SecondsCounter'
+import './SecondsCounter'
+import './HelloFrom'
 
 let imgRotation: f32 = 0
 let img: HTMLImageElement
@@ -51,35 +50,32 @@ let text2: Text
 
 let container: HTMLElement
 
-const style = document.createElement('div')
+const style = document.createElement('style')
 
-style.innerHTML = `
-	<style>
-		body {
-			/* And there was 3D depth. */
-			perspective: 800px;
-			width: 100%;
-			height: 100%;
-			margin: 0;
-		}
-		.hello span {
-			font-weight: normal;
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%)
-		}
-		.dot {
-			width: 20px; height: 20px;
-			border-radius: 100%;
-			background: deeppink;
-			position: absolute;
-			top: 25%; left: 50%;
-		}
-		.selected * {
-			background: #0fc;
-		}
-	</style>
+style.innerHTML = /*css*/ `
+	body {
+		/* And there was 3D depth. */
+		perspective: 800px;
+		width: 100%;
+		height: 100%;
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+	.hello span {
+		font-weight: normal;
+	}
+	.dot {
+		width: 20px; height: 20px;
+		border-radius: 100%;
+		background: deeppink;
+		position: absolute;
+		top: 25%; left: 50%;
+	}
+	.selected * {
+		background: #0fc;
+	}
 `
 
 document.body!.appendChild(style)
@@ -181,26 +177,6 @@ if (i != 2) throw new Error('Unexpected number of child elements.')
 	if (query4[0] != null) throw new Error('There should be no more elements.')
 }
 // }}
-
-img = document.createElement('img') as HTMLImageElement
-
-img.setAttribute('src', '../assets/image.png')
-
-// Animate the rotation of the logo.
-requestAnimationFrame(
-	(logoRotationLoop = () => {
-		img.setAttribute(
-			'style',
-			'border-radius: 20px; position: absolute; top: 25%; left: 50%; transform: translate(-50%, -50%) rotateY(' +
-				(imgRotation++).toString() +
-				'deg)',
-		)
-
-		requestAnimationFrame(logoRotationLoop)
-	}),
-)
-
-document.body!.appendChild(img)
 
 document.body!.onclick = () => {
 	cancelAnimationFrame(explosionLoopFrame)
@@ -311,8 +287,6 @@ setTimeout(() => {
 	unbind(text2)
 }, 1000)
 
-customElements.define('seconds-counter', () => new SecondsCounter(), SecondsCounter.observedAttributes)
-
 container = document.createElement('div') as HTMLDivElement
 container.innerHTML = /*html*/ `
 	<seconds-counter></seconds-counter>
@@ -324,9 +298,36 @@ document.body!.appendChild(container)
 log('--------------------')
 
 setTimeout(() => {
-	const el = container.firstElementChild as SecondsCounter
+	const el = container.firstElementChild!
 
 	// This causes the custom element's attributeChangedCallback to run,
 	// and it logs to the console.
 	el.setAttribute('some-attribute', 'bar')
 }, 1000)
+
+const div = document.createElement('div')
+document.body!.appendChild(div)
+
+div.innerHTML = /*html*/ `
+	<!-- Omitting attributes causes the default values to be used. -->
+	<hello-from></hello-from>
+
+	<!-- Custom attribute values provided. -->
+	<hello-from place="Oakland, CA" avatar="https://avatars.githubusercontent.com/u/297678?v=4"></hello-from>
+`
+
+// img = document.createElement('img') as HTMLImageElement
+// img.setAttribute('src', '../assets/image.png')
+
+img = document.querySelector('hello-from')!.shadowRoot!.querySelector('img') as HTMLImageElement
+
+// Animate the rotation of the logo.
+requestAnimationFrame(
+	(logoRotationLoop = () => {
+		img.setAttribute('style', 'transform: rotateY(' + (imgRotation++).toString() + 'deg)')
+
+		requestAnimationFrame(logoRotationLoop)
+	}),
+)
+
+// document.body!.appendChild(img)

@@ -1,5 +1,5 @@
 import {setInterval} from '../node_modules/ecmassembly/assembly/setInterval'
-import {HTMLElement, ShadowRootInit} from '../node_modules/asdom/assembly/index'
+import {customElements, HTMLElement, ShadowRootInit} from '../node_modules/asdom/assembly/index'
 import {log} from './imports'
 
 let count: i32 = 0
@@ -60,3 +60,8 @@ export class SecondsCounter extends HTMLElement {
 		this.countOutput!.innerText = count.toString()
 	}
 }
+
+// The customElements.define call has to be slightly different in
+// AssemblyScript because AS does not yet support constructor function
+// references.
+customElements.define('seconds-counter', () => new SecondsCounter(), SecondsCounter.observedAttributes)
