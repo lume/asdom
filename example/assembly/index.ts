@@ -316,9 +316,7 @@ div.innerHTML = /*html*/ `
 	<hello-from place="Oakland, CA" avatar="https://avatars.githubusercontent.com/u/297678?v=4"></hello-from>
 `
 
-// img = document.createElement('img') as HTMLImageElement
-// img.setAttribute('src', '../assets/image.png')
-
+// You should normally not reach into an element's shadow DOM! But for sake of example...
 img = document.querySelector('hello-from')!.shadowRoot!.querySelector('img') as HTMLImageElement
 
 // Animate the rotation of the logo.
@@ -329,5 +327,3 @@ requestAnimationFrame(
 		requestAnimationFrame(logoRotationLoop)
 	}),
 )
-
-// document.body!.appendChild(img)
