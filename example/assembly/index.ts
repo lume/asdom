@@ -308,6 +308,7 @@ setTimeout(() => {
 const div = document.createElement('div')
 document.body!.appendChild(div)
 
+div.setAttribute('style', 'margin-top: 40px;')
 div.innerHTML = /*html*/ `
 	<!-- Omitting attributes causes the default values to be used. -->
 	<hello-from></hello-from>
