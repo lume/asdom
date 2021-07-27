@@ -7,7 +7,6 @@ import {
 	Element,
 	HTMLDivElement,
 	HTMLTemplateElement,
-	unbind,
 	Text,
 	HTMLElement,
 	HTMLImageElement,
@@ -184,12 +183,7 @@ document.body!.onclick = () => {
 	dotScale = 1.0
 
 	for (let i = 0; i < dotsLength; i++) {
-		if (!firstClick) {
-			dots[i].remove()
-
-			// Don't forget to unbind any element when done using it to avoid a memory leak!
-			unbind(dots[i])
-		}
+		if (!firstClick) dots[i].remove()
 
 		const dot = document.createElement('div') as HTMLDivElement
 		dots[i] = dot
@@ -256,7 +250,10 @@ if (textParentElement) throw new Error('There should not be a parent element yet
 let textParentNode = text.parentNode
 if (textParentNode) throw new Error('There should not be a parent node yet!')
 
-document.body!.appendChild(text)
+const span1 = document.createElement('span')
+span1.setAttribute('class', 'span1')
+document.body!.appendChild(span1)
+span1.appendChild(text)
 
 textParentElement = text.parentElement
 if (!textParentElement) throw new Error('There should be a parent element!')
@@ -268,24 +265,23 @@ const br = document.createElement('br')
 
 text.parentElement!.appendChild(br)
 
-text2 = document.createTextNode('Another text node, appended using parentNode!')
-text.parentNode!.appendChild(text2)
-
 log('Text node type should be true:')
 log((text.nodeType == 3).toString())
 
-setTimeout(() => {
-	document.body!.removeChild(text2)
+text2 = document.createTextNode('Another text node, appended using parentNode! ')
 
-	// When you no longer need an element, don't forget to call unbind on
-	// it to avoid a memory leak.
-	//
-	// Although this is not needed in JS / TS, it is needed in AS.
-	//
-	// After unbinding, you should not use the unbound instances or else
-	// things may not work as expected.
-	unbind(text2)
-}, 1000)
+const span2 = document.createElement('span')
+span2.setAttribute('class', 'span2')
+document.body!.appendChild(span2)
+;(span1.parentNode! as Element).querySelector('.span2')!.appendChild(text2)
+
+const removeButton = document.createElement('button')
+removeButton.innerText = 'Remove this line'
+span2.appendChild(removeButton)
+
+removeButton.onclick = () => {
+	document.body!.removeChild(span2)
+}
 
 container = document.createElement('div') as HTMLDivElement
 container.innerHTML = /*html*/ `
@@ -318,7 +314,8 @@ div.innerHTML = /*html*/ `
 `
 
 // You should normally not reach into an element's shadow DOM! But for sake of example...
-img = document.querySelector('hello-from')!.shadowRoot!.querySelector('img') as HTMLImageElement
+const hiFrom = document.querySelector('hello-from')!
+img = hiFrom.shadowRoot!.querySelector('img') as HTMLImageElement
 
 // Animate the rotation of the logo.
 requestAnimationFrame(

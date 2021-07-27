@@ -1,6 +1,5 @@
 import {ObjectType} from './ObjectType'
 import {log, trackNextRef} from './imports'
-import {refs} from './refs'
 import {
 	Node,
 	HTMLBodyElement,
@@ -96,6 +95,6 @@ export function idToNullOrObject(id: i32): Object | null {
 	else {
 		logDebug('idToNullOrObject got reference ID: ' + id.toString())
 
-		return refs.get(id) as Object // It must be a Object. Use this function only for APIs that return Object or Object|null.
+		return changetype<Object>(id) // It must be a Object. Use this function only for APIs that return Object or Object|null.
 	}
 }

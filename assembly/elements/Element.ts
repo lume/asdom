@@ -3,7 +3,7 @@ import {
 	elGetAttribute,
 	getInnerHTML,
 	elGetInnerText,
-	elOnClick,
+	setOnclick,
 	elSetAttribute,
 	setInnerHTML,
 	elSetInnerText,
@@ -110,8 +110,20 @@ export abstract class Element extends Node {
 		elClick(this.__ptr__)
 	}
 
-	set onclick(cb: () => void) {
-		elOnClick(this.__ptr__, cb.index)
+	private __onclick: (() => void) | null = null
+
+	set onclick(cb: (() => void) | null) {
+		this.__onclick = cb
+		setOnclick(this.__ptr__, cb ? cb.index : -1) // -1 means "null"
+	}
+
+	get onclick(): (() => void) | null {
+		// For now there is no glue code here, and we assume manipulation of this
+		// property happens only on the AS-side. TODO Eventually we'll have to
+		// figure how to "get" a function that may already exist on the JS side
+		// to be able to call it, for example, in a monkey patch.
+		// return getOnclick()
+		return this.__onclick
 	}
 
 	remove(): void {

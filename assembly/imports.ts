@@ -3,8 +3,16 @@
 export declare function trackNextRef(id: usize): void
 
 // @ts-expect-error
+@external('asDOM', 'releaseObject')
+export declare function releaseObject(ptr: usize): void
+
+// @ts-expect-error
 @external('asDOM', 'log')
 export declare function log(msg: string): void
+
+// @ts-expect-error
+@external('asDOM_Window', 'getDocument')
+export declare function getDocument(id: usize, docId: usize): void
 
 // @ts-expect-error
 @external('asDOM_Window', 'getCustomElements')
@@ -21,10 +29,6 @@ export declare function define(id: usize, tag: string, factoryIndex: i32, attrib
 // @ts-expect-error
 @external('asDOM_Document', 'getUrl')
 export declare function getUrl(id: usize): string
-
-// @ts-expect-error
-@external('asDOM_Document', 'setDocument')
-export declare function setDocument(id: usize): void
 
 // @ts-expect-error
 @external('asDOM_Document', 'setElement')
@@ -135,8 +139,12 @@ export declare function getPreviousElementSibling(id: usize): i32
 export declare function elClick(id: usize): void
 
 // @ts-expect-error
-@external('asDOM_Element', 'elOnClick')
-export declare function elOnClick(id: usize, ptr: number): void
+@external('asDOM_Element', 'setOnclick')
+export declare function setOnclick(id: usize, ptr: u32): void
+
+// // @ts-expect-error
+// @external('asDOM_Element', 'getOnclick')
+// export declare function getOnclick(id: usize, ptr: u32): ???
 
 // @ts-expect-error
 @external('asDOM_Element', 'remove')

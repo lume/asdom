@@ -19,6 +19,11 @@ class Refs extends Map {
 	keyFrom(b) {
 		return this.__reverse.get(b)
 	}
+
+	delete(a) {
+		this.__reverse.delete(this.get(a))
+		super.delete(a)
+	}
 }
 
 export class Asdom {
@@ -30,12 +35,13 @@ export class Asdom {
 	__newString
 	__getArray
 	__newArray
-	table
-	asdom_connectedCallback
-	asdom_disconnectedCallback
-	asdom_adoptedCallback
-	asdom_attributeChangedCallback
-	idof_Arrayi32
+	__pin
+	__unpin
+	__table
+	__asdom_connectedCallback
+	__asdom_disconnectedCallback
+	__asdom_adoptedCallback
+	__asdom_attributeChangedCallback
 
 	__exports = null
 
@@ -49,16 +55,17 @@ export class Asdom {
 		this.__newString = e.__newString
 		this.__getArray = e.__getArray
 		this.__newArray = e.__newArray
-		this.table = e.table
-		this.asdom_connectedCallback = e.asdom_connectedCallback
-		this.asdom_disconnectedCallback = e.asdom_disconnectedCallback
-		this.asdom_adoptedCallback = e.asdom_adoptedCallback
-		this.asdom_attributeChangedCallback = e.asdom_attributeChangedCallback
-		this.idof_Arrayi32 = e.idof_Arrayi32
+		this.__pin = e.__pin
+		this.__unpin = e.__unpin
+		this.__table = e.table
+		this.__asdom_connectedCallback = e.asdom_connectedCallback
+		this.__asdom_disconnectedCallback = e.asdom_disconnectedCallback
+		this.__asdom_adoptedCallback = e.asdom_adoptedCallback
+		this.__asdom_attributeChangedCallback = e.asdom_attributeChangedCallback
 	}
 
 	fn(fnIndex) {
-		return this.table.get(fnIndex)
+		return this.__table.get(fnIndex)
 	}
 
 	/**
@@ -90,8 +97,10 @@ export class Asdom {
 				// TODO elements need to be associated with documents on the AS-side so they can have ownerDocument properties.
 				this.__refs.set(id, ref)
 			},
+			releaseObject: id => {
+				this.__refs.delete(id)
+			},
 			log: str => {
-				if (this.__getString(str) == null || this.__getString(str) === 'null') debugger
 				console.log('AS: ' + this.__getString(str))
 			},
 		},
@@ -101,14 +110,26 @@ export class Asdom {
 			},
 			/**
 			 * @param {number} id
-			 * @param {number} ceId
+			 * @param {number} objId
 			 */
-			getCustomElements: (id, ceId) => {
+			getDocument: (id, objId) => {
+				/** @type {Document} */
+				const self = this.__refs.get(id)
+				const obj = self.document
+				let key = this.__refs.keyFrom(obj)
+				if (!key) this.__refs.set((key = objId), obj)
+				return key
+			},
+			/**
+			 * @param {number} id
+			 * @param {number} objId
+			 */
+			getCustomElements: (id, objId) => {
 				/** @type {Window} */
-				const window = this.__refs.get(id)
-				const ce = window.customElements
-				let key = this.__refs.keyFrom(ce)
-				if (!key) this.__refs.set((key = ceId), ce)
+				const self = this.__refs.get(id)
+				const obj = self.customElements
+				let key = this.__refs.keyFrom(obj)
+				if (!key) this.__refs.set((key = objId), obj)
 				return key
 			},
 		},
@@ -128,27 +149,44 @@ export class Asdom {
 						return asdom.stringArray(attributes)
 					}
 
+					__pinned = false
+
+					__pin() {
+						if (this.__pinned) return
+						this.__pinned = true
+						asdom.__pin(this.__asRef)
+					}
+
+					__unpin() {
+						if (!this.__pinned) return
+						this.__pinned = false
+						asdom.__unpin(this.__asRef)
+					}
+
 					constructor() {
 						super()
 
 						this.__asRef = asdom.fn(factory)()
+						this.__pin()
 						asdom.__refs.set(this.__asRef, this)
 					}
 
 					connectedCallback() {
-						asdom.asdom_connectedCallback(this.__asRef)
+						this.__pin()
+						asdom.__asdom_connectedCallback(this.__asRef)
 					}
 
 					disconnectedCallback() {
-						asdom.asdom_disconnectedCallback(this.__asRef)
+						asdom.__asdom_disconnectedCallback(this.__asRef)
+						this.__unpin()
 					}
 
 					adoptedCallback() {
-						asdom.asdom_adoptedCallback(this.__asRef)
+						asdom.__asdom_adoptedCallback(this.__asRef)
 					}
 
 					attributeChangedCallback(name, oldVal, newVal) {
-						asdom.asdom_attributeChangedCallback(
+						asdom.__asdom_attributeChangedCallback(
 							this.__asRef,
 							asdom.__newString(name),
 							asdom.__newString(oldVal),
@@ -164,13 +202,6 @@ export class Asdom {
 			getUrl: id => {
 				const document = this.__refs.get(id)
 				return this.__newString(document.URL)
-			},
-			setDocument: id => {
-				this.__refs.set(id, document)
-			},
-			getDocument: id => {
-				if (!this.__refs.get(id)) this.wasmImports.asDOM_Document.setDocument(id)
-				return this.__refs.get(id)
 			},
 			setElement: (docId, elId, tag) => {
 				tag = this.__getString(tag)
@@ -299,10 +330,15 @@ export class Asdom {
 				return this.getKeyOrObjectType(result)
 			},
 			// element.onclick
-			elOnClick: (id, callback) => {
+			setOnclick: (id, callback) => {
 				/** @type {Element} */
-				const el = this.__refs.get(id)
-				el.onclick = this.fn(callback)
+				const obj = this.__refs.get(id)
+				obj.onclick = callback === -1 ? null : this.fn(callback)
+			},
+			getOnclick: id => {
+				/** @type {Element} */
+				const obj = this.__refs.get(id)
+				// TODO How to "return" a JS function so that AS can call it?
 			},
 			// element.click()
 			elClick: id => {
