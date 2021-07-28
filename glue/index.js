@@ -134,6 +134,18 @@ export class Asdom {
 				if (!key) this.__refs.set((key = objId), obj)
 				return key
 			},
+			/**
+			 * @param {number} id
+			 * @param {number} objId
+			 */
+			getHistory: (id, objId) => {
+				/** @type {Window} */
+				const self = this.__refs.get(id)
+				const obj = self.history
+				let key = this.__refs.keyFrom(obj)
+				if (!key) this.__refs.set((key = objId), obj)
+				return key
+			},
 		},
 		asDOM_CustomElementRegistry: {
 			// customElements.define()

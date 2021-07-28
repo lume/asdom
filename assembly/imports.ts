@@ -19,6 +19,10 @@ export declare function getDocument(id: usize, docId: usize): void
 export declare function getCustomElements(id: usize, ceId: usize): void
 
 // @ts-expect-error
+@external('asDOM_Window', 'getHistory')
+export declare function getHistory(id: usize, histId: usize): void
+
+// @ts-expect-error
 @external('asDOM_Window', 'trackWindow')
 export declare function trackWindow(id: usize): void
 

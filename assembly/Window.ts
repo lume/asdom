@@ -1,6 +1,7 @@
 import {CustomElementRegistry} from './CustomElementRegistry'
 import {Document} from './Document'
-import {getCustomElements, getDocument, setOnclick, trackWindow} from './imports'
+import {getCustomElements, getDocument, getHistory, setOnclick, trackWindow} from './imports'
+import {History} from './History'
 import {Object} from './Object'
 
 export class Window extends Object {
@@ -17,14 +18,27 @@ export class Window extends Object {
 		return obj
 	}
 
-	private __ceRegistry: CustomElementRegistry | null = null
+	private __customElements: CustomElementRegistry | null = null
 
 	get customElements(): CustomElementRegistry {
-		let obj = this.__ceRegistry
+		let obj = this.__customElements
 
 		if (!obj) {
-			this.__ceRegistry = obj = new CustomElementRegistry()
+			this.__customElements = obj = new CustomElementRegistry()
 			getCustomElements(this.__ptr__, obj.__ptr__)
+		}
+
+		return obj
+	}
+
+	private __history: History | null = null
+
+	get history(): History {
+		let obj = this.__history
+
+		if (!obj) {
+			this.__history = obj = new History()
+			getHistory(this.__ptr__, obj.__ptr__)
 		}
 
 		return obj
@@ -50,5 +64,7 @@ export class Window extends Object {
 export const window = new Window()
 trackWindow(window.__ptr__)
 
-export const customElements = window.customElements
+// export "globals"
 export const document = window.document
+export const customElements = window.customElements
+export const history = window.history

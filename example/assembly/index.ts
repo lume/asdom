@@ -13,12 +13,8 @@ import {
 	Node,
 	HTMLHeadingElement,
 	HTMLSpanElement,
+	window,
 } from '../node_modules/asdom/assembly/index'
-
-if (document.children.length != 1) throw new Error('document.children.length should be 1')
-if (document.children[0]!.tagName != 'HTML') throw new Error('document.children[0] should be <html>')
-if (document.firstElementChild!.tagName != 'HTML') throw new Error('document.firstElementChild should be <html>')
-if (document.lastElementChild!.tagName != 'HTML') throw new Error('document.lastElementChild should be <html>')
 
 // TODO move these into asdom, because requestAnimationFrame is a DOM API.
 import {cancelAnimationFrame, requestAnimationFrame} from '../node_modules/ecmassembly/assembly/requestAnimationFrame'
@@ -27,6 +23,13 @@ import {setTimeout} from '../node_modules/ecmassembly/assembly/setTimeout'
 import {log} from './imports'
 import './SecondsCounter'
 import './HelloFrom'
+
+log('History length: ' + window.history.length.toString())
+
+if (document.children.length != 1) throw new Error('document.children.length should be 1')
+if (document.children[0]!.tagName != 'HTML') throw new Error('document.children[0] should be <html>')
+if (document.firstElementChild!.tagName != 'HTML') throw new Error('document.firstElementChild should be <html>')
+if (document.lastElementChild!.tagName != 'HTML') throw new Error('document.lastElementChild should be <html>')
 
 let imgRotation: f32 = 0
 let img: HTMLImageElement
