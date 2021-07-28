@@ -1,3 +1,5 @@
+import {createAsdomCustomElementClass} from './AsdomCustomElement.js'
+
 class Refs extends Map {
 	/** @type {Map<number, object>} */
 	__reverse = new Map()
@@ -135,67 +137,10 @@ export class Asdom {
 		},
 		asDOM_CustomElementRegistry: {
 			// customElements.define()
-			define: (id, tag, factory, attributes) => {
-				tag = this.__getString(tag)
-
+			define: (id, tagName, factory, attributes) => {
+				tagName = this.__getString(tagName)
 				const customElements = this.__refs.get(id)
-
-				const asdom = this
-
-				class AsdomElement extends HTMLElement {
-					__asRef = -1
-
-					static get observedAttributes() {
-						return asdom.stringArray(attributes)
-					}
-
-					__pinned = false
-
-					__pin() {
-						if (this.__pinned) return
-						this.__pinned = true
-						asdom.__pin(this.__asRef)
-					}
-
-					__unpin() {
-						if (!this.__pinned) return
-						this.__pinned = false
-						asdom.__unpin(this.__asRef)
-					}
-
-					constructor() {
-						super()
-
-						this.__asRef = asdom.fn(factory)()
-						this.__pin()
-						asdom.__refs.set(this.__asRef, this)
-					}
-
-					connectedCallback() {
-						this.__pin()
-						asdom.__asdom_connectedCallback(this.__asRef)
-					}
-
-					disconnectedCallback() {
-						asdom.__asdom_disconnectedCallback(this.__asRef)
-						this.__unpin()
-					}
-
-					adoptedCallback() {
-						asdom.__asdom_adoptedCallback(this.__asRef)
-					}
-
-					attributeChangedCallback(name, oldVal, newVal) {
-						asdom.__asdom_attributeChangedCallback(
-							this.__asRef,
-							asdom.__newString(name),
-							asdom.__newString(oldVal),
-							asdom.__newString(newVal),
-						)
-					}
-				}
-
-				customElements.define(tag, AsdomElement)
+				customElements.define(tagName, createAsdomCustomElementClass(this, factory, attributes))
 			},
 		},
 		asDOM_Document: {
