@@ -99,10 +99,40 @@ el.innerHTML = /*html*/ `
 document.body!.appendChild(el)
 ```
 
+# Caveats
+
+- Don't create built-in elements (f.e. `<div>` elements) using their
+  constructors. For example, don't do `new HTMLDivElement`, instead use
+  `document.createElement('div')`, or things won't work as expected.
+- AS does not yet support referencing constructors, but the Custom Elements API
+  is one that accepts a constructor as the second argument to
+  `customElements.define('tag-name', YourClass)`. To work around this
+  limitation, the `define()` API should be use like so:
+  ```js
+  customElements.define('tag-name', () => new YourClass(), YourClass.observedAttributes)
+  ```
+  As with built-in elements, do not manually `new` your custom element class,
+  except in the factory function that you pass into `customElements.define()`
+  as the second arg. In other scenarios when you want a ref to your custom
+  element, you can use any pattern that grabs your element from the DOM instead
+  of creating it with `new`.
+  ```js
+  const temp = document.createElement('<div>')
+  temp.innerHTML = '<your-element></your-element>'
+  const yourElement = temp.firstElementChild
+  // ...use yourElement...
+  ```
+  This will be improved.
+
 # TODO
 
 We will add more DOM APIs as needed while we chisel away.
 
+- [ ] Improve custom element API to allow directly creating custom element
+      instances from their constructors.
 - [ ] Use as-pect for testing.
-- [ ] Import jsdom or undom so that DOM APIs are mocked (on the JavaScript side) during testing (as-pect runs in Node.js not a browser).
-- [ ] Make `document` global. Currently making AS globals is incompatible with TypeScript, so VS Code intellisense doesn't pick up AS globals (https://github.com/AssemblyScript/assemblyscript/issues/1929)
+- [ ] Import jsdom or undom so that DOM APIs are mocked (on the JavaScript
+      side) during testing (as-pect runs in Node.js not a browser).
+- [ ] Make `window` and any of its properties global. Currently making AS
+      globals is incompatible with TypeScript, so VS Code intellisense doesn't pick
+      up AS globals (https://github.com/AssemblyScript/assemblyscript/issues/1929)
