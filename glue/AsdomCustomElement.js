@@ -6,7 +6,7 @@
  * @param {number} attributes
  */
 export function createAsdomCustomElementClass(asdom, factory, attributes) {
-	class AsdomCustomElement extends HTMLElement {
+	return class AsdomCustomElement extends HTMLElement {
 		__asRef = -1
 
 		static get observedAttributes() {
