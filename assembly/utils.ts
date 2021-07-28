@@ -78,7 +78,6 @@ export function idToNullOrObject(id: i32): Object | null {
 
 		// Associate the AS-side instance with the JS-side instance.
 		// TODO use this.ownerDocument.__ptr__ instead of document.__ptr__
-		// trackNextElement(document.__ptr__, el.__ptr__)
 		trackNextRef(obj.__ptr__)
 
 		return obj

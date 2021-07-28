@@ -145,48 +145,34 @@ export class Asdom {
 		},
 		asDOM_Document: {
 			getUrl: id => {
-				const document = this.__refs.get(id)
-				return this.__newString(document.URL)
+				const self = this.__refs.get(id)
+				return this.__newString(self.URL)
 			},
-			setElement: (docId, elId, tag) => {
-				tag = this.__getString(tag)
-				let el =
-					tag === 'body'
-						? document.body || thro('bug!')
-						: this.wasmImports.asDOM_Document.documentCreateElement(docId, tag)
-				this.__refs.set(elId, el)
+			getBody: id => {
+				/** @type {Document} */
+				const self = this.__refs.get(id)
+				const result = self.body
+
+				if (!result) return 0 // null
+
+				return this.getKeyOrObjectType(result)
 			},
-			trackNextElement: (docId, id) => {
-				const ref = this.__nextRefToTrack
-
-				if (!ref) {
-					throw new Error(
-						'Bug, this should not happen, trackNextElement should have been called synchronously right after an existing element was referenced and an AS-side objet created to mirror it.',
-					)
-				}
-
-				this.__nextRefToTrack = undefined
-
-				// TODO elements need to be associated with documents on the AS-side so they can have ownerDocument properties.
-				this.__refs.set(id, ref)
-			},
-			getElement: id => {
-				return this.__refs.get(id)
+			setBody: (id, bodyId) => {
+				// TODO
 			},
 			// document.createElement()
-			documentCreateElement: (id, tag) => {
-				const document = this.__refs.get(id)
-				return document.createElement(tag)
-			},
-			documentHasBody: id => {
-				const document = this.__refs.get(id)
-				return document.body ? true : false
+			createElement: (id, tagName /*, TODO options */) => {
+				/** @type {Document} */
+				const self = this.__refs.get(id)
+				const result = self.createElement(this.__getString(tagName))
+				return this.getKeyOrObjectType(result)
 			},
 			// document.createTextNode()
-			createTextNode: (docId, textId, data) => {
-				const document = this.__refs.get(docId)
-				const text = document.createTextNode(this.__getString(data))
-				this.__refs.set(textId, text)
+			createTextNode: (id, data) => {
+				/** @type {Document} */
+				const self = this.__refs.get(id)
+				const result = self.createTextNode(this.__getString(data))
+				return this.getKeyOrObjectType(result)
 			},
 		},
 		asDOM_Element: {

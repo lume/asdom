@@ -27,24 +27,20 @@ export declare function trackWindow(id: usize): void
 export declare function define(id: usize, tag: string, factoryIndex: i32, attributes: string[]): void
 
 // @ts-expect-error
+@external('asDOM_Document', 'getBody')
+export declare function getBody(id: usize): i32
+
+// @ts-expect-error
 @external('asDOM_Document', 'getUrl')
 export declare function getUrl(id: usize): string
 
 // @ts-expect-error
-@external('asDOM_Document', 'setElement')
-export declare function setElement(docId: usize, elId: usize, tag: string): void
-
-// @ts-expect-error
-@external('asDOM_Document', 'documentHasBody')
-export declare function documentHasBody(doc: usize): boolean
+@external('asDOM_Document', 'createElement')
+export declare function createElement(docId: usize, tagName: string): i32
 
 // @ts-expect-error
 @external('asDOM_Document', 'createTextNode')
-export declare function createTextNode(docId: usize, textId: usize, data: string): void
-
-// // @ts-expect-error
-// @external('asDOM_Document', 'trackNextElement')
-// export declare function trackNextElement(docId: usize, elId: usize): void
+export declare function createTextNode(docId: usize, data: string): i32
 
 // @ts-expect-error
 @external('asDOM_Node', 'nodeAppendChild')
