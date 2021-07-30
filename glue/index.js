@@ -110,6 +110,30 @@ export class Asdom {
 				console.log('AS: ' + this.__getString(str))
 			},
 		},
+		asDOM_History: {
+			pushState: (id, state, title, url) => {
+				/** @type {History} */
+				const self = this.__refs.get(id)
+
+				// TODO state is an pointer to an AS object, but AS doesn't have
+				// dynamic objects. Handle state somehow (with ason or
+				// as-json?).
+				state = {}
+
+				self.pushState(state, this.__getString(title), this.__getString(url))
+			},
+			replaceState: (id, state, title, url) => {
+				/** @type {History} */
+				const self = this.__refs.get(id)
+
+				// TODO state is an pointer to an AS object, but AS doesn't have
+				// dynamic objects. Handle state somehow (with ason or
+				// as-json?).
+				state = {}
+
+				self.replaceState(state, this.__getString(title), this.__getString(url))
+			},
+		},
 		asDOM_EventTarget: {
 			addEventListenerCallback: (id, eventName, callback /* TODO , optionsOrUseCapture*/) => {
 				/** @type {EventTarget} */

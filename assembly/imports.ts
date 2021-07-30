@@ -13,6 +13,14 @@ export declare function releaseObject(ptr: usize): void
 export declare function log(msg: string): void
 
 // @ts-expect-error
+@external('asDOM_History', 'pushState')
+export declare function pushState(id: usize, state: usize, title: string, url: string): void
+
+// @ts-expect-error
+@external('asDOM_History', 'replaceState')
+export declare function replaceState(id: usize, state: usize, title: string, url: string): void
+
+// @ts-expect-error
 @external('asDOM_EventTarget', 'addEventListenerCallback')
 export declare function addEventListenerCallback(id: usize, eventName: string, callbackIndex: u32): void
 

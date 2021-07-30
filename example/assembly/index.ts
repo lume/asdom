@@ -14,6 +14,7 @@ import {
 	HTMLHeadingElement,
 	HTMLSpanElement,
 	window,
+	EmptyHistoryState,
 } from '../node_modules/asdom/assembly/index'
 
 // TODO move these into asdom, because requestAnimationFrame is a DOM API.
@@ -26,10 +27,19 @@ import './HelloFrom'
 
 log('History length: ' + window.history.length.toString())
 
+setTimeout(() => {
+	window.history.pushState(new EmptyHistoryState(), '', '/foo')
+
+	setTimeout(() => {
+		window.history.pushState(new EmptyHistoryState(), '', '/bar')
+	}, 1000)
+}, 1000)
+
+// To test these work, press the browser back and forward buttons after the
+// previous timeouts complete and have changed the URL.
 window.addEventListener('popstate', () => {
 	log('popstate 1')
 })
-
 window.onpopstate = () => {
 	log('popstate 2')
 }
