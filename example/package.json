@@ -9,7 +9,7 @@
 	},
 	"dependencies": {
 		"@assemblyscript/loader": "^0.18.32",
-		"asdom": "file:../",
+		"asdom": "0.1.15",
 		"ecmassembly": "^0.1.8"
 	},
 	"devDependencies": {
