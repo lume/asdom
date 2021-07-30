@@ -1,10 +1,10 @@
 import {CustomElementRegistry} from './CustomElementRegistry'
 import {Document} from './Document'
-import {getCustomElements, getDocument, getHistory, setOnclick, trackWindow} from './imports'
+import {getCustomElements, getDocument, getHistory, setOnclick, setOnpopstate, trackWindow} from './imports'
 import {History} from './History'
-import {Object} from './Object'
+import {EventTarget} from './EventTarget'
 
-export class Window extends Object {
+export class Window extends EventTarget {
 	private __document: Document | null = null
 
 	get document(): Document {
@@ -58,6 +58,22 @@ export class Window extends Object {
 		// to be able to call it, for example, in a monkey patch.
 		// return getOnclick()
 		return this.__onclick
+	}
+
+	private __onpopstate: (() => void) | null = null
+
+	set onpopstate(cb: (() => void) | null) {
+		this.__onpopstate = cb
+		setOnpopstate(this.__ptr__, cb ? cb.index : -1) // -1 means "null"
+	}
+
+	get onpopstate(): (() => void) | null {
+		// For now there is no glue code here, and we assume manipulation of this
+		// property happens only on the AS-side. TODO Eventually we'll have to
+		// figure how to "get" a function that may already exist on the JS side
+		// to be able to call it, for example, in a monkey patch.
+		// return getOnpopstate()
+		return this.__onpopstate
 	}
 }
 

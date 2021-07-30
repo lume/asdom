@@ -1,3 +1,5 @@
+import { EventListener } from "./EventListener";
+
 // @ts-expect-error
 @external('asDOM', 'trackNextRef')
 export declare function trackNextRef(id: usize): void
@@ -9,6 +11,26 @@ export declare function releaseObject(ptr: usize): void
 // @ts-expect-error
 @external('asDOM', 'log')
 export declare function log(msg: string): void
+
+// @ts-expect-error
+@external('asDOM_EventTarget', 'addEventListenerCallback')
+export declare function addEventListenerCallback(id: usize, eventName: string, callbackIndex: u32): void
+
+// @ts-expect-error
+@external('asDOM_EventTarget', 'addEventListenerObject')
+export declare function addEventListenerObject(id: usize, eventName: string, listenerPtr: usize): void
+
+// @ts-expect-error
+@external('asDOM_EventTarget', 'removeEventListenerCallback')
+export declare function removeEventListenerCallback(id: usize, eventName: string, callbackIndex: u32): void
+
+// @ts-expect-error
+@external('asDOM_EventTarget', 'removeEventListenerObject')
+export declare function removeEventListenerObject(id: usize, eventName: string, listenerPtr: usize): void
+
+// @ts-expect-error
+@external('asDOM_Window', 'trackWindow')
+export declare function trackWindow(id: usize): void
 
 // @ts-expect-error
 @external('asDOM_Window', 'getDocument')
@@ -23,8 +45,12 @@ export declare function getCustomElements(id: usize, ceId: usize): void
 export declare function getHistory(id: usize, histId: usize): void
 
 // @ts-expect-error
-@external('asDOM_Window', 'trackWindow')
-export declare function trackWindow(id: usize): void
+@external('asDOM_Window', 'setOnpopstate')
+export declare function setOnpopstate(id: usize, index: u32): void
+
+// // @ts-expect-error
+// @external('asDOM_Window', 'getOnpopstate')
+// export declare function getOnpopstate(id: usize): ???
 
 // @ts-expect-error
 @external('asDOM_CustomElementRegistry', 'define')
@@ -140,11 +166,11 @@ export declare function elClick(id: usize): void
 
 // @ts-expect-error
 @external('asDOM_Element', 'setOnclick')
-export declare function setOnclick(id: usize, ptr: u32): void
+export declare function setOnclick(id: usize, index: u32): void
 
 // // @ts-expect-error
 // @external('asDOM_Element', 'getOnclick')
-// export declare function getOnclick(id: usize, ptr: u32): ???
+// export declare function getOnclick(id: usize): ???
 
 // @ts-expect-error
 @external('asDOM_Element', 'remove')

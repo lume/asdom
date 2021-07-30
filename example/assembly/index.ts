@@ -26,6 +26,14 @@ import './HelloFrom'
 
 log('History length: ' + window.history.length.toString())
 
+window.addEventListener('popstate', () => {
+	log('popstate 1')
+})
+
+window.onpopstate = () => {
+	log('popstate 2')
+}
+
 if (document.children.length != 1) throw new Error('document.children.length should be 1')
 if (document.children[0]!.tagName != 'HTML') throw new Error('document.children[0] should be <html>')
 if (document.firstElementChild!.tagName != 'HTML') throw new Error('document.firstElementChild should be <html>')
@@ -223,6 +231,12 @@ document.body!.onclick = () => {
 	)
 }
 
+const clickHandler: () => void = () => {
+	log('body clicked!')
+}
+
+document.body!.addEventListener('click', clickHandler)
+
 const audio = new Audio('../assets/audio2.mp3')
 
 audio.autoplay = true
@@ -284,6 +298,7 @@ span2.appendChild(removeButton)
 
 removeButton.onclick = () => {
 	document.body!.removeChild(span2)
+	document.body!.removeEventListener('click', clickHandler)
 }
 
 container = document.createElement('div') as HTMLDivElement

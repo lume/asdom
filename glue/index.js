@@ -66,6 +66,10 @@ export class Asdom {
 		this.__asdom_attributeChangedCallback = e.asdom_attributeChangedCallback
 	}
 
+	/**
+	 * @param {number} fnIndex - The index into the WebAssembly.Table of a function inside the AssemblyScript module.
+	 * @returns {(...args: any[]) => any} - A JavaScript-side function that proxies arguments and return value to the AssemblyScript function.
+	 */
 	fn(fnIndex) {
 		return this.__table.get(fnIndex)
 	}
@@ -104,6 +108,27 @@ export class Asdom {
 			},
 			log: str => {
 				console.log('AS: ' + this.__getString(str))
+			},
+		},
+		asDOM_EventTarget: {
+			addEventListenerCallback: (id, eventName, callback /* TODO , optionsOrUseCapture*/) => {
+				/** @type {EventTarget} */
+				const self = this.__refs.get(id)
+				self.addEventListener(this.__getString(eventName), this.fn(callback))
+			},
+			addEventListenerObject: id => {
+				console.error('addEventListener with an EventListener object not implemented yet')
+			},
+			removeEventListenerCallback: (id, eventName, callback /* TODO , optionsOrUseCapture*/) => {
+				/** @type {EventTarget} */
+				const self = this.__refs.get(id)
+
+				console.log('---------------------', this.fn(callback) === this.fn(callback))
+
+				self.removeEventListener(this.__getString(eventName), this.fn(callback))
+			},
+			removeEventListenerObject: id => {
+				console.error('removeEventListener with an EventListener object not implemented yet')
 			},
 		},
 		asDOM_Window: {
@@ -145,6 +170,17 @@ export class Asdom {
 				let key = this.__refs.keyFrom(obj)
 				if (!key) this.__refs.set((key = objId), obj)
 				return key
+			},
+			// window.onpopstate
+			setOnpopstate: (id, callback) => {
+				/** @type {Window} */
+				const self = this.__refs.get(id)
+				self.onpopstate = callback === -1 ? null : this.fn(callback)
+			},
+			getOnpopstate: id => {
+				/** @type {Window} */
+				const self = this.__refs.get(id)
+				// TODO How to "return" a JS function so that AS can call it?
 			},
 		},
 		asDOM_CustomElementRegistry: {
@@ -232,8 +268,8 @@ export class Asdom {
 			},
 			getChildren: (id, listId) => {
 				/** @type {Element | Document | DocumentFragment} */
-				const obj = this.__refs.get(id)
-				const list = obj.children
+				const self = this.__refs.get(id)
+				const list = self.children
 				if (!this.__refs.keyFrom(list)) this.__refs.set(listId, list)
 			},
 			getFirstElementChild: id => {
@@ -275,12 +311,12 @@ export class Asdom {
 			// element.onclick
 			setOnclick: (id, callback) => {
 				/** @type {Element} */
-				const obj = this.__refs.get(id)
-				obj.onclick = callback === -1 ? null : this.fn(callback)
+				const self = this.__refs.get(id)
+				self.onclick = callback === -1 ? null : this.fn(callback)
 			},
 			getOnclick: id => {
 				/** @type {Element} */
-				const obj = this.__refs.get(id)
+				const self = this.__refs.get(id)
 				// TODO How to "return" a JS function so that AS can call it?
 			},
 			// element.click()
@@ -401,8 +437,8 @@ export class Asdom {
 			},
 			getChildNodes: (id, listId) => {
 				/** @type {Node} */
-				const obj = this.__refs.get(id)
-				const list = obj.childNodes
+				const self = this.__refs.get(id)
+				const list = self.childNodes
 				if (!this.__refs.keyFrom(list)) this.__refs.set(listId, list)
 			},
 		},

@@ -11,8 +11,8 @@ import {
 	getLastChild,
 	getParentElement,
 } from './imports'
-import {Object} from './Object'
 import {NodeList} from './NodeList'
+import {EventTarget} from './EventTarget'
 
 /** Node types: https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType */
 enum NodeType {
@@ -29,7 +29,7 @@ enum NodeType {
 	// 12 is deprecated and skipped.
 }
 
-export abstract class Node extends Object {
+export abstract class Node extends EventTarget {
 	static ELEMENT_NODE: NodeType = NodeType.ELEMENT_NODE
 	static ATTRIBUTE_NODE: NodeType = NodeType.ATTRIBUTE_NODE
 	static TEXT_NODE: NodeType = NodeType.TEXT_NODE
