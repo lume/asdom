@@ -107,7 +107,7 @@ document.body!.appendChild(el)
 - AS does not yet support referencing constructors, but the Custom Elements API
   is one that accepts a constructor as the second argument to
   `customElements.define('tag-name', YourClass)`. To work around this
-  limitation, the `define()` API should be use like so:
+  limitation, the `define()` API should be used like so:
   ```js
   customElements.define('tag-name', () => new YourClass(), YourClass.observedAttributes)
   ```
