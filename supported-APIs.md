@@ -18,94 +18,106 @@ yet (or someone forgot to update this outline).
 
 - `Object`
   - Subclasses:
-    - `Window`
-      - `customElements`
+    - `History`
+      - `pushState()`
+      - `replaceState()`
+      - `length`
     - `CustomElementRegistry`
       - `define()`
     - `NodeList`
     - `HTMLCollection`
-    - `Node`
-      - `static ELEMENT_NODE`
-      - `static ATTRIBUTE_NODE`
-      - `static TEXT_NODE`
-      - `static CDATA_SECTION_NODE`
-      - `static PROCESSING_INSTRUCTION_NODE`
-      - `static COMMENT_NODE`
-      - `static DOCUMENT_NODE`
-      - `static DOCUMENT_TYPE_NODE`
-      - `static DOCUMENT_FRAGMENT_NODE`
-      - `nodeType`
-      - `parentNode`
-      - `parentElement`
-      - `childNodes`
-      - `firstChild`
-      - `lastChild`
-      - `nextSibling`
-      - `previousSibling`
-      - `appendChild()`
-      - `removeChild()`
-      - `cloneNode()`
+    - `EventTarget`
+      - `addEventListener`
+      - `removeEventListener`
       - Subclasses:
-        - `DocumentFragment`
-          - `children`
-          - `firstElementChild`
-          - `lastElementChild`
-          - `querySelector()`
-          - `querySelectorAll()`
+        - `Window`
+          - `document`
+          - `customElements`
+          - `history`
+          - `onclick`
+          - `onpopstate`
+        - `Node`
+          - `static ELEMENT_NODE`
+          - `static ATTRIBUTE_NODE`
+          - `static TEXT_NODE`
+          - `static CDATA_SECTION_NODE`
+          - `static PROCESSING_INSTRUCTION_NODE`
+          - `static COMMENT_NODE`
+          - `static DOCUMENT_NODE`
+          - `static DOCUMENT_TYPE_NODE`
+          - `static DOCUMENT_FRAGMENT_NODE`
+          - `nodeType`
+          - `parentNode`
+          - `parentElement`
+          - `childNodes`
+          - `firstChild`
+          - `lastChild`
+          - `nextSibling`
+          - `previousSibling`
+          - `appendChild()`
+          - `removeChild()`
+          - `cloneNode()`
           - Subclasses:
-            - `ShadowRoot`
+            - `DocumentFragment`
+              - `children`
+              - `firstElementChild`
+              - `lastElementChild`
+              - `querySelector()`
+              - `querySelectorAll()`
+              - Subclasses:
+                - `ShadowRoot`
+                  - `innerHTML`
+            - `CharacterData`
+              - Subclasses:
+                - `Text`
+            - `Document`
+              - `URL`
+              - `body`
+              - `createElement()`
+              - `createTextNode()`
+              - `children`
+              - `firstElementChild`
+              - `lastElementChild`
+              - `querySelector()`
+              - `querySelectorAll()`
+            - `Element`
+              - `tagName`
+              - `setAttribute()`
+              - `getAttribute()`
               - `innerHTML`
-        - `CharacterData`
-          - Subclasses:
-            - `Text`
-        - `Document`
-          - `URL`
-          - `body`
-          - `createElement()`
-          - `createTextNode()`
-          - `children`
-          - `firstElementChild`
-          - `lastElementChild`
-          - `querySelector()`
-          - `querySelectorAll()`
-        - `Element`
-          - `tagName`
-          - `setAttribute()`
-          - `getAttribute()`
-          - `innerHTML`
-          - `children`
-          - `firstElementChild`
-          - `lastElementChild`
-          - `nextElementSibling`
-          - `previousElementSibling`
-          - `click()`
-          - `onclick` (No `Event` object is passed into the callback yet, but at least you can react to a click)
-          - `remove()`
-          - `querySelector()`
-          - `querySelectorAll()`
-          - `shadowRoot`
-          - `attachShadow()`
-          - Subclasses:
-            - `HTMLElement` (`<section>` and various other elements extend from this)
+              - `children`
+              - `firstElementChild`
+              - `lastElementChild`
+              - `nextElementSibling`
+              - `previousElementSibling`
+              - `click()`
+              - `onclick` (No `Event` object is passed into the callback yet, but at least you can react to a click)
+              - `remove()`
+              - `querySelector()`
+              - `querySelectorAll()`
+              - `shadowRoot`
+              - `attachShadow()`
               - Subclasses:
-                - `HTMLBodyElement` (`<body>`)
-                - `HTMLDivElement` (`<div>`)
-                - `HTMLSpanElement` (`<span>`)
-                - `HTMLParagraphElement` (`<p>`)
-                - `HTMLAnchorElement` (`<a>`)
-                - `HTMLScriptElement` (`<script>`)
-                - `HTMLImageElement`/`Image` (`<img>`)
-                - `HTMLAudioElement`/`Audio` (`<audio>`)
-                  - `play()`
-                  - `pause()`
-                  - `autoplay`
-                - `HTMLHeadingElement` (`<h1>` - `<h6>`)
-                - `HTMLTemplateElement` (`<template>`)
-                  - `content`
-                - `HTMLUnknownElement` (any unrecognized non-hyphenated element)
-            - `SVGElement`
-              - Subclasses:
-                - `SVGSVGElement` (`<svg>`)
+                - `HTMLElement` (`<section>` and various other elements extend from this)
+                  - Subclasses:
+                    - `HTMLBodyElement` (`<body>`)
+                    - `HTMLDivElement` (`<div>`)
+                    - `HTMLSpanElement` (`<span>`)
+                    - `HTMLParagraphElement` (`<p>`)
+                    - `HTMLAnchorElement` (`<a>`)
+                    - `HTMLScriptElement` (`<script>`)
+                    - `HTMLImageElement`/`Image` (`<img>`)
+                    - `HTMLAudioElement`/`Audio` (`<audio>`)
+                      - `play()`
+                      - `pause()`
+                      - `autoplay`
+                    - `HTMLHeadingElement` (`<h1>` - `<h6>`)
+                    - `HTMLTemplateElement` (`<template>`)
+                      - `content`
+                    - `HTMLUnknownElement` (any unrecognized non-hyphenated element)
+                - `SVGElement`
+                  - Subclasses:
+                    - `SVGSVGElement` (`<svg>`)
 
 # Additional APIs from ECMAseembly
 
