@@ -8,7 +8,7 @@ export class HelloFrom extends HTMLElement {
 
 	private static readonly __placeDefault: string = 'AssemblyScript'
 	private __place: string = HelloFrom.__placeDefault
-	private __placeRef: Element | null = null
+	private __placeRef: HTMLElement | null = null
 
 	get place(): string {
 		return this.__place
@@ -21,7 +21,7 @@ export class HelloFrom extends HTMLElement {
 
 	private static readonly __avatarDefault: string = 'https://www.assemblyscript.org/images/icon.svg'
 	private __avatar: string = HelloFrom.__avatarDefault
-	private __avatarRef: Element | null = null
+	private __avatarRef: HTMLElement | null = null
 
 	get avatar(): string {
 		return this.__avatar
@@ -48,8 +48,8 @@ export class HelloFrom extends HTMLElement {
 
 		root.innerHTML = this.template()
 
-		this.__placeRef = root.querySelector('[ref=placeRef]')
-		this.__avatarRef = root.querySelector('[ref=avatarRef]')
+		this.__placeRef = root.querySelector('[ref=placeRef]') as HTMLElement
+		this.__avatarRef = root.querySelector('[ref=avatarRef]') as HTMLElement
 	}
 
 	template(): string {

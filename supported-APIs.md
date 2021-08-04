@@ -99,6 +99,7 @@ yet (or someone forgot to update this outline).
               - `attachShadow()`
               - Subclasses:
                 - `HTMLElement` (`<section>` and various other elements extend from this)
+                  - `innerText`
                   - Subclasses:
                     - `HTMLBodyElement` (`<body>`)
                     - `HTMLDivElement` (`<div>`)

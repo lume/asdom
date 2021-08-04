@@ -2,11 +2,9 @@ import {
 	elClick,
 	elGetAttribute,
 	getInnerHTML,
-	elGetInnerText,
 	setOnclick,
 	elSetAttribute,
 	setInnerHTML,
-	elSetInnerText,
 	getChildren,
 	getFirstElementChild,
 	getLastElementChild,
@@ -45,13 +43,6 @@ export abstract class Element extends Node {
 	}
 	set innerHTML(value: string | null) {
 		setInnerHTML(this.__ptr__, value)
-	}
-
-	get innerText(): string {
-		return elGetInnerText(this.__ptr__)
-	}
-	set innerText(value: string | null) {
-		elSetInnerText(this.__ptr__, value)
 	}
 
 	private __children: HTMLCollection | null = null

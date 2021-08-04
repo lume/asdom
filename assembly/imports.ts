@@ -121,6 +121,14 @@ export declare function cloneNode(id: usize, deep?: boolean): i32
 export declare function getChildNodes(nodeId: usize, listId: usize): void
 
 // @ts-expect-error
+@external('asDOM_HTMLElement', 'setInnerText')
+export declare function setInnerText(id: usize, value: string | null): void
+
+// @ts-expect-error
+@external('asDOM_HTMLElement', 'getInnerText')
+export declare function getInnerText(id: usize): string
+
+// @ts-expect-error
 @external('asDOM_Element', 'getTagName')
 export declare function getTagName(id: usize): string
 
@@ -139,14 +147,6 @@ export declare function setInnerHTML(id: usize, value: string | null): void
 // @ts-expect-error
 @external('asDOM_Element', 'getInnerHTML')
 export declare function getInnerHTML(id: usize): string
-
-// @ts-expect-error
-@external('asDOM_Element', 'elSetInnerText')
-export declare function elSetInnerText(id: usize, value: string | null): void
-
-// @ts-expect-error
-@external('asDOM_Element', 'elGetInnerText')
-export declare function elGetInnerText(id: usize): string
 
 // @ts-expect-error
 @external('asDOM_Element', 'getChildren')

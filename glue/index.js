@@ -278,18 +278,6 @@ export class Asdom {
 				const el = this.__refs.get(id)
 				return this.__newString(el.innerHTML)
 			},
-			// element.innerText
-			elSetInnerText: (id, value) => {
-				/** @type {Element} */
-				const el = this.__refs.get(id)
-				el.innerText = this.__getString(value)
-			},
-			// element.innerText
-			elGetInnerText: id => {
-				/** @type {Element} */
-				const el = this.__refs.get(id)
-				return this.__newString(el.innerText)
-			},
 			getChildren: (id, listId) => {
 				/** @type {Element | Document | DocumentFragment} */
 				const self = this.__refs.get(id)
@@ -379,6 +367,19 @@ export class Asdom {
 				const el = this.__refs.get(id)
 				const root = el.attachShadow({mode: this.__getString(mode)})
 				this.__refs.set(rootId, root)
+			},
+		},
+		asDOM_HTMLElement: {
+			// element.innerText
+			setInnerText: (id, value) => {
+				/** @type {HTMLElement} */
+				const el = this.__refs.get(id)
+				el.innerText = this.__getString(value)
+			},
+			getInnerText: id => {
+				/** @type {HTMLElement} */
+				const el = this.__refs.get(id)
+				return this.__newString(el.innerText)
 			},
 		},
 		asDOM_Node: {
