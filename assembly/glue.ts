@@ -1,5 +1,6 @@
 import './__finalize'
 import {HTMLElement} from './elements/HTML/HTMLElement'
+import {EventListener} from './EventListener'
 
 export function asdom_connectedCallback(id: usize): void {
 	const el = changetype<HTMLElement>(id)
@@ -24,4 +25,9 @@ export function asdom_attributeChangedCallback(
 ): void {
 	const el = changetype<HTMLElement>(id)
 	el.attributeChangedCallback(name, oldValue, newValue)
+}
+
+export function asdom_triggerEventListener(id: usize /*TODO , eventPtr: usize*/): void {
+	const listener = changetype<EventListener>(id)
+	listener.handleEvent()
 }

@@ -7,7 +7,7 @@ import {
 } from './imports'
 import {Object} from './Object'
 
-type EventCallback = (/*TODO event: Event*/) => void
+export type EventCallback = (/*TODO event: Event*/) => void
 
 export class EventTarget extends Object {
 	addEventListener<T>(eventName: string, listener: T): void {

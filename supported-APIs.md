@@ -17,6 +17,7 @@ If a method or property is not listed in the outline, it means we haven't added 
 yet (or someone forgot to update this outline).
 
 - `Object`
+  - `toString()`
   - Subclasses:
     - `History`
       - `pushState()`
@@ -26,6 +27,20 @@ yet (or someone forgot to update this outline).
       - `define()`
     - `NodeList`
     - `HTMLCollection`
+    - `Location`
+      - `href`
+      - `protocol`
+      - `host`
+      - `hostname`
+      - `port`
+      - `pathname`
+      - `search`
+      - `hash`
+      - `origin`
+      - `assign()`
+      - `reload()`
+      - `replace()`
+      - `toString()`
     - `EventTarget`
       - `addEventListener`
       - `removeEventListener`
@@ -34,6 +49,7 @@ yet (or someone forgot to update this outline).
           - `document`
           - `customElements`
           - `history`
+          - `location`
           - `onclick`
           - `onpopstate`
         - `Node`
@@ -73,6 +89,7 @@ yet (or someone forgot to update this outline).
             - `Document`
               - `URL`
               - `body`
+              - `location`
               - `createElement()`
               - `createTextNode()`
               - `children`

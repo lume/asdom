@@ -1,8 +1,17 @@
 import {CustomElementRegistry} from './CustomElementRegistry'
 import {Document} from './Document'
-import {getCustomElements, getDocument, getHistory, setOnclick, setOnpopstate, trackWindow} from './imports'
+import {
+	getCustomElements,
+	getDocument,
+	getHistory,
+	getLocation,
+	setOnclick,
+	setOnpopstate,
+	trackWindow,
+} from './imports'
 import {History} from './History'
 import {EventTarget} from './EventTarget'
+import {Location} from './Location'
 
 export class Window extends EventTarget {
 	private __document: Document | null = null
@@ -42,6 +51,23 @@ export class Window extends EventTarget {
 		}
 
 		return obj
+	}
+
+	private __location: Location | null = null
+
+	get location(): Location {
+		let obj = this.__location
+
+		if (!obj) {
+			this.__location = obj = new Location()
+			getLocation(this.__ptr__, obj.__ptr__)
+		}
+
+		return obj
+	}
+
+	set location(l: Location) {
+		ERROR('The setter for window.location cannot currently take a string. Use window.location.href instead.')
 	}
 
 	private __onclick: (() => void) | null = null

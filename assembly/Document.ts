@@ -5,6 +5,7 @@ import {
 	getChildren,
 	getFirstElementChild,
 	getLastElementChild,
+	getLocation,
 	getUrl,
 	querySelector,
 	querySelectorAll,
@@ -17,6 +18,7 @@ import {Node} from './Node'
 import {Text} from './Text'
 import {NodeList} from './NodeList'
 import {HTMLCollection} from './HTMLCollection'
+import {Location} from './Location'
 
 export class Document extends Node {
 	get nodeType(): i32 {
@@ -40,6 +42,23 @@ export class Document extends Node {
 
 	set body(el: HTMLBodyElement) {
 		throw new Error('TODO: document.body setter is not implemented yet.')
+	}
+
+	private __location: Location | null = null
+
+	get location(): Location {
+		let obj = this.__location
+
+		if (!obj) {
+			this.__location = obj = new Location()
+			getLocation(this.__ptr__, obj.__ptr__)
+		}
+
+		return obj
+	}
+
+	set location(l: Location) {
+		ERROR('The setter for window.location cannot currently take a string. Use window.location.href instead.')
 	}
 
 	private __onclick: (() => void) | null = null

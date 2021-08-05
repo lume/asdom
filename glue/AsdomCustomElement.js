@@ -2,7 +2,7 @@
 
 /**
  * @param {import('./index').Asdom} asdom
- * @param {() => number} factory
+ * @param {number} factory
  * @param {number} attributes
  */
 export function createAsdomCustomElementClass(asdom, factory, attributes) {

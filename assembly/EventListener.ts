@@ -1,5 +1,6 @@
 import {Object} from './Object'
 
-export abstract class EventListener extends Object {
+export class EventListener extends Object {
+	/** Subclasses should implement this. */
 	handleEvent(): void {}
 }

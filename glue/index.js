@@ -1,3 +1,5 @@
+// @ts-check
+
 import {createAsdomCustomElementClass} from './AsdomCustomElement.js'
 
 class Refs extends Map {
@@ -64,6 +66,7 @@ export class Asdom {
 		this.__asdom_disconnectedCallback = e.asdom_disconnectedCallback
 		this.__asdom_adoptedCallback = e.asdom_adoptedCallback
 		this.__asdom_attributeChangedCallback = e.asdom_attributeChangedCallback
+		this.__asdom_triggerEventListener = e.asdom_triggerEventListener
 	}
 
 	/**
@@ -110,6 +113,9 @@ export class Asdom {
 				console.log('AS: ' + this.__getString(str))
 			},
 		},
+		asDOM_Object: {
+			toString: noArgStringReturnFunction(this, 'toString'),
+		},
 		asDOM_History: {
 			pushState: (id, state, title, url) => {
 				/** @type {History} */
@@ -134,14 +140,46 @@ export class Asdom {
 				self.replaceState(state, this.__getString(title), this.__getString(url))
 			},
 		},
+		asDOM_Location: {
+			setHref: setString(this, 'href'),
+			getHref: getString(this, 'href'),
+			setProtocol: setString(this, 'protocol'),
+			getProtocol: getString(this, 'protocol'),
+			setHost: setString(this, 'host'),
+			getHost: getString(this, 'host'),
+			setHostname: setString(this, 'hostname'),
+			getHostname: getString(this, 'hostname'),
+			setPort: setString(this, 'port'),
+			getPort: getString(this, 'port'),
+			setPathname: setString(this, 'pathname'),
+			getPathname: getString(this, 'pathname'),
+			setSearch: setString(this, 'search'),
+			getSearch: getString(this, 'search'),
+			setHash: setString(this, 'hash'),
+			getHash: getString(this, 'hash'),
+			getOrigin: getString(this, 'origin'),
+			reload: noArgNoReturnFunction(this, 'reload'),
+			replace: stringArgNoReturnFunction(this, 'replace'),
+		},
 		asDOM_EventTarget: {
 			addEventListenerCallback: (id, eventName, callback /* TODO , optionsOrUseCapture*/) => {
 				/** @type {EventTarget} */
 				const self = this.__refs.get(id)
 				self.addEventListener(this.__getString(eventName), this.fn(callback))
 			},
-			addEventListenerObject: id => {
-				console.error('addEventListener with an EventListener object not implemented yet')
+			addEventListenerObject: (id, eventName, listenerId /* TODO , optionsOrUseCapture*/) => {
+				/** @type {EventTarget} */
+				const self = this.__refs.get(id)
+
+				// A listener can only be added once.
+				if (this.__refs.get(listenerId)) return
+
+				const listener = event => this.__asdom_triggerEventListener(listenerId /*TODO , event*/)
+
+				this.__refs.set(listenerId, listener)
+
+				self.addEventListener(this.__getString(eventName), listener)
+				this.__pin(listenerId)
 			},
 			removeEventListenerCallback: (id, eventName, callback /* TODO , optionsOrUseCapture*/) => {
 				/** @type {EventTarget} */
@@ -151,8 +189,19 @@ export class Asdom {
 
 				self.removeEventListener(this.__getString(eventName), this.fn(callback))
 			},
-			removeEventListenerObject: id => {
-				console.error('removeEventListener with an EventListener object not implemented yet')
+			removeEventListenerObject: (id, eventName, listenerId /* TODO , optionsOrUseCapture*/) => {
+				/** @type {EventTarget} */
+				const self = this.__refs.get(id)
+
+				const listener = this.__refs.get(listenerId)
+
+				// Nothing to do if the listener wasn't added yet.
+				if (!listener) return
+
+				self.removeEventListener(this.__getString(eventName), listener)
+
+				this.__refs.delete(listenerId)
+				this.__unpin(listenerId)
 			},
 		},
 		asDOM_Window: {
@@ -164,7 +213,7 @@ export class Asdom {
 			 * @param {number} objId
 			 */
 			getDocument: (id, objId) => {
-				/** @type {Document} */
+				/** @type {Window} */
 				const self = this.__refs.get(id)
 				const obj = self.document
 				let key = this.__refs.keyFrom(obj)
@@ -191,6 +240,18 @@ export class Asdom {
 				/** @type {Window} */
 				const self = this.__refs.get(id)
 				const obj = self.history
+				let key = this.__refs.keyFrom(obj)
+				if (!key) this.__refs.set((key = objId), obj)
+				return key
+			},
+			/**
+			 * @param {number} id
+			 * @param {number} objId
+			 */
+			getLocation: (id, objId) => {
+				/** @type {Window | Document} */
+				const self = this.__refs.get(id)
+				const obj = self.location
 				let key = this.__refs.keyFrom(obj)
 				if (!key) this.__refs.set((key = objId), obj)
 				return key
@@ -248,7 +309,6 @@ export class Asdom {
 			},
 		},
 		asDOM_Element: {
-			// element.innerHTML
 			getTagName: id => {
 				/** @type {Element} */
 				const el = this.__refs.get(id)
@@ -267,17 +327,8 @@ export class Asdom {
 				return this.__newString(el.getAttribute(this.__getString(attr)))
 			},
 			// element.innerHTML
-			setInnerHTML: (id, value) => {
-				/** @type {Element | ShadowRoot} */
-				const el = this.__refs.get(id)
-				el.innerHTML = this.__getString(value)
-			},
-			// element.innerHTML
-			getInnerHTML: id => {
-				/** @type {Element | ShadowRoot} */
-				const el = this.__refs.get(id)
-				return this.__newString(el.innerHTML)
-			},
+			setInnerHTML: setStringOrNull(this, 'innerHTML'),
+			getInnerHTML: getString(this, 'innerHTML'),
 			getChildren: (id, listId) => {
 				/** @type {Element | Document | DocumentFragment} */
 				const self = this.__refs.get(id)
@@ -371,16 +422,8 @@ export class Asdom {
 		},
 		asDOM_HTMLElement: {
 			// element.innerText
-			setInnerText: (id, value) => {
-				/** @type {HTMLElement} */
-				const el = this.__refs.get(id)
-				el.innerText = this.__getString(value)
-			},
-			getInnerText: id => {
-				/** @type {HTMLElement} */
-				const el = this.__refs.get(id)
-				return this.__newString(el.innerText)
-			},
+			setInnerText: setStringOrNull(this, 'innerText'),
+			getInnerText: getString(this, 'innerText'),
 		},
 		asDOM_Node: {
 			// node.appendChild()
@@ -582,5 +625,54 @@ function getObjectType(obj) {
 		throw new Error(
 			'TODO: objects besides Element and Text instances not yet supported in the particular API that caused this error.',
 		)
+	}
+}
+
+/** @param {Asdom} asdom */
+function setString(asdom, key) {
+	return (id, str) => {
+		const self = asdom.__refs.get(id)
+		self[key] = asdom.__getString(str)
+	}
+}
+
+/** @param {Asdom} asdom */
+function setStringOrNull(asdom, key) {
+	return (id, str) => {
+		const self = asdom.__refs.get(id)
+		if (str === 0) self[key] = null
+		else self[key] = asdom.__getString(str)
+	}
+}
+
+/** @param {Asdom} asdom */
+function getString(asdom, key) {
+	return id => {
+		const self = asdom.__refs.get(id)
+		return asdom.__newString(self[key])
+	}
+}
+
+/** @param {Asdom} asdom */
+function noArgNoReturnFunction(asdom, key) {
+	return id => {
+		const self = asdom.__refs.get(id)
+		self[key]()
+	}
+}
+
+/** @param {Asdom} asdom */
+function stringArgNoReturnFunction(asdom, key) {
+	return (id, str) => {
+		const self = asdom.__refs.get(id)
+		self[key](asdom.__getString(str))
+	}
+}
+
+/** @param {Asdom} asdom */
+function noArgStringReturnFunction(asdom, key) {
+	return id => {
+		const self = asdom.__refs.get(id)
+		return asdom.__newString(self[key]())
 	}
 }

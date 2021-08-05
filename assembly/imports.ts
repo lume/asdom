@@ -13,12 +13,92 @@ export declare function releaseObject(ptr: usize): void
 export declare function log(msg: string): void
 
 // @ts-expect-error
+@external('asDOM_Object', 'toString')
+export declare function toString(id: usize): string
+
+// @ts-expect-error
 @external('asDOM_History', 'pushState')
 export declare function pushState(id: usize, state: usize, title: string, url: string): void
 
 // @ts-expect-error
 @external('asDOM_History', 'replaceState')
 export declare function replaceState(id: usize, state: usize, title: string, url: string): void
+
+// @ts-expect-error
+@external('asDOM_Location', 'setHref')
+export declare function setHref(id: usize, value: string): void
+
+// @ts-expect-error
+@external('asDOM_Location', 'getHref')
+export declare function getHref(id: usize): string
+
+// @ts-expect-error
+@external('asDOM_Location', 'setProtocol')
+export declare function setProtocol(id: usize, value: string): void
+
+// @ts-expect-error
+@external('asDOM_Location', 'getProtocol')
+export declare function getProtocol(id: usize): string
+
+// @ts-expect-error
+@external('asDOM_Location', 'setHost')
+export declare function setHost(id: usize, value: string): void
+
+// @ts-expect-error
+@external('asDOM_Location', 'getHost')
+export declare function getHost(id: usize): string
+
+// @ts-expect-error
+@external('asDOM_Location', 'setHostname')
+export declare function setHostname(id: usize, value: string): void
+
+// @ts-expect-error
+@external('asDOM_Location', 'getHostname')
+export declare function getHostname(id: usize): string
+
+// @ts-expect-error
+@external('asDOM_Location', 'setPort')
+export declare function setPort(id: usize, value: string): void
+
+// @ts-expect-error
+@external('asDOM_Location', 'getPort')
+export declare function getPort(id: usize): string
+
+// @ts-expect-error
+@external('asDOM_Location', 'setPathname')
+export declare function setPathname(id: usize, value: string): void
+
+// @ts-expect-error
+@external('asDOM_Location', 'getPathname')
+export declare function getPathname(id: usize): string
+
+// @ts-expect-error
+@external('asDOM_Location', 'setSearch')
+export declare function setSearch(id: usize, value: string): void
+
+// @ts-expect-error
+@external('asDOM_Location', 'getSearch')
+export declare function getSearch(id: usize): string
+
+// @ts-expect-error
+@external('asDOM_Location', 'setHash')
+export declare function setHash(id: usize, value: string): void
+
+// @ts-expect-error
+@external('asDOM_Location', 'getHash')
+export declare function getHash(id: usize): string
+
+// @ts-expect-error
+@external('asDOM_Location', 'getOrigin')
+export declare function getOrigin(id: usize): string
+
+// @ts-expect-error
+@external('asDOM_Location', 'reload')
+export declare function reload(id: usize): void
+
+// @ts-expect-error
+@external('asDOM_Location', 'replace')
+export declare function replace(id: usize, value: string): void
 
 // @ts-expect-error
 @external('asDOM_EventTarget', 'addEventListenerCallback')
@@ -51,6 +131,10 @@ export declare function getCustomElements(id: usize, ceId: usize): void
 // @ts-expect-error
 @external('asDOM_Window', 'getHistory')
 export declare function getHistory(id: usize, histId: usize): void
+
+// @ts-expect-error
+@external('asDOM_Window', 'getLocation')
+export declare function getLocation(id: usize, locationId: usize): void
 
 // @ts-expect-error
 @external('asDOM_Window', 'setOnpopstate')
