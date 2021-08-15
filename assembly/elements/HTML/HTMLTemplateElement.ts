@@ -13,7 +13,7 @@ export class HTMLTemplateElement extends HTMLElement {
 			this.__frag = frag
 		}
 
-		getContent(this.__ptr__, frag.__ptr__)
+		getContent(this, frag)
 
 		return frag
 	}

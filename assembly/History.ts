@@ -6,14 +6,14 @@ export class EmptyHistoryState extends Object {}
 
 export class History extends Object {
 	get length(): i32 {
-		return getLength(this.__ptr__)
+		return getLength(this)
 	}
 
 	pushState(state: EmptyHistoryState, title: string, url: string = ''): void {
-		pushState(this.__ptr__, state.__ptr__, title, url)
+		pushState(this, state, title, url)
 	}
 
 	replaceState(state: EmptyHistoryState, title: string, url: string = ''): void {
-		replaceState(this.__ptr__, state.__ptr__, title, url)
+		replaceState(this, state, title, url)
 	}
 }

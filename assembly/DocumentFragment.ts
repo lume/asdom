@@ -16,12 +16,12 @@ export class DocumentFragment extends Node {
 			children = new HTMLCollection()
 			this.__children = children
 		}
-		getChildren(this.__ptr__, children.__ptr__)
+		getChildren(this, children)
 		return children
 	}
 
 	get firstElementChild(): Element | null {
-		const id: i32 = getFirstElementChild(this.__ptr__)
+		const id: i32 = getFirstElementChild(this)
 
 		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
 		// return idToNullOrObject(id) as Element | null
@@ -31,7 +31,7 @@ export class DocumentFragment extends Node {
 	}
 
 	get lastElementChild(): Element | null {
-		const id: i32 = getLastElementChild(this.__ptr__)
+		const id: i32 = getLastElementChild(this)
 
 		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
 		// return idToNullOrObject(id) as Element | null
@@ -41,7 +41,7 @@ export class DocumentFragment extends Node {
 	}
 
 	querySelector(selectors: string): Element | null {
-		const id = querySelector(this.__ptr__, selectors)
+		const id = querySelector(this, selectors)
 
 		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
 		// return idToNullOrObject(id) as Element | null
@@ -51,7 +51,7 @@ export class DocumentFragment extends Node {
 	}
 
 	querySelectorAll(selectors: string): NodeList<Element> {
-		const id = querySelectorAll(this.__ptr__, selectors)
+		const id = querySelectorAll(this, selectors)
 		return idToNullOrObject(id) as NodeList<Element>
 	}
 }

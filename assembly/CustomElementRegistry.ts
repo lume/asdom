@@ -17,7 +17,7 @@ export class CustomElementRegistry extends Object {
 	private __defs: Map<string, () => HTMLElement> = new Map()
 
 	define(tag: string, factory: () => HTMLElement, attributes: string[]): void {
-		define(this.__ptr__, tag, factory.index, attributes)
+		define(this, tag, factory.index, attributes)
 		this.__defs.set(tag, factory)
 	}
 

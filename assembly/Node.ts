@@ -41,19 +41,19 @@ export abstract class Node extends EventTarget {
 	static DOCUMENT_FRAGMENT_NODE: NodeType = NodeType.DOCUMENT_FRAGMENT_NODE
 
 	appendChild<T extends Node>(child: T): T {
-		nodeAppendChild(this.__ptr__, child.__ptr__)
+		nodeAppendChild(this, child)
 		return child
 	}
 
 	removeChild<T extends Node>(child: T): T {
-		nodeRemoveChild(this.__ptr__, child.__ptr__)
+		nodeRemoveChild(this, child)
 		return child
 	}
 
 	abstract get nodeType(): NodeType
 
 	get parentNode(): Node | null {
-		const id: i32 = getParentNode(this.__ptr__)
+		const id: i32 = getParentNode(this)
 
 		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
 		// return idToNullOrObject(id) as Node | null
@@ -63,7 +63,7 @@ export abstract class Node extends EventTarget {
 	}
 
 	get parentElement(): Node | null {
-		const id: i32 = getParentElement(this.__ptr__)
+		const id: i32 = getParentElement(this)
 
 		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
 		// return idToNullOrObject(id) as Node | null
@@ -73,7 +73,7 @@ export abstract class Node extends EventTarget {
 	}
 
 	get firstChild(): Node | null {
-		const id: i32 = getFirstChild(this.__ptr__)
+		const id: i32 = getFirstChild(this)
 
 		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
 		// return idToNullOrObject(id) as Node | null
@@ -83,7 +83,7 @@ export abstract class Node extends EventTarget {
 	}
 
 	get lastChild(): Node | null {
-		const id: i32 = getLastChild(this.__ptr__)
+		const id: i32 = getLastChild(this)
 
 		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
 		// return idToNullOrObject(id) as Node | null
@@ -93,7 +93,7 @@ export abstract class Node extends EventTarget {
 	}
 
 	get nextSibling(): Node | null {
-		const id: i32 = getNextSibling(this.__ptr__)
+		const id: i32 = getNextSibling(this)
 
 		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
 		// return idToNullOrObject(id) as Node | null
@@ -103,7 +103,7 @@ export abstract class Node extends EventTarget {
 	}
 
 	get previousSibling(): Node | null {
-		const id: i32 = getPreviousSibling(this.__ptr__)
+		const id: i32 = getPreviousSibling(this)
 
 		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
 		// return idToNullOrObject(id) as Node | null
@@ -113,7 +113,7 @@ export abstract class Node extends EventTarget {
 	}
 
 	cloneNode(deep: boolean = false): Node {
-		const id: i32 = cloneNode(this.__ptr__, deep)
+		const id: i32 = cloneNode(this, deep)
 		return idToNullOrObject(id) as Node // The result must not be null if we just cloned a Node.
 	}
 
@@ -125,7 +125,7 @@ export abstract class Node extends EventTarget {
 			childNodes = new NodeList()
 			this.__childNodes = childNodes
 		}
-		getChildNodes(this.__ptr__, childNodes.__ptr__)
+		getChildNodes(this, childNodes)
 		return childNodes
 	}
 }

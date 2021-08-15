@@ -5,11 +5,11 @@ import {idToNullOrObject} from './utils'
 
 export class HTMLCollection extends Object {
 	get length(): i32 {
-		return getLength(this.__ptr__)
+		return getLength(this)
 	}
 
 	item(index: i32): Element | null {
-		const id: i32 = item(this.__ptr__, index)
+		const id: i32 = item(this, index)
 
 		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
 		// return idToNullOrObject(id) as Element | null

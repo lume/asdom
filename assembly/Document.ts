@@ -26,12 +26,12 @@ export class Document extends Node {
 	}
 
 	get URL(): string {
-		return getUrl(this.__ptr__)
+		return getUrl(this)
 	}
 
-	// @ts-expect-error
+	// @ts-expect-error, TS does not allow a getter type to be a superset of the setter type, only the other way around.
 	get body(): HTMLBodyElement | null {
-		const id: i32 = getBody(this.__ptr__)
+		const id: i32 = getBody(this)
 
 		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
 		// return idToNullOrObject(id) as Element | null
@@ -44,6 +44,9 @@ export class Document extends Node {
 		throw new Error('TODO: document.body setter is not implemented yet.')
 	}
 
+	// Pattern: A value that we know can't ever change, so we can cache the
+	// mirror object after the first call. {{
+
 	private __location: Location | null = null
 
 	get location(): Location {
@@ -51,7 +54,7 @@ export class Document extends Node {
 
 		if (!obj) {
 			this.__location = obj = new Location()
-			getLocation(this.__ptr__, obj.__ptr__)
+			getLocation(this, obj)
 		}
 
 		return obj
@@ -61,11 +64,13 @@ export class Document extends Node {
 		ERROR('The setter for window.location cannot currently take a string. Use window.location.href instead.')
 	}
 
+	// }}
+
 	private __onclick: (() => void) | null = null
 
 	set onclick(cb: (() => void) | null) {
 		this.__onclick = cb
-		setOnclick(this.__ptr__, cb ? cb.index : -1) // -1 means "null"
+		setOnclick(this, cb ? cb.index : -1) // -1 means "null"
 	}
 
 	get onclick(): (() => void) | null {
@@ -78,7 +83,7 @@ export class Document extends Node {
 	}
 
 	createElement(tagName: string /*, TODO options */): HTMLElement {
-		const id: i32 = createElement(this.__ptr__, tagName)
+		const id: i32 = createElement(this, tagName)
 		return idToNullOrObject(id) as HTMLElement
 	}
 
@@ -90,7 +95,7 @@ export class Document extends Node {
 	 * @param data String that specifies the nodeValue property of the text node.
 	 */
 	createTextNode(data: string): Text {
-		const id: i32 = createTextNode(this.__ptr__, data)
+		const id: i32 = createTextNode(this, data)
 		return idToNullOrObject(id) as Text
 	}
 
@@ -102,12 +107,12 @@ export class Document extends Node {
 			children = new HTMLCollection()
 			this.__children = children
 		}
-		getChildren(this.__ptr__, children.__ptr__)
+		getChildren(this, children)
 		return children
 	}
 
 	get firstElementChild(): Element | null {
-		const id: i32 = getFirstElementChild(this.__ptr__)
+		const id: i32 = getFirstElementChild(this)
 
 		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
 		// return idToNullOrObject(id) as Element | null
@@ -117,7 +122,7 @@ export class Document extends Node {
 	}
 
 	get lastElementChild(): Element | null {
-		const id: i32 = getLastElementChild(this.__ptr__)
+		const id: i32 = getLastElementChild(this)
 
 		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
 		// return idToNullOrObject(id) as Element | null
@@ -127,7 +132,7 @@ export class Document extends Node {
 	}
 
 	querySelector(selectors: string): Element | null {
-		const id = querySelector(this.__ptr__, selectors)
+		const id = querySelector(this, selectors)
 
 		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
 		// return idToNullOrObject(id) as Node | null
@@ -137,7 +142,7 @@ export class Document extends Node {
 	}
 
 	querySelectorAll(selectors: string): NodeList<Element> {
-		const id = querySelectorAll(this.__ptr__, selectors)
+		const id = querySelectorAll(this, selectors)
 		return idToNullOrObject(id) as NodeList<Element>
 	}
 }

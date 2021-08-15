@@ -28,21 +28,21 @@ export abstract class Element extends Node {
 	}
 
 	get tagName(): string {
-		return getTagName(this.__ptr__)
+		return getTagName(this)
 	}
 
 	setAttribute(attr: string, value: string | null): void {
-		elSetAttribute(this.__ptr__, attr, value)
+		elSetAttribute(this, attr, value)
 	}
 	getAttribute(attr: string): string | null {
-		return elGetAttribute(this.__ptr__, attr)
+		return elGetAttribute(this, attr)
 	}
 
 	get innerHTML(): string {
-		return getInnerHTML(this.__ptr__)
+		return getInnerHTML(this)
 	}
 	set innerHTML(value: string | null) {
-		setInnerHTML(this.__ptr__, value)
+		setInnerHTML(this, value)
 	}
 
 	private __children: HTMLCollection | null = null
@@ -53,12 +53,12 @@ export abstract class Element extends Node {
 			children = new HTMLCollection()
 			this.__children = children
 		}
-		getChildren(this.__ptr__, children.__ptr__)
+		getChildren(this, children)
 		return children
 	}
 
 	get firstElementChild(): Element | null {
-		const id: i32 = getFirstElementChild(this.__ptr__)
+		const id: i32 = getFirstElementChild(this)
 
 		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
 		// return idToNullOrObject(id) as Element | null
@@ -68,7 +68,7 @@ export abstract class Element extends Node {
 	}
 
 	get lastElementChild(): Element | null {
-		const id: i32 = getLastElementChild(this.__ptr__)
+		const id: i32 = getLastElementChild(this)
 
 		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
 		// return idToNullOrObject(id) as Element | null
@@ -78,7 +78,7 @@ export abstract class Element extends Node {
 	}
 
 	get nextElementSibling(): Element | null {
-		const id: i32 = getNextElementSibling(this.__ptr__)
+		const id: i32 = getNextElementSibling(this)
 
 		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
 		// return idToNullOrObject(id) as Element | null
@@ -88,7 +88,7 @@ export abstract class Element extends Node {
 	}
 
 	get previousElementSibling(): Element | null {
-		const id: i32 = getPreviousElementSibling(this.__ptr__)
+		const id: i32 = getPreviousElementSibling(this)
 
 		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
 		// return idToNullOrObject(id) as Element | null
@@ -98,14 +98,14 @@ export abstract class Element extends Node {
 	}
 
 	click(): void {
-		elClick(this.__ptr__)
+		elClick(this)
 	}
 
 	private __onclick: (() => void) | null = null
 
 	set onclick(cb: (() => void) | null) {
 		this.__onclick = cb
-		setOnclick(this.__ptr__, cb ? cb.index : -1) // -1 means "null"
+		setOnclick(this, cb ? cb.index : -1) // -1 means "null"
 	}
 
 	get onclick(): (() => void) | null {
@@ -118,11 +118,11 @@ export abstract class Element extends Node {
 	}
 
 	remove(): void {
-		remove(this.__ptr__)
+		remove(this)
 	}
 
 	querySelector(selectors: string): Element | null {
-		const id = querySelector(this.__ptr__, selectors)
+		const id = querySelector(this, selectors)
 
 		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
 		// return idToNullOrObject(id) as Element | null
@@ -132,7 +132,7 @@ export abstract class Element extends Node {
 	}
 
 	querySelectorAll(selectors: string): NodeList<Element> {
-		const id = querySelectorAll(this.__ptr__, selectors)
+		const id = querySelectorAll(this, selectors)
 		return idToNullOrObject(id) as NodeList<Element>
 	}
 
@@ -144,7 +144,7 @@ export abstract class Element extends Node {
 
 	attachShadow(options: ShadowRootInit): ShadowRoot {
 		const root = new ShadowRoot()
-		attachShadow(this.__ptr__, root.__ptr__, options.mode)
+		attachShadow(this, root, options.mode)
 		if (options.mode == 'open') this.__shadowRoot = root
 		return root
 	}
