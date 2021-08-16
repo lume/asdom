@@ -16,7 +16,7 @@ import {
 	getTagName,
 	attachShadow,
 } from '../imports'
-import {idToNullOrObject} from '../utils'
+import {idToNullOrObject, valueNotChanged} from '../utils'
 import {Node} from '../Node'
 import {HTMLCollection} from '../HTMLCollection'
 import {NodeList} from '../NodeList'
@@ -48,53 +48,70 @@ export abstract class Element extends Node {
 	private __children: HTMLCollection | null = null
 
 	get children(): HTMLCollection {
-		let children = this.__children
-		if (!children) {
-			children = new HTMLCollection()
-			this.__children = children
+		let obj = this.__children
+
+		if (!obj) {
+			this.__children = obj = new HTMLCollection()
+			getChildren(this, obj)
 		}
-		getChildren(this, children)
-		return children
+
+		return obj
 	}
+
+	private __firstElementChild: Element | null = null
 
 	get firstElementChild(): Element | null {
 		const id: i32 = getFirstElementChild(this)
 
-		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
-		// return idToNullOrObject(id) as Element | null
+		if (id == valueNotChanged) return this.__firstElementChild
+
+		// TODO update this once null issues fixed (see TODO NULL in Document)
 		const result = idToNullOrObject(id)
-		if (!result) return null
-		else return result as Element
+		if (result) this.__firstElementChild = result as Element
+		else this.__firstElementChild = null
+		return this.__firstElementChild
 	}
+
+	private __lastElementChild: Element | null = null
 
 	get lastElementChild(): Element | null {
 		const id: i32 = getLastElementChild(this)
 
-		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
-		// return idToNullOrObject(id) as Element | null
+		if (id == valueNotChanged) return this.__lastElementChild
+
+		// TODO update this once null issues fixed (see TODO NULL in Document)
 		const result = idToNullOrObject(id)
-		if (!result) return null
-		else return result as Element
+		if (result) this.__lastElementChild = result as Element
+		else this.__lastElementChild = null
+		return this.__lastElementChild
 	}
+
+	private __nextElementSibling: Element | null = null
 
 	get nextElementSibling(): Element | null {
 		const id: i32 = getNextElementSibling(this)
 
-		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
-		// return idToNullOrObject(id) as Element | null
+		if (id == valueNotChanged) return this.__nextElementSibling
+
+		// TODO update this once null issues fixed (see TODO NULL in Document)
 		const result = idToNullOrObject(id)
-		if (!result) return null
-		else return result as Element
+		if (result) this.__nextElementSibling = result as Element
+		else this.__nextElementSibling = null
+		return this.__nextElementSibling
 	}
+
+	private __previousElementSibling: Element | null = null
 
 	get previousElementSibling(): Element | null {
 		const id: i32 = getPreviousElementSibling(this)
 
-		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
-		// return idToNullOrObject(id) as Element | null
+		if (id == valueNotChanged) return this.__previousElementSibling
+
+		// TODO update this once null issues fixed (see TODO NULL in Document)
 		const result = idToNullOrObject(id)
-		if (!result) return null
-		else return result as Element
+		if (result) this.__previousElementSibling = result as Element
+		else this.__previousElementSibling = null
+		return this.__previousElementSibling
 	}
 
 	click(): void {
@@ -121,14 +138,18 @@ export abstract class Element extends Node {
 		remove(this)
 	}
 
+	private __querySelector: Element | null = null
+
 	querySelector(selectors: string): Element | null {
 		const id = querySelector(this, selectors)
 
-		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
-		// return idToNullOrObject(id) as Element | null
+		if (id == valueNotChanged) return this.__querySelector
+
+		// TODO update this once null issues fixed (see TODO NULL in Document)
 		const result = idToNullOrObject(id)
-		if (!result) return null
-		else return result as Element
+		if (result) this.__querySelector = result as Element
+		else this.__querySelector = null
+		return this.__querySelector
 	}
 
 	querySelectorAll(selectors: string): NodeList<Element> {

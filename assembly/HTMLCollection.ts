@@ -1,21 +1,25 @@
 import {getLength, item} from './imports'
 import {Element} from './elements/Element'
 import {Object} from './Object'
-import {idToNullOrObject} from './utils'
+import {idToNullOrObject, valueNotChanged} from './utils'
 
 export class HTMLCollection extends Object {
 	get length(): i32 {
 		return getLength(this)
 	}
 
+	private __item: Element | null = null
+
 	item(index: i32): Element | null {
 		const id: i32 = item(this, index)
 
-		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
-		// return idToNullOrObject(id) as Element | null
-		const result = idToNullOrObject(id)
-		if (!result) return null
-		else return result as Element
+		if (id == valueNotChanged) return this.__item
+
+		// TODO update this once null issues fixed (see TODO NULL in Document)
+		const result = idToNullOrObject(id) // The old value can then be GC'd.
+		if (result) this.__item = result as Element
+		else this.__item = null
+		return this.__item
 	}
 
 	@operator('[]')

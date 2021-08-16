@@ -1,4 +1,4 @@
-import {idToNullOrObject} from './utils'
+import {idToNullOrObject, valueNotChanged} from './utils'
 import {
 	nodeAppendChild,
 	nodeRemoveChild,
@@ -13,6 +13,7 @@ import {
 } from './imports'
 import {NodeList} from './NodeList'
 import {EventTarget} from './EventTarget'
+import {Element} from '.'
 
 /** Node types: https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType */
 enum NodeType {
@@ -52,64 +53,88 @@ export abstract class Node extends EventTarget {
 
 	abstract get nodeType(): NodeType
 
+	private __parentNode: Node | null = null
+
 	get parentNode(): Node | null {
 		const id: i32 = getParentNode(this)
 
-		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
-		// return idToNullOrObject(id) as Node | null
+		if (id == valueNotChanged) return this.__parentNode
+
+		// TODO update this once null issues fixed (see TODO NULL in Document)
 		const result = idToNullOrObject(id)
-		if (!result) return null
-		else return result as Node
+		if (result) this.__parentNode = result as Node
+		else this.__parentNode = null
+		return this.__parentNode
 	}
 
-	get parentElement(): Node | null {
+	private __parentElement: Element | null = null
+
+	get parentElement(): Element | null {
 		const id: i32 = getParentElement(this)
 
-		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
-		// return idToNullOrObject(id) as Node | null
+		if (id == valueNotChanged) return this.__parentElement
+
+		// TODO update this once null issues fixed (see TODO NULL in Document)
 		const result = idToNullOrObject(id)
-		if (!result) return null
-		else return result as Node
+		if (result) this.__parentElement = result as Element
+		else this.__parentElement = null
+		return this.__parentElement
 	}
+
+	private __firstChild: Node | null = null
 
 	get firstChild(): Node | null {
 		const id: i32 = getFirstChild(this)
 
-		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
-		// return idToNullOrObject(id) as Node | null
+		if (id == valueNotChanged) return this.__firstChild
+
+		// TODO update this once null issues fixed (see TODO NULL in Document)
 		const result = idToNullOrObject(id)
-		if (!result) return null
-		else return result as Node
+		if (result) this.__firstChild = result as Node
+		else this.__firstChild = null
+		return this.__firstChild
 	}
+
+	private __lastChild: Node | null = null
 
 	get lastChild(): Node | null {
 		const id: i32 = getLastChild(this)
 
-		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
-		// return idToNullOrObject(id) as Node | null
+		if (id == valueNotChanged) return this.__lastChild
+
+		// TODO update this once null issues fixed (see TODO NULL in Document)
 		const result = idToNullOrObject(id)
-		if (!result) return null
-		else return result as Node
+		if (result) this.__lastChild = result as Node
+		else this.__lastChild = null
+		return this.__lastChild
 	}
+
+	private __nextSibling: Node | null = null
 
 	get nextSibling(): Node | null {
 		const id: i32 = getNextSibling(this)
 
-		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
-		// return idToNullOrObject(id) as Node | null
+		if (id == valueNotChanged) return this.__nextSibling
+
+		// TODO update this once null issues fixed (see TODO NULL in Document)
 		const result = idToNullOrObject(id)
-		if (!result) return null
-		else return result as Node
+		if (result) this.__nextSibling = result as Node
+		else this.__nextSibling = null
+		return this.__nextSibling
 	}
+
+	private __previousSibling: Node | null = null
 
 	get previousSibling(): Node | null {
 		const id: i32 = getPreviousSibling(this)
 
-		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
-		// return idToNullOrObject(id) as Node | null
+		if (id == valueNotChanged) return this.__previousSibling
+
+		// TODO update this once null issues fixed (see TODO NULL in Document)
 		const result = idToNullOrObject(id)
-		if (!result) return null
-		else return result as Node
+		if (result) this.__previousSibling = result as Node
+		else this.__previousSibling = null
+		return this.__previousSibling
 	}
 
 	cloneNode(deep: boolean = false): Node {
@@ -120,12 +145,13 @@ export abstract class Node extends EventTarget {
 	private __childNodes: NodeList<Node> | null = null
 
 	get childNodes(): NodeList<Node> {
-		let childNodes = this.__childNodes
-		if (!childNodes) {
-			childNodes = new NodeList()
-			this.__childNodes = childNodes
+		let obj = this.__childNodes
+
+		if (!obj) {
+			this.__childNodes = obj = new NodeList()
+			getChildNodes(this, obj)
 		}
-		getChildNodes(this, childNodes)
-		return childNodes
+
+		return obj
 	}
 }

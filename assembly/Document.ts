@@ -13,7 +13,7 @@ import {
 } from './imports'
 // TODO Perhaps put these on a new `window` object, to make it more like on the JS side.
 import {Element, HTMLBodyElement, HTMLElement} from './elements/index'
-import {idToNullOrObject} from './utils'
+import {idToNullOrObject, valueNotChanged} from './utils'
 import {Node} from './Node'
 import {Text} from './Text'
 import {NodeList} from './NodeList'
@@ -29,20 +29,46 @@ export class Document extends Node {
 		return getUrl(this)
 	}
 
+	// Pattern: A value that can change, but if it hasn't changed, we should
+	// return early rather than create a mirror object. We could prevent the
+	// crossing to JS entirely, but that would only work assuming our AS code
+	// is the only code manipulating the DOM. By crossing to JS, we also catch
+	// the case where some other code on the JS side could change the value.
+	//
+	// {{
+
+	private __body: HTMLBodyElement | null = null
+
 	// @ts-expect-error, TS does not allow a getter type to be a superset of the setter type, only the other way around.
 	get body(): HTMLBodyElement | null {
 		const id: i32 = getBody(this)
 
-		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
-		// return idToNullOrObject(id) as Element | null
+		if (id == valueNotChanged) return this.__body
+
+		// TODO NULL File a bug and eventually use this. This incorrectly returns `null` instead of the non-null instance... {{
+
+		// return (this.__querySelector = idToNullOrObject(id) as Element | null) // The old value can then be GC'd.
+
+		// }} ...but this version works fine only when the value is not actually null. {{
+
+		// this.__querySelector = idToNullOrObject(id) as Element | null // The old value can then be GC'd.
+		// return this.__querySelector
+
+		// }} And finally, this is what works when the value might be null (issue https://github.com/AssemblyScript/assemblyscript/issues/2035) {{
+
 		const result = idToNullOrObject(id)
-		if (!result) return null
-		else return result as HTMLBodyElement
+		if (result) this.__body = result as HTMLBodyElement
+		else this.__body = null
+		return this.__body
+
+		// }}
 	}
 
 	set body(el: HTMLBodyElement) {
 		throw new Error('TODO: document.body setter is not implemented yet.')
 	}
+
+	// }}
 
 	// Pattern: A value that we know can't ever change, so we can cache the
 	// mirror object after the first call. {{
@@ -102,43 +128,56 @@ export class Document extends Node {
 	private __children: HTMLCollection | null = null
 
 	get children(): HTMLCollection {
-		let children = this.__children
-		if (!children) {
-			children = new HTMLCollection()
-			this.__children = children
+		let obj = this.__children
+
+		if (!obj) {
+			this.__children = obj = new HTMLCollection()
+			getChildren(this, obj)
 		}
-		getChildren(this, children)
-		return children
+
+		return obj
 	}
+
+	private __firstElementChild: Element | null = null
 
 	get firstElementChild(): Element | null {
 		const id: i32 = getFirstElementChild(this)
 
-		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
-		// return idToNullOrObject(id) as Element | null
+		if (id == valueNotChanged) return this.__firstElementChild
+
+		// TODO update this once null issues fixed (see TODO NULL in Document)
 		const result = idToNullOrObject(id)
-		if (!result) return null
-		else return result as Element
+		if (result) this.__firstElementChild = result as Element
+		else this.__firstElementChild = null
+		return this.__firstElementChild
 	}
+
+	private __lastElementChild: Element | null = null
 
 	get lastElementChild(): Element | null {
 		const id: i32 = getLastElementChild(this)
 
-		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
-		// return idToNullOrObject(id) as Element | null
+		if (id == valueNotChanged) return this.__lastElementChild
+
+		// TODO update this once null issues fixed (see TODO NULL in Document)
 		const result = idToNullOrObject(id)
-		if (!result) return null
-		else return result as Element
+		if (result) this.__lastElementChild = result as Element
+		else this.__lastElementChild = null
+		return this.__lastElementChild
 	}
+
+	private __querySelector: Element | null = null
 
 	querySelector(selectors: string): Element | null {
 		const id = querySelector(this, selectors)
 
-		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
-		// return idToNullOrObject(id) as Node | null
+		if (id == valueNotChanged) return this.__querySelector
+
+		// TODO update this once null issues fixed (see TODO NULL in Document)
 		const result = idToNullOrObject(id)
-		if (!result) return null
-		else return result as Element
+		if (result) this.__querySelector = result as Element
+		else this.__querySelector = null
+		return this.__querySelector
 	}
 
 	querySelectorAll(selectors: string): NodeList<Element> {

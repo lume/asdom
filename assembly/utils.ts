@@ -96,3 +96,5 @@ export function idToNullOrObject(id: i32): Object | null {
 		return changetype<Object>(id) // It must be a Object. Use this function only for APIs that return Object or Object|null.
 	}
 }
+
+export const valueNotChanged = I32.MIN_VALUE

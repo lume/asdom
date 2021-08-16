@@ -34,7 +34,11 @@ export class Asdom {
 	__refs = new Refs()
 	__nextRefToTrack
 
-	// Direct refs to the Wasm module's exports for convenience
+	// Direct refs to the Wasm module's exports for convenience {{
+
+	__exports = null
+
+	/** @type {(ptr: number) => string} */
 	__getString
 	__newString
 	__getArray
@@ -47,7 +51,25 @@ export class Asdom {
 	__asdom_adoptedCallback
 	__asdom_attributeChangedCallback
 
-	__exports = null
+	// }}
+
+	// cache vars {{
+
+	/** @type {WeakMap<object, object>} */ __body = new WeakMap()
+	/** @type {WeakMap<object, object>} */ __firstElementChild = new WeakMap()
+	/** @type {WeakMap<object, object>} */ __lastElementChild = new WeakMap()
+	/** @type {WeakMap<object, object>} */ __nextElementSibling = new WeakMap()
+	/** @type {WeakMap<object, object>} */ __previousElementSibling = new WeakMap()
+	/** @type {WeakMap<object, object>} */ __querySelector = new WeakMap()
+	/** @type {WeakMap<object, object>} */ __parentNode = new WeakMap()
+	/** @type {WeakMap<object, object>} */ __parentElement = new WeakMap()
+	/** @type {WeakMap<object, object>} */ __firstChild = new WeakMap()
+	/** @type {WeakMap<object, object>} */ __lastChild = new WeakMap()
+	/** @type {WeakMap<object, object>} */ __nextSibling = new WeakMap()
+	/** @type {WeakMap<object, object>} */ __previousSibling = new WeakMap()
+	/** @type {WeakMap<object, object>} */ __item = new WeakMap()
+
+	// }}
 
 	get wasmExports() {
 		return this.__exports
@@ -286,6 +308,9 @@ export class Asdom {
 				const self = this.__refs.get(id)
 				const result = self.body
 
+				if (this.__body.get(self) === result) return valueNotChanged
+				this.__body.set(self, result) // The old value can then be GC'd.
+
 				if (!result) return 0 // null
 
 				return this.getKeyOrObjectType(result)
@@ -337,8 +362,11 @@ export class Asdom {
 			},
 			getFirstElementChild: id => {
 				/** @type {Element | Document | DocumentFragment} */
-				const node = this.__refs.get(id)
-				const result = node.firstElementChild
+				const self = this.__refs.get(id)
+				const result = self.firstElementChild
+
+				if (this.__firstElementChild.get(self) === result) return valueNotChanged
+				this.__firstElementChild.set(self, result) // The old value can then be GC'd.
 
 				if (!result) return 0 // null
 
@@ -346,8 +374,11 @@ export class Asdom {
 			},
 			getLastElementChild: id => {
 				/** @type {Element | Document | DocumentFragment} */
-				const node = this.__refs.get(id)
-				const result = node.lastElementChild
+				const self = this.__refs.get(id)
+				const result = self.lastElementChild
+
+				if (this.__lastElementChild.get(self) === result) return valueNotChanged
+				this.__lastElementChild.set(self, result) // The old value can then be GC'd.
 
 				if (!result) return 0 // null
 
@@ -355,8 +386,11 @@ export class Asdom {
 			},
 			getNextElementSibling: id => {
 				/** @type {Element} */
-				const node = this.__refs.get(id)
-				const result = node.nextElementSibling
+				const self = this.__refs.get(id)
+				const result = self.nextElementSibling
+
+				if (this.__nextElementSibling.get(self) === result) return valueNotChanged
+				this.__nextElementSibling.set(self, result) // The old value can then be GC'd.
 
 				if (!result) return 0 // null
 
@@ -364,8 +398,11 @@ export class Asdom {
 			},
 			getPreviousElementSibling: id => {
 				/** @type {Element} */
-				const node = this.__refs.get(id)
-				const result = node.previousElementSibling
+				const self = this.__refs.get(id)
+				const result = self.previousElementSibling
+
+				if (this.__previousElementSibling.get(self) === result) return valueNotChanged
+				this.__previousElementSibling.set(self, result) // The old value can then be GC'd.
 
 				if (!result) return 0 // null
 
@@ -396,8 +433,14 @@ export class Asdom {
 			},
 			querySelector: (id, selectors) => {
 				/** @type {Element | Document | DocumentFragment} */
-				const node = this.__refs.get(id)
-				const result = node.querySelector(this.__getString(selectors))
+				const self = this.__refs.get(id)
+				const result = self.querySelector(this.__getString(selectors))
+
+				if (this.__querySelector.get(self) === result) return valueNotChanged
+				this.__querySelector.set(self, result) // The old value can then be GC'd.
+
+				if (!result) return 0 // null
+
 				return this.getKeyOrObjectType(result)
 			},
 			querySelectorAll: (id, selectors) => {
@@ -442,8 +485,11 @@ export class Asdom {
 			},
 			getParentNode: id => {
 				/** @type {Node} */
-				const node = this.__refs.get(id)
-				const result = node.parentNode
+				const self = this.__refs.get(id)
+				const result = self.parentNode
+
+				if (this.__parentNode.get(self) === result) return valueNotChanged
+				this.__parentNode.set(self, result) // The old value can then be GC'd.
 
 				if (!result) return 0 // null
 
@@ -451,8 +497,11 @@ export class Asdom {
 			},
 			getParentElement: id => {
 				/** @type {Node} */
-				const node = this.__refs.get(id)
-				const result = node.parentElement
+				const self = this.__refs.get(id)
+				const result = self.parentElement
+
+				if (this.__parentElement.get(self) === result) return valueNotChanged
+				this.__parentElement.set(self, result) // The old value can then be GC'd.
 
 				if (!result) return 0 // null
 
@@ -461,8 +510,11 @@ export class Asdom {
 			// node.firstChild (readonly)
 			getFirstChild: id => {
 				/** @type {Node} */
-				const node = this.__refs.get(id)
-				const result = node.firstChild
+				const self = this.__refs.get(id)
+				const result = self.firstChild
+
+				if (this.__firstChild.get(self) === result) return valueNotChanged
+				this.__firstChild.set(self, result) // The old value can then be GC'd.
 
 				if (!result) return 0 // null
 
@@ -470,8 +522,11 @@ export class Asdom {
 			},
 			getLastChild: id => {
 				/** @type {Node} */
-				const node = this.__refs.get(id)
-				const result = node.lastChild
+				const self = this.__refs.get(id)
+				const result = self.lastChild
+
+				if (this.__lastChild.get(self) === result) return valueNotChanged
+				this.__lastChild.set(self, result) // The old value can then be GC'd.
 
 				if (!result) return 0 // null
 
@@ -479,8 +534,11 @@ export class Asdom {
 			},
 			getNextSibling: id => {
 				/** @type {Node} */
-				const node = this.__refs.get(id)
-				const result = node.nextSibling
+				const self = this.__refs.get(id)
+				const result = self.nextSibling
+
+				if (this.__nextSibling.get(self) === result) return valueNotChanged
+				this.__nextSibling.set(self, result) // The old value can then be GC'd.
 
 				if (!result) return 0 // null
 
@@ -488,8 +546,11 @@ export class Asdom {
 			},
 			getPreviousSibling: id => {
 				/** @type {Node} */
-				const node = this.__refs.get(id)
-				const result = node.previousSibling
+				const self = this.__refs.get(id)
+				const result = self.previousSibling
+
+				if (this.__previousSibling.get(self) === result) return valueNotChanged
+				this.__previousSibling.set(self, result) // The old value can then be GC'd.
 
 				if (!result) return 0 // null
 
@@ -498,9 +559,7 @@ export class Asdom {
 			cloneNode: (id, deep = false) => {
 				/** @type {Node} */
 				const node = this.__refs.get(id)
-
 				const result = node.cloneNode(deep)
-
 				return this.getKeyOrObjectType(result)
 			},
 			getChildNodes: (id, listId) => {
@@ -548,13 +607,16 @@ export class Asdom {
 			// list.length
 			getLength: id => {
 				/** @type {NodeList} */
-				const list = this.__refs.get(id)
-				return list.length
+				const self = this.__refs.get(id)
+				return self.length
 			},
 			item: (id, index) => {
 				/** @type {NodeList} */
-				const list = this.__refs.get(id)
-				const result = list.item(index)
+				const self = this.__refs.get(id)
+				const result = self.item(index)
+
+				if (this.__item.get(self) === result) return valueNotChanged
+				this.__item.set(self, result) // The old value can then be GC'd.
 
 				if (!result) return 0 // null
 
@@ -676,3 +738,6 @@ function noArgStringReturnFunction(asdom, key) {
 		return asdom.__newString(self[key]())
 	}
 }
+
+const i32min = -2147483648
+const valueNotChanged = i32min
