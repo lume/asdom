@@ -68,7 +68,7 @@ void main() {
 const kaijunicornMax: i32 = 1_000_000;
 var kaijunicornCount: i32 = 0;
 
-var gl: WebGLRenderingContextId = createContextFromCanvas('cnvs', 'webgl2');
+var gl: usize = createContextFromCanvas('cnvs', 'webgl2');
 
 var image_id: ImageData = createImage('kaijunicorn-sheet.png');
 var image_ready: bool = false;

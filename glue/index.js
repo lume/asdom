@@ -603,6 +603,23 @@ export class Asdom {
 				this.__refs.set(fragId, frag)
 			},
 		},
+		asDOM_HTMLCanvasElement: {
+			/**
+			 * @param {number} id
+			 * @param {number} ctxId
+			 * @param {number} typeNum
+			 */
+			getContext: (id, ctxId, typeNum /*TODO , options*/) => {
+				/** @type {HTMLCanvasElement} */
+				const self = this.__refs.get(id)
+				const result = self.getContext(getCanvasContextTypeString(typeNum))
+
+				// It must be valid because the AS bindings calling this only allow a static (compile-time) set of extension types.
+				if (!result) throw new Error('Invalid extension type.')
+
+				this.__refs.set(ctxId, result)
+			},
+		},
 		asDOM_NodeList: {
 			// list.length
 			getLength: id => {
@@ -624,6 +641,21 @@ export class Asdom {
 				return this.getKeyOrObjectType(result)
 			},
 		},
+		asDOM_WebGLRenderingContext: {
+			// Specify the color to fill a cleared color buffer with
+			clearColor: (id, r, g, b, a) => {
+				/** @type {WebGLRenderingContext} */
+				const self = this.__refs.get(id)
+				self.clearColor(r, g, b, a)
+			},
+
+			// Clears the color, depth and stencil buffers
+			clear: (id, mask) => {
+				/** @type {WebGLRenderingContext} */
+				const self = this.__refs.get(id)
+				self.clear(mask)
+			},
+		},
 	}
 
 	/**
@@ -633,6 +665,13 @@ export class Asdom {
 	 * negative because the AS-side IDs are only ever positive, so negative
 	 * numbers won't collide with IDs within the first IDs between 0 and
 	 * 2^31.
+	 *
+	 * @param {object} obj - The object whose type ID we wish to get.
+	 * @param {number} [explicitTypeOverride] - Optional. Provide an explicit
+	 * type ID if we already know the object's type ahead of time, to skip
+	 * the cost of instanceof checks, etc, but to still trigger the other
+	 * machinery.
+	 * @returns {number} - The object's type ID.
 	 */
 	getKeyOrObjectType(obj, explicitTypeOverride) {
 		const key = this.__refs.keyFrom(obj)
@@ -671,6 +710,7 @@ function getObjectType(obj) {
 		else if (tag === 'H4') return 14
 		else if (tag === 'H5') return 15
 		else if (tag === 'H6') return 16
+		else if (tag === 'CANVAS') return 17
 		else if (tag.includes('-')) throw new Error('Hyphenated (possibly-custom) element not supported yet.')
 		else return 1 // HTMLUnknownElement
 	} else if (obj instanceof Text) {
@@ -684,10 +724,19 @@ function getObjectType(obj) {
 	// 	return 202
 	// }
 	else {
-		throw new Error(
-			'TODO: objects besides Element and Text instances not yet supported in the particular API that caused this error.',
-		)
+		throw new Error('Unsupported object (either it is TODO, or an invalid type override was provided).')
 	}
+}
+
+/**
+ * @param {number} typeNum
+ */
+function getCanvasContextTypeString(typeNum) {
+	if (typeNum === 0) return '2d'
+	if (typeNum === 1) return 'bitmaprenderer'
+	if (typeNum === 2) return 'webgl'
+	if (typeNum === 3) return 'webgl2'
+	// ...
 }
 
 /** @param {Asdom} asdom */

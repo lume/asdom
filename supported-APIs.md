@@ -41,6 +41,9 @@ yet (or someone forgot to update this outline).
       - `reload()`
       - `replace()`
       - `toString()`
+    - `WebGLRenderingContext`
+      - `clearColor`
+      - `clear`
     - `EventTarget`
       - `addEventListener`
       - `removeEventListener`
@@ -133,6 +136,8 @@ yet (or someone forgot to update this outline).
                     - `HTMLTemplateElement` (`<template>`)
                       - `content`
                     - `HTMLUnknownElement` (any unrecognized non-hyphenated element)
+                    - `HTMLCanvasElement` (`<canvas>`)
+                      - `getContext()`
                 - `SVGElement`
                   - Subclasses:
                     - `SVGSVGElement` (`<svg>`)

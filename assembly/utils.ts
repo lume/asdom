@@ -9,6 +9,7 @@ import {
 	HTMLAnchorElement,
 	HTMLScriptElement,
 	HTMLTemplateElement,
+	HTMLCanvasElement,
 	Audio,
 	Image,
 	HTMLHeadingElement,
@@ -45,6 +46,7 @@ export function makeObject(type: ObjectType): Object {
 	else if (type == ObjectType.h4) obj = new HTMLHeadingElement()
 	else if (type == ObjectType.h5) obj = new HTMLHeadingElement()
 	else if (type == ObjectType.h6) obj = new HTMLHeadingElement()
+	else if (type == ObjectType.canvas) obj = new HTMLCanvasElement()
 	else if (type === ObjectType.unknown) obj = new HTMLUnknownElement()
 	// Text nodes
 	else if (type === ObjectType.text) obj = new Text()

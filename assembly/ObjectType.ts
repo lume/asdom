@@ -21,6 +21,7 @@ export enum ObjectType {
 	h4 = 14,
 	h5 = 15,
 	h6 = 16,
+	canvas = 17,
 
 	// Text nodes
 	text = 100,

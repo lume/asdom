@@ -3,6 +3,7 @@ import {HTMLElement} from './HTMLElement'
 export * from './HTMLElement'
 export * from './Audio'
 export * from './HTMLTemplateElement'
+export * from './HTMLCanvasElement/index'
 
 // We can move any of these into their own file if/when they need custom implementation.
 export class HTMLBodyElement extends HTMLElement {}
