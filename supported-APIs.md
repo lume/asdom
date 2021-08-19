@@ -42,8 +42,29 @@ yet (or someone forgot to update this outline).
       - `replace()`
       - `toString()`
     - `WebGLRenderingContext`
-      - `clearColor`
+      - `attachShader`
+      - `bindBuffer`
+      - `bufferData`
+      - `bufferData`
       - `clear`
+      - `clearColor`
+      - `clearDepth`
+      - `compileShader`
+      - `createBuffer`
+      - `createProgram`
+      - `createShader`
+      - `depthFunc`
+      - `drawArrays`
+      - `enable`
+      - `enableVertexAttribArray`
+      - `getAttribLocation`
+      - `getExtension`
+      - `getUniformLocation`
+      - `linkProgram`
+      - `shaderSource`
+      - `uniformMatrix4fv`
+      - `useProgram`
+      - `vertexAttribPointer`
     - `EventTarget`
       - `addEventListener`
       - `removeEventListener`
@@ -101,22 +122,24 @@ yet (or someone forgot to update this outline).
               - `querySelector()`
               - `querySelectorAll()`
             - `Element`
-              - `tagName`
-              - `setAttribute()`
+              - `attachShadow()`
+              - `children`
+              - `click()`
+              - `clientHeight`
+              - `clientWidth`
+              - `firstElementChild`
               - `getAttribute()`
               - `innerHTML`
-              - `children`
-              - `firstElementChild`
               - `lastElementChild`
               - `nextElementSibling`
-              - `previousElementSibling`
-              - `click()`
               - `onclick` (No `Event` object is passed into the callback yet, but at least you can react to a click)
-              - `remove()`
+              - `previousElementSibling`
               - `querySelector()`
               - `querySelectorAll()`
+              - `remove()`
+              - `setAttribute()`
               - `shadowRoot`
-              - `attachShadow()`
+              - `tagName`
               - Subclasses:
                 - `HTMLElement` (`<section>` and various other elements extend from this)
                   - `innerText`

@@ -45,7 +45,7 @@ export function createAsdomCustomElementClass(asdom, factory, attributes) {
 			// ephemeral (created only when needed).
 			this.__pin()
 
-			asdom.__refs.set(this.__asRef, this)
+			asdom.__objectRefs.set(this.__asRef, this)
 		}
 
 		connectedCallback() {

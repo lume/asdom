@@ -1,4 +1,4 @@
-import { GLbitfield, GLclampf, GLenum, WebGLShader } from "./elements";
+import { GLbitfield, GLboolean, GLclampf, GLenum, GLfloat, GLint, GLintptr, GLsizei, GLuint, WebGLBuffer, WebGLDataBufferTypes, WebGLExtension, WebGLProgram, WebGLRenderingContext, WebGLShader, WebGLUniformLocation } from "./elements";
 import { Object } from "./Object";
 
 // @ts-expect-error
@@ -238,6 +238,14 @@ export declare function getInnerHTML(id: Object): string
 export declare function getChildren(nodeId: Object, listId: Object): void
 
 // @ts-expect-error
+@external('asDOM_Element', 'getClientWidth')
+export declare function getClientWidth(id: Object): i32
+
+// @ts-expect-error
+@external('asDOM_Element', 'getClientHeight')
+export declare function getClientHeight(id: Object): i32
+
+// @ts-expect-error
 @external('asDOM_Element', 'getFirstElementChild')
 export declare function getFirstElementChild(id: Object): i32
 
@@ -345,21 +353,100 @@ export declare function item(id: Object, index: i32): i32
 // export declare function setStencil(gl: WebGLContextAttributes, value: GLboolean): void
 
 // @ts-expect-error
-@external('asDOM_WebGLRenderingContext', 'createShader')
-export declare function createShader(gl: Object, typ: GLenum): WebGLShader
+@external('asDOM_WebGLRenderingContext', 'attachShader')
+export declare function attachShader(gl: WebGLRenderingContext, program: WebGLProgram, shader: WebGLShader): void
 
 // @ts-expect-error
-@external('asDOM_WebGLRenderingContext', 'shaderSource')
-export declare function shaderSource(gl: Object, shader: WebGLShader, source: string): void
+@external('asDOM_WebGLRenderingContext', 'bindBuffer')
+export declare function bindBuffer(gl: WebGLRenderingContext, target: GLenum, buffer: WebGLBuffer): void
 
+// TODO use TypedArray instead of StaticArray to match JS/TS APIs after this is fixed: https://github.com/AssemblyScript/assemblyscript/issues/2038
 // @ts-expect-error
-@external('asDOM_WebGLRenderingContext', 'getExtension')
-export declare function getExtension(gl: Object, extId: Object, typeNum: i32): void
+@external('asDOM_WebGLRenderingContext', 'bufferData')
+// export declare function bufferData<T>(gl: WebGLRenderingContext, arrayType: WebGLDataBufferTypes, target: GLenum, data: TypedArray<T>, usage: GLenum): void
+export declare function bufferData<T>(gl: WebGLRenderingContext, arrayType: WebGLDataBufferTypes, target: GLenum, data: StaticArray<T>, usage: GLenum): void
+
+// Pattern: No glue code needed for WebGLRenderingContext.canvas because we
+// know ahead of time that it will be the canvas on which getContext was
+// called, so we assign that when making WebGLRenderingContext and we don't
+// need to cross to JS for this readonly property.
+// // @ts-expect-error
+// @external('asDOM_WebGLRenderingContext', 'getCanvas')
+// export declare function getCanvas(gl: WebGLRenderingContext): void
 
 // @ts-expect-error
 @external('asDOM_WebGLRenderingContext', 'clear')
-export declare function clear(gl: Object, mask: GLbitfield): void
+export declare function clear(gl: WebGLRenderingContext, mask: GLbitfield): void
 
 // @ts-expect-error
 @external('asDOM_WebGLRenderingContext', 'clearColor')
-export declare function clearColor(gl: Object, red: GLclampf, green: GLclampf, blue: GLclampf, alpha: GLclampf): void
+export declare function clearColor(gl: WebGLRenderingContext, red: GLclampf, green: GLclampf, blue: GLclampf, alpha: GLclampf): void
+
+// @ts-expect-error
+@external('asDOM_WebGLRenderingContext', 'clearDepth')
+export declare function clearDepth(gl: WebGLRenderingContext, depth: GLclampf): void
+
+// @ts-expect-error
+@external('asDOM_WebGLRenderingContext', 'compileShader')
+export declare function compileShader(gl: WebGLRenderingContext, shader: WebGLShader): void
+
+// @ts-expect-error
+@external('asDOM_WebGLRenderingContext', 'createBuffer')
+export declare function createBuffer(gl: WebGLRenderingContext, buffer: WebGLBuffer): void
+
+// @ts-expect-error
+@external('asDOM_WebGLRenderingContext', 'createProgram')
+export declare function createProgram(gl: WebGLRenderingContext, program: WebGLProgram): void
+
+// @ts-expect-error
+@external('asDOM_WebGLRenderingContext', 'createShader')
+export declare function createShader(gl: WebGLRenderingContext, shader: WebGLShader, type: GLenum): void
+
+// @ts-expect-error
+@external('asDOM_WebGLRenderingContext', 'depthFunc')
+export declare function depthFunc(gl: WebGLRenderingContext, func: GLenum): void
+
+// @ts-expect-error
+@external('asDOM_WebGLRenderingContext', 'drawArrays')
+export declare function drawArrays(gl: WebGLRenderingContext, mode: GLenum, first: GLint, count: GLsizei): void
+
+// @ts-expect-error
+@external('asDOM_WebGLRenderingContext', 'enable')
+export declare function enable(gl: WebGLRenderingContext, capability: GLenum): void
+
+// @ts-expect-error
+@external('asDOM_WebGLRenderingContext', 'enableVertexAttribArray')
+export declare function enableVertexAttribArray(gl: WebGLRenderingContext, index: GLuint): void
+
+// @ts-expect-error
+@external('asDOM_WebGLRenderingContext', 'getAttribLocation')
+export declare function getAttribLocation(gl: WebGLRenderingContext, program: WebGLProgram, name: string): GLint
+
+// @ts-expect-error
+@external('asDOM_WebGLRenderingContext', 'getExtension')
+export declare function getExtension(gl: WebGLRenderingContext, extId: WebGLExtension, typeNum: i32): void
+
+// @ts-expect-error
+@external('asDOM_WebGLRenderingContext', 'getUniformLocation')
+export declare function getUniformLocation(gl: WebGLRenderingContext, uniLocationId: WebGLUniformLocation, program: WebGLProgram, name: string): WebGLUniformLocation
+
+// @ts-expect-error
+@external('asDOM_WebGLRenderingContext', 'linkProgram')
+export declare function linkProgram(gl: WebGLRenderingContext, program: WebGLProgram): void
+
+// @ts-expect-error
+@external('asDOM_WebGLRenderingContext', 'shaderSource')
+export declare function shaderSource(gl: WebGLRenderingContext, shader: WebGLShader, source: string): void
+
+// TODO use TypedArray instead of StaticArray after https://github.com/AssemblyScript/assemblyscript/issues/2038
+// @ts-expect-error
+@external('asDOM_WebGLRenderingContext', 'uniformMatrix4fv')
+export declare function uniformMatrix4fv(gl: WebGLRenderingContext, location: WebGLUniformLocation, transpose: GLboolean, value: StaticArray<GLfloat>): void
+
+// @ts-expect-error
+@external('asDOM_WebGLRenderingContext', 'useProgram')
+export declare function useProgram(gl: WebGLRenderingContext, program: WebGLProgram): void
+
+// @ts-expect-error
+@external('asDOM_WebGLRenderingContext', 'vertexAttribPointer')
+export declare function vertexAttribPointer(gl: WebGLRenderingContext, indx: GLint, size: GLint, type: GLenum, normalized: GLboolean, stride: GLsizei, offset: GLintptr): void

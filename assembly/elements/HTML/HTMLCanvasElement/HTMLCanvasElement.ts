@@ -4,14 +4,23 @@ import {HTMLElement} from '../HTMLElement'
 import {getContext} from '../../../imports'
 
 class WebGL2RenderingContext extends Object {
+	constructor(public canvas: HTMLCanvasElement) {
+		super()
+	}
 	// TODO
 }
 
 class CanvasRenderingContext2D extends Object {
+	constructor(public canvas: HTMLCanvasElement) {
+		super()
+	}
 	// TODO
 }
 
 class ImageBitmapRenderingContext extends Object {
+	constructor(public canvas: HTMLCanvasElement) {
+		super()
+	}
 	// TODO
 }
 
@@ -33,7 +42,7 @@ export class HTMLCanvasElement extends HTMLElement {
 			else return this.__context as T
 		}
 
-		const obj = instantiate<T>()
+		const obj = instantiate<T>(this)
 
 		let typeNum: i32 = -1
 

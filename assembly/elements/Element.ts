@@ -15,6 +15,8 @@ import {
 	remove,
 	getTagName,
 	attachShadow,
+	getClientWidth,
+	getClientHeight,
 } from '../imports'
 import {idToNullOrObject, valueNotChanged} from '../utils'
 import {Node} from '../Node'
@@ -56,6 +58,14 @@ export abstract class Element extends Node {
 		}
 
 		return obj
+	}
+
+	get clientWidth(): i32 {
+		return getClientWidth(this)
+	}
+
+	get clientHeight(): i32 {
+		return getClientHeight(this)
 	}
 
 	private __firstElementChild: Element | null = null

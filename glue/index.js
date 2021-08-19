@@ -31,7 +31,9 @@ class Refs extends Map {
 }
 
 export class Asdom {
-	__refs = new Refs()
+	// This maps AS mirror object instances (by their pointer) to their respective JS-side objects.
+	__objectRefs = new Refs()
+
 	__nextRefToTrack
 
 	// Direct refs to the Wasm module's exports for convenience {{
@@ -42,6 +44,7 @@ export class Asdom {
 	__getString
 	__newString
 	__getArray
+	__getArrayView
 	__newArray
 	__pin
 	__unpin
@@ -80,6 +83,7 @@ export class Asdom {
 		this.__getString = e.__getString
 		this.__newString = e.__newString
 		this.__getArray = e.__getArray
+		this.__getArrayView = e.__getArrayView
 		this.__newArray = e.__newArray
 		this.__pin = e.__pin
 		this.__unpin = e.__unpin
@@ -126,10 +130,10 @@ export class Asdom {
 				this.__nextRefToTrack = undefined
 
 				// TODO elements need to be associated with documents on the AS-side so they can have ownerDocument properties.
-				this.__refs.set(id, ref)
+				this.__objectRefs.set(id, ref)
 			},
 			releaseObject: id => {
-				this.__refs.delete(id)
+				this.__objectRefs.delete(id)
 			},
 			log: str => {
 				console.log('AS: ' + this.__getString(str))
@@ -141,7 +145,7 @@ export class Asdom {
 		asDOM_History: {
 			pushState: (id, state, title, url) => {
 				/** @type {History} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 
 				// TODO state is an pointer to an AS object, but AS doesn't have
 				// dynamic objects. Handle state somehow (with ason or
@@ -152,7 +156,7 @@ export class Asdom {
 			},
 			replaceState: (id, state, title, url) => {
 				/** @type {History} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 
 				// TODO state is an pointer to an AS object, but AS doesn't have
 				// dynamic objects. Handle state somehow (with ason or
@@ -186,26 +190,26 @@ export class Asdom {
 		asDOM_EventTarget: {
 			addEventListenerCallback: (id, eventName, callback /* TODO , optionsOrUseCapture*/) => {
 				/** @type {EventTarget} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				self.addEventListener(this.__getString(eventName), this.fn(callback))
 			},
 			addEventListenerObject: (id, eventName, listenerId /* TODO , optionsOrUseCapture*/) => {
 				/** @type {EventTarget} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 
 				// A listener can only be added once.
-				if (this.__refs.get(listenerId)) return
+				if (this.__objectRefs.get(listenerId)) return
 
 				const listener = event => this.__asdom_triggerEventListener(listenerId /*TODO , event*/)
 
-				this.__refs.set(listenerId, listener)
+				this.__objectRefs.set(listenerId, listener)
 
 				self.addEventListener(this.__getString(eventName), listener)
 				this.__pin(listenerId)
 			},
 			removeEventListenerCallback: (id, eventName, callback /* TODO , optionsOrUseCapture*/) => {
 				/** @type {EventTarget} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 
 				console.log('---------------------', this.fn(callback) === this.fn(callback))
 
@@ -213,22 +217,22 @@ export class Asdom {
 			},
 			removeEventListenerObject: (id, eventName, listenerId /* TODO , optionsOrUseCapture*/) => {
 				/** @type {EventTarget} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 
-				const listener = this.__refs.get(listenerId)
+				const listener = this.__objectRefs.get(listenerId)
 
 				// Nothing to do if the listener wasn't added yet.
 				if (!listener) return
 
 				self.removeEventListener(this.__getString(eventName), listener)
 
-				this.__refs.delete(listenerId)
+				this.__objectRefs.delete(listenerId)
 				this.__unpin(listenerId)
 			},
 		},
 		asDOM_Window: {
 			trackWindow: id => {
-				this.__refs.set(id, window)
+				this.__objectRefs.set(id, window)
 			},
 			/**
 			 * @param {number} id
@@ -236,10 +240,10 @@ export class Asdom {
 			 */
 			getDocument: (id, objId) => {
 				/** @type {Window} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				const obj = self.document
-				let key = this.__refs.keyFrom(obj)
-				if (!key) this.__refs.set((key = objId), obj)
+				let key = this.__objectRefs.keyFrom(obj)
+				if (!key) this.__objectRefs.set((key = objId), obj)
 				return key
 			},
 			/**
@@ -248,10 +252,10 @@ export class Asdom {
 			 */
 			getCustomElements: (id, objId) => {
 				/** @type {Window} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				const obj = self.customElements
-				let key = this.__refs.keyFrom(obj)
-				if (!key) this.__refs.set((key = objId), obj)
+				let key = this.__objectRefs.keyFrom(obj)
+				if (!key) this.__objectRefs.set((key = objId), obj)
 				return key
 			},
 			/**
@@ -260,10 +264,10 @@ export class Asdom {
 			 */
 			getHistory: (id, objId) => {
 				/** @type {Window} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				const obj = self.history
-				let key = this.__refs.keyFrom(obj)
-				if (!key) this.__refs.set((key = objId), obj)
+				let key = this.__objectRefs.keyFrom(obj)
+				if (!key) this.__objectRefs.set((key = objId), obj)
 				return key
 			},
 			/**
@@ -272,21 +276,21 @@ export class Asdom {
 			 */
 			getLocation: (id, objId) => {
 				/** @type {Window | Document} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				const obj = self.location
-				let key = this.__refs.keyFrom(obj)
-				if (!key) this.__refs.set((key = objId), obj)
+				let key = this.__objectRefs.keyFrom(obj)
+				if (!key) this.__objectRefs.set((key = objId), obj)
 				return key
 			},
 			// window.onpopstate
 			setOnpopstate: (id, callback) => {
 				/** @type {Window} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				self.onpopstate = callback === -1 ? null : this.fn(callback)
 			},
 			getOnpopstate: id => {
 				/** @type {Window} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				// TODO How to "return" a JS function so that AS can call it?
 			},
 		},
@@ -294,18 +298,18 @@ export class Asdom {
 			// customElements.define()
 			define: (id, tagName, factory, attributes) => {
 				tagName = this.__getString(tagName)
-				const customElements = this.__refs.get(id)
+				const customElements = this.__objectRefs.get(id)
 				customElements.define(tagName, createAsdomCustomElementClass(this, factory, attributes))
 			},
 		},
 		asDOM_Document: {
 			getUrl: id => {
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				return this.__newString(self.URL)
 			},
 			getBody: id => {
 				/** @type {Document} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				const result = self.body
 
 				if (this.__body.get(self) === result) return valueNotChanged
@@ -313,7 +317,7 @@ export class Asdom {
 
 				if (!result) return 0 // null
 
-				return this.getKeyOrObjectType(result)
+				return this.getObjectIdOrType(result)
 			},
 			setBody: (id, bodyId) => {
 				// TODO
@@ -321,34 +325,34 @@ export class Asdom {
 			// document.createElement()
 			createElement: (id, tagName /*, TODO options */) => {
 				/** @type {Document} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				const result = self.createElement(this.__getString(tagName))
-				return this.getKeyOrObjectType(result)
+				return this.getObjectIdOrType(result)
 			},
 			// document.createTextNode()
 			createTextNode: (id, data) => {
 				/** @type {Document} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				const result = self.createTextNode(this.__getString(data))
-				return this.getKeyOrObjectType(result)
+				return this.getObjectIdOrType(result)
 			},
 		},
 		asDOM_Element: {
 			getTagName: id => {
 				/** @type {Element} */
-				const el = this.__refs.get(id)
+				const el = this.__objectRefs.get(id)
 				return this.__newString(el.tagName)
 			},
 			// element.setAttribute
 			elSetAttribute: (id, attr, value) => {
 				/** @type {Element} */
-				const el = this.__refs.get(id)
+				const el = this.__objectRefs.get(id)
 				el.setAttribute(this.__getString(attr), this.__getString(value))
 			},
 			// element.getAttribute
 			elGetAttribute: (id, attr) => {
 				/** @type {Element} */
-				const el = this.__refs.get(id)
+				const el = this.__objectRefs.get(id)
 				return this.__newString(el.getAttribute(this.__getString(attr)))
 			},
 			// element.innerHTML
@@ -356,13 +360,23 @@ export class Asdom {
 			getInnerHTML: getString(this, 'innerHTML'),
 			getChildren: (id, listId) => {
 				/** @type {Element | Document | DocumentFragment} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				const list = self.children
-				if (!this.__refs.keyFrom(list)) this.__refs.set(listId, list)
+				if (!this.__objectRefs.keyFrom(list)) this.__objectRefs.set(listId, list)
+			},
+			getClientWidth: id => {
+				/** @type {Element} */
+				const self = this.__objectRefs.get(id)
+				return self.clientWidth
+			},
+			getClientHeight: id => {
+				/** @type {Element} */
+				const self = this.__objectRefs.get(id)
+				return self.clientHeight
 			},
 			getFirstElementChild: id => {
 				/** @type {Element | Document | DocumentFragment} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				const result = self.firstElementChild
 
 				if (this.__firstElementChild.get(self) === result) return valueNotChanged
@@ -370,11 +384,11 @@ export class Asdom {
 
 				if (!result) return 0 // null
 
-				return this.getKeyOrObjectType(result)
+				return this.getObjectIdOrType(result)
 			},
 			getLastElementChild: id => {
 				/** @type {Element | Document | DocumentFragment} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				const result = self.lastElementChild
 
 				if (this.__lastElementChild.get(self) === result) return valueNotChanged
@@ -382,11 +396,11 @@ export class Asdom {
 
 				if (!result) return 0 // null
 
-				return this.getKeyOrObjectType(result)
+				return this.getObjectIdOrType(result)
 			},
 			getNextElementSibling: id => {
 				/** @type {Element} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				const result = self.nextElementSibling
 
 				if (this.__nextElementSibling.get(self) === result) return valueNotChanged
@@ -394,11 +408,11 @@ export class Asdom {
 
 				if (!result) return 0 // null
 
-				return this.getKeyOrObjectType(result)
+				return this.getObjectIdOrType(result)
 			},
 			getPreviousElementSibling: id => {
 				/** @type {Element} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				const result = self.previousElementSibling
 
 				if (this.__previousElementSibling.get(self) === result) return valueNotChanged
@@ -406,34 +420,34 @@ export class Asdom {
 
 				if (!result) return 0 // null
 
-				return this.getKeyOrObjectType(result)
+				return this.getObjectIdOrType(result)
 			},
 			// element.onclick
 			setOnclick: (id, callback) => {
 				/** @type {Element} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				self.onclick = callback === -1 ? null : this.fn(callback)
 			},
 			getOnclick: id => {
 				/** @type {Element} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				// TODO How to "return" a JS function so that AS can call it?
 			},
 			// element.click()
 			elClick: id => {
 				/** @type {Element} */
-				const el = this.__refs.get(id)
+				const el = this.__objectRefs.get(id)
 				el.click()
 			},
 			// element.remove()
 			remove: id => {
 				/** @type {Element} */
-				const el = this.__refs.get(id)
+				const el = this.__objectRefs.get(id)
 				el.remove()
 			},
 			querySelector: (id, selectors) => {
 				/** @type {Element | Document | DocumentFragment} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				const result = self.querySelector(this.__getString(selectors))
 
 				if (this.__querySelector.get(self) === result) return valueNotChanged
@@ -441,26 +455,26 @@ export class Asdom {
 
 				if (!result) return 0 // null
 
-				return this.getKeyOrObjectType(result)
+				return this.getObjectIdOrType(result)
 			},
 			querySelectorAll: (id, selectors) => {
 				/** @type {Element | Document | DocumentFragment} */
-				const node = this.__refs.get(id)
+				const node = this.__objectRefs.get(id)
 				const result = node.querySelectorAll(this.__getString(selectors))
-				return this.getKeyOrObjectType(result, 202)
+				return this.getObjectIdOrType(result, 202)
 			},
 			getShadowRoot: id => {
 				/** @type {Element} */
-				const el = this.__refs.get(id)
+				const el = this.__objectRefs.get(id)
 				const root = el.shadowRoot
 				if (!root) return 0 // null
-				return this.__refs.keyFrom(root)
+				return this.__objectRefs.keyFrom(root)
 			},
 			attachShadow: (id, rootId, mode) => {
 				/** @type {Element} */
-				const el = this.__refs.get(id)
+				const el = this.__objectRefs.get(id)
 				const root = el.attachShadow({mode: this.__getString(mode)})
-				this.__refs.set(rootId, root)
+				this.__objectRefs.set(rootId, root)
 			},
 		},
 		asDOM_HTMLElement: {
@@ -471,21 +485,21 @@ export class Asdom {
 		asDOM_Node: {
 			// node.appendChild()
 			nodeAppendChild: (parentId, childId) => {
-				const parent = this.__refs.get(parentId)
-				const child = this.__refs.get(childId)
+				const parent = this.__objectRefs.get(parentId)
+				const child = this.__objectRefs.get(childId)
 				// We'd actually return the object here when we switch to `externref`.
 				/*return*/ parent.appendChild(child)
 			},
 			// node.removeChild()
 			nodeRemoveChild: (parentId, childId) => {
-				const parent = this.__refs.get(parentId)
-				const child = this.__refs.get(childId)
+				const parent = this.__objectRefs.get(parentId)
+				const child = this.__objectRefs.get(childId)
 				// We'd actually return the object here when we switch to `externref`.
 				/*return*/ parent.removeChild(child)
 			},
 			getParentNode: id => {
 				/** @type {Node} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				const result = self.parentNode
 
 				if (this.__parentNode.get(self) === result) return valueNotChanged
@@ -493,11 +507,11 @@ export class Asdom {
 
 				if (!result) return 0 // null
 
-				return this.getKeyOrObjectType(result)
+				return this.getObjectIdOrType(result)
 			},
 			getParentElement: id => {
 				/** @type {Node} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				const result = self.parentElement
 
 				if (this.__parentElement.get(self) === result) return valueNotChanged
@@ -505,12 +519,12 @@ export class Asdom {
 
 				if (!result) return 0 // null
 
-				return this.getKeyOrObjectType(result)
+				return this.getObjectIdOrType(result)
 			},
 			// node.firstChild (readonly)
 			getFirstChild: id => {
 				/** @type {Node} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				const result = self.firstChild
 
 				if (this.__firstChild.get(self) === result) return valueNotChanged
@@ -518,11 +532,11 @@ export class Asdom {
 
 				if (!result) return 0 // null
 
-				return this.getKeyOrObjectType(result)
+				return this.getObjectIdOrType(result)
 			},
 			getLastChild: id => {
 				/** @type {Node} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				const result = self.lastChild
 
 				if (this.__lastChild.get(self) === result) return valueNotChanged
@@ -530,11 +544,11 @@ export class Asdom {
 
 				if (!result) return 0 // null
 
-				return this.getKeyOrObjectType(result)
+				return this.getObjectIdOrType(result)
 			},
 			getNextSibling: id => {
 				/** @type {Node} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				const result = self.nextSibling
 
 				if (this.__nextSibling.get(self) === result) return valueNotChanged
@@ -542,11 +556,11 @@ export class Asdom {
 
 				if (!result) return 0 // null
 
-				return this.getKeyOrObjectType(result)
+				return this.getObjectIdOrType(result)
 			},
 			getPreviousSibling: id => {
 				/** @type {Node} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				const result = self.previousSibling
 
 				if (this.__previousSibling.get(self) === result) return valueNotChanged
@@ -554,53 +568,53 @@ export class Asdom {
 
 				if (!result) return 0 // null
 
-				return this.getKeyOrObjectType(result)
+				return this.getObjectIdOrType(result)
 			},
 			cloneNode: (id, deep = false) => {
 				/** @type {Node} */
-				const node = this.__refs.get(id)
+				const node = this.__objectRefs.get(id)
 				const result = node.cloneNode(deep)
-				return this.getKeyOrObjectType(result)
+				return this.getObjectIdOrType(result)
 			},
 			getChildNodes: (id, listId) => {
 				/** @type {Node} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				const list = self.childNodes
-				if (!this.__refs.keyFrom(list)) this.__refs.set(listId, list)
+				if (!this.__objectRefs.keyFrom(list)) this.__objectRefs.set(listId, list)
 			},
 		},
 		asDOM_Audio: {
 			initAudio: (id, src) => {
-				this.__refs.set(id, new Audio(this.__getString(src)))
+				this.__objectRefs.set(id, new Audio(this.__getString(src)))
 			},
 			// element.play()
 			playAudio: id => {
-				const el = this.__refs.get(id)
+				const el = this.__objectRefs.get(id)
 				el.play()
 			},
 			// element.pause()
 			pauseAudio: id => {
-				const el = this.__refs.get(id)
+				const el = this.__objectRefs.get(id)
 				el.pause()
 			},
 			// element.autoplay
 			setAutoplay: (id, toggle) => {
-				const el = this.__refs.get(id)
+				const el = this.__objectRefs.get(id)
 				el.autoplay = !!toggle
 			},
 			// element.autoplay
 			getAutoplay: id => {
 				/** @type {HTMLAudioElement} */
-				const el = this.__refs.get(id)
+				const el = this.__objectRefs.get(id)
 				return el.autoplay
 			},
 		},
 		asDOM_HTMLTemplateElement: {
 			// element.content (readonly)
 			getContent: (id, fragId) => {
-				const el = this.__refs.get(id)
+				const el = this.__objectRefs.get(id)
 				const frag = el.content
-				this.__refs.set(fragId, frag)
+				this.__objectRefs.set(fragId, frag)
 			},
 		},
 		asDOM_HTMLCanvasElement: {
@@ -611,25 +625,25 @@ export class Asdom {
 			 */
 			getContext: (id, ctxId, typeNum /*TODO , options*/) => {
 				/** @type {HTMLCanvasElement} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				const result = self.getContext(getCanvasContextTypeString(typeNum))
 
 				// It must be valid because the AS bindings calling this only allow a static (compile-time) set of extension types.
 				if (!result) throw new Error('Invalid extension type.')
 
-				this.__refs.set(ctxId, result)
+				this.__objectRefs.set(ctxId, result)
 			},
 		},
 		asDOM_NodeList: {
 			// list.length
 			getLength: id => {
 				/** @type {NodeList} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				return self.length
 			},
 			item: (id, index) => {
 				/** @type {NodeList} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				const result = self.item(index)
 
 				if (this.__item.get(self) === result) return valueNotChanged
@@ -637,23 +651,158 @@ export class Asdom {
 
 				if (!result) return 0 // null
 
-				// TODO this should be getKeyOrNodeType and consider non-element Nodes too.
-				return this.getKeyOrObjectType(result)
+				return this.getObjectIdOrType(result)
 			},
 		},
 		asDOM_WebGLRenderingContext: {
-			// Specify the color to fill a cleared color buffer with
-			clearColor: (id, r, g, b, a) => {
+			attachShader: (id, progId, shaderId) => {
 				/** @type {WebGLRenderingContext} */
-				const self = this.__refs.get(id)
-				self.clearColor(r, g, b, a)
+				const self = this.__objectRefs.get(id)
+				const program = this.__objectRefs.get(progId)
+				const shader = this.__objectRefs.get(shaderId)
+				self.attachShader(program, shader)
 			},
+			bindBuffer: (id, target, bufId) => {
+				/** @type {WebGLRenderingContext} */
+				const self = this.__objectRefs.get(id)
+				const buffer = this.__objectRefs.get(bufId)
+				self.bindBuffer(target, buffer)
+			},
+			bufferData: (id, arrayType, target, arrayId, usage) => {
+				/** @type {WebGLRenderingContext} */
+				const self = this.__objectRefs.get(id)
 
-			// Clears the color, depth and stencil buffers
+				// TODO use `arrayType` to call the more efficient functions
+				// like `__getArrayBuffer`, `__getInt8ArrayView`, etc.
+				const array = this.__getArrayView(arrayId)
+				console.log(array)
+
+				self.bufferData(target, array, usage)
+			},
 			clear: (id, mask) => {
 				/** @type {WebGLRenderingContext} */
-				const self = this.__refs.get(id)
+				const self = this.__objectRefs.get(id)
 				self.clear(mask)
+			},
+			clearColor: (id, r, g, b, a) => {
+				/** @type {WebGLRenderingContext} */
+				const self = this.__objectRefs.get(id)
+				self.clearColor(r, g, b, a)
+			},
+			clearDepth: (id, depth) => {
+				/** @type {WebGLRenderingContext} */
+				const self = this.__objectRefs.get(id)
+				self.clearDepth(depth)
+			},
+			compileShader: (id, shaderId) => {
+				/** @type {WebGLRenderingContext} */
+				const self = this.__objectRefs.get(id)
+				const shader = this.__objectRefs.get(shaderId)
+				self.compileShader(shader)
+				console.log('compile shader')
+			},
+			createBuffer: (id, bufId) => {
+				/** @type {WebGLRenderingContext} */
+				const self = this.__objectRefs.get(id)
+				const result = self.createBuffer()
+				this.__objectRefs.set(bufId, result)
+			},
+			createProgram: (id, progId) => {
+				/** @type {WebGLRenderingContext} */
+				const self = this.__objectRefs.get(id)
+				const result = self.createProgram()
+				this.__objectRefs.set(progId, result)
+			},
+			createShader: (id, shaderId, type) => {
+				/** @type {WebGLRenderingContext} */
+				const self = this.__objectRefs.get(id)
+				let result = self.createShader(type)
+				this.__objectRefs.set(shaderId, result)
+				console.log('create shader', result)
+			},
+			depthFunc: (id, func) => {
+				/** @type {WebGLRenderingContext} */
+				const self = this.__objectRefs.get(id)
+				self.depthFunc(func)
+			},
+			drawArrays: (id, mode, first, count) => {
+				/** @type {WebGLRenderingContext} */
+				const self = this.__objectRefs.get(id)
+				self.drawArrays(mode, first, count)
+			},
+			enable: (id, capability) => {
+				/** @type {WebGLRenderingContext} */
+				const self = this.__objectRefs.get(id)
+				self.enable(capability)
+			},
+			enableVertexAttribArray: (id, index) => {
+				/** @type {WebGLRenderingContext} */
+				const self = this.__objectRefs.get(id)
+				self.enableVertexAttribArray(index)
+			},
+			getAttribLocation: (id, programId, name) => {
+				/** @type {WebGLRenderingContext} */
+				const self = this.__objectRefs.get(id)
+				const program = this.__objectRefs.get(programId)
+				return self.getAttribLocation(program, this.__getString(name))
+			},
+			/**
+			 * @param {number} id
+			 * @param {number} extId
+			 * @param {number} typeNum
+			 */
+			getExtension: (id, extId, typeNum) => {
+				/** @type {WebGLRenderingContext} */
+				const self = this.__objectRefs.get(id)
+				const result = self.getExtension(getWebGLExtensionTypeString(typeNum))
+
+				// It must be valid because the AS bindings calling this only allow a static (compile-time) set of extension types.
+				if (!result) throw new Error('Invalid extension type.')
+
+				this.__objectRefs.set(extId, result)
+			},
+			getUniformLocation: (id, uniLocationId, programId, name) => {
+				/** @type {WebGLRenderingContext} */
+				const self = this.__objectRefs.get(id)
+				const program = this.__objectRefs.get(programId)
+				const result = self.getUniformLocation(program, this.__getString(name))
+				this.__objectRefs.set(uniLocationId, result)
+			},
+			linkProgram: (id, progId) => {
+				/** @type {WebGLRenderingContext} */
+				const self = this.__objectRefs.get(id)
+				const program = this.__objectRefs.get(progId)
+				self.linkProgram(program)
+			},
+			/**
+			 * @param {number} id
+			 * @param {number} shaderId
+			 * @param {number} source
+			 */
+			shaderSource: (id, shaderId, source) => {
+				/** @type {WebGLRenderingContext} */
+				const self = this.__objectRefs.get(id)
+				const shader = this.__objectRefs.get(shaderId)
+				self.shaderSource(shader, this.__getString(source))
+				console.log('add shader source')
+			},
+			uniformMatrix4fv: (id, locationId, transpose, valueId) => {
+				/** @type {WebGLRenderingContext} */
+				const self = this.__objectRefs.get(id)
+				const location = this.__objectRefs.get(locationId)
+				const array = this.__getArrayView(valueId)
+				self.uniformMatrix4fv(location, transpose, array)
+			},
+			useProgram: (id, programId) => {
+				/** @type {WebGLRenderingContext} */
+				const self = this.__objectRefs.get(id)
+				const program = this.__objectRefs.get(programId)
+				self.useProgram(program)
+			},
+			vertexAttribPointer: (id, indx, size, type, normalized, stride, offset) => {
+				/** @type {WebGLRenderingContext} */
+				const self = this.__objectRefs.get(id)
+				self.vertexAttribPointer(indx, size, type, normalized, stride, offset)
 			},
 		},
 	}
@@ -673,16 +822,16 @@ export class Asdom {
 	 * machinery.
 	 * @returns {number} - The object's type ID.
 	 */
-	getKeyOrObjectType(obj, explicitTypeOverride) {
-		const key = this.__refs.keyFrom(obj)
+	getObjectIdOrType(obj, explicitTypeOverride) {
+		const id = this.__objectRefs.keyFrom(obj)
 
-		if (!key) {
+		if (!id) {
 			this.__nextRefToTrack = obj
 
 			return -(explicitTypeOverride ?? getObjectType(obj))
 		}
 
-		return key
+		return id
 	}
 }
 
@@ -723,9 +872,29 @@ function getObjectType(obj) {
 	// else if (obj instanceof NodeList<Element>) {
 	// 	return 202
 	// }
+	// else if (obj is ANGLE_instanced_arrays) {
+	// 	return 300
+	// }
+	// else if (obj instanceof WebGLShader) { // AS makes this ahead of time.
+	// 	return 400
+	// }
 	else {
 		throw new Error('Unsupported object (either it is TODO, or an invalid type override was provided).')
 	}
+}
+
+// TODO convert to TypeScript and use an `enum` instead.
+const WebGLExtensionType = {
+	ANGLE_instanced_arrays: 0,
+}
+
+/**
+ * @param {number} typeNum
+ */
+function getWebGLExtensionTypeString(typeNum) {
+	if (typeNum === 0) return 'ANGLE_instanced_arrays'
+	if (typeNum === 1) return 'EXT_blend_minmax'
+	// ...
 }
 
 /**
@@ -742,7 +911,7 @@ function getCanvasContextTypeString(typeNum) {
 /** @param {Asdom} asdom */
 function setString(asdom, key) {
 	return (id, str) => {
-		const self = asdom.__refs.get(id)
+		const self = asdom.__objectRefs.get(id)
 		self[key] = asdom.__getString(str)
 	}
 }
@@ -750,7 +919,7 @@ function setString(asdom, key) {
 /** @param {Asdom} asdom */
 function setStringOrNull(asdom, key) {
 	return (id, str) => {
-		const self = asdom.__refs.get(id)
+		const self = asdom.__objectRefs.get(id)
 		if (str === 0) self[key] = null
 		else self[key] = asdom.__getString(str)
 	}
@@ -759,7 +928,7 @@ function setStringOrNull(asdom, key) {
 /** @param {Asdom} asdom */
 function getString(asdom, key) {
 	return id => {
-		const self = asdom.__refs.get(id)
+		const self = asdom.__objectRefs.get(id)
 		return asdom.__newString(self[key])
 	}
 }
@@ -767,7 +936,7 @@ function getString(asdom, key) {
 /** @param {Asdom} asdom */
 function noArgNoReturnFunction(asdom, key) {
 	return id => {
-		const self = asdom.__refs.get(id)
+		const self = asdom.__objectRefs.get(id)
 		self[key]()
 	}
 }
@@ -775,7 +944,7 @@ function noArgNoReturnFunction(asdom, key) {
 /** @param {Asdom} asdom */
 function stringArgNoReturnFunction(asdom, key) {
 	return (id, str) => {
-		const self = asdom.__refs.get(id)
+		const self = asdom.__objectRefs.get(id)
 		self[key](asdom.__getString(str))
 	}
 }
@@ -783,7 +952,7 @@ function stringArgNoReturnFunction(asdom, key) {
 /** @param {Asdom} asdom */
 function noArgStringReturnFunction(asdom, key) {
 	return id => {
-		const self = asdom.__refs.get(id)
+		const self = asdom.__objectRefs.get(id)
 		return asdom.__newString(self[key]())
 	}
 }

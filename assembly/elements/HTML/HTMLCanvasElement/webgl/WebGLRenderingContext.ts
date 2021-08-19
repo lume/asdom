@@ -1,6 +1,29 @@
-import {clear, clearColor, createShader, getExtension} from '../../../../imports'
+import {HTMLCanvasElement} from '../../../..'
+import {
+	attachShader,
+	bindBuffer,
+	bufferData,
+	clear,
+	clearColor,
+	clearDepth,
+	compileShader,
+	createBuffer,
+	createProgram,
+	createShader,
+	depthFunc,
+	drawArrays,
+	enable,
+	enableVertexAttribArray,
+	getAttribLocation,
+	getExtension,
+	getUniformLocation,
+	linkProgram,
+	shaderSource,
+	uniformMatrix4fv,
+	useProgram,
+	vertexAttribPointer,
+} from '../../../../imports'
 import {Object} from '../../../../Object'
-import {idToNullOrObject} from '../../../../utils'
 
 type WebGLContextAttributes = i32
 
@@ -21,7 +44,7 @@ export type GLclampf = f32
 export type GLuint64 = u32 //u64;
 export type GLint64 = i32 //i64;
 
-export type WebGLUniformLocation = i32
+export class WebGLUniformLocation extends Object {}
 export type TexImageSource = i32
 export type Int32List = i32
 export type Uint32List = i32
@@ -460,8 +483,8 @@ export const CONTEXT_LOST_WEBGL: GLenum = 0x9242
 export const UNPACK_COLORSPACE_CONVERSION_WEBGL = 0x9243
 export const BROWSER_DEFAULT_WEBGL: GLenum = 0x9244
 
-export declare function getDrawingBufferWidth(gl: Object): GLsizei
-export declare function getDrawingBufferHeight(gl: Object): GLsizei
+export declare function getDrawingBufferWidth(gl: WebGLRenderingContext): GLsizei
+export declare function getDrawingBufferHeight(gl: WebGLRenderingContext): GLsizei
 
 export declare function getContextAttributes(gl: usize): WebGLContextAttributes
 export declare function isContextLost(gl: usize): bool
@@ -478,10 +501,12 @@ export class EXT_blend_minmax extends WebGLExtension {
 	// TODO
 }
 
-export class WebGLProgram extends Object {
-	// TODO
-}
+export class WebGLProgram extends Object {}
+
+let id = 1
+
 export class WebGLShader extends Object {}
+
 export class WebGLBuffer extends Object {
 	// TODO
 }
@@ -495,37 +520,53 @@ export class WebGLTexture extends Object {
 	// TODO
 }
 
-export declare function activeTexture(gl: Object, texture: GLenum): void
-export declare function attachShader(gl: Object, program: WebGLProgram, shader: WebGLShader): void
-// export declare function bindAttribLocation(gl: Object, program: WebGLProgram, index: GLuint, name: string): void;
-export declare function bindBuffer(gl: Object, target: GLenum, buffer: WebGLBuffer): void
-export declare function bindFramebuffer(gl: Object, target: GLenum, framebuffer: WebGLFramebuffer): void
-export declare function bindRenderbuffer(gl: Object, target: GLenum, renderbuffer: WebGLRenderbuffer): void
-export declare function bindTexture(gl: Object, target: GLenum, texture: WebGLTexture): void
-export declare function blendColor(gl: Object, red: GLclampf, green: GLclampf, blue: GLclampf, alpha: GLclampf): void
-export declare function blendEquation(gl: Object, mode: GLenum): void
-export declare function blendEquationSeparate(gl: Object, modeRGB: GLenum, modeAlpha: GLenum): void
-export declare function blendFunc(gl: Object, sfactor: GLenum, dfactor: GLenum): void
+export declare function activeTexture(gl: WebGLRenderingContext, texture: GLenum): void
+// export declare function bindAttribLocation(gl: WebGLRenderingContext, program: WebGLProgram, index: GLuint, name: string): void;
+export declare function bindFramebuffer(gl: WebGLRenderingContext, target: GLenum, framebuffer: WebGLFramebuffer): void
+export declare function bindRenderbuffer(
+	gl: WebGLRenderingContext,
+	target: GLenum,
+	renderbuffer: WebGLRenderbuffer,
+): void
+export declare function bindTexture(gl: WebGLRenderingContext, target: GLenum, texture: WebGLTexture): void
+export declare function blendColor(
+	gl: WebGLRenderingContext,
+	red: GLclampf,
+	green: GLclampf,
+	blue: GLclampf,
+	alpha: GLclampf,
+): void
+export declare function blendEquation(gl: WebGLRenderingContext, mode: GLenum): void
+export declare function blendEquationSeparate(gl: WebGLRenderingContext, modeRGB: GLenum, modeAlpha: GLenum): void
+export declare function blendFunc(gl: WebGLRenderingContext, sfactor: GLenum, dfactor: GLenum): void
 export declare function blendFuncSeparate(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	srcRGB: GLenum,
 	dstRGB: GLenum,
 	srcAlpha: GLenum,
 	dstAlpha: GLenum,
 ): void
-export declare function bufferData<T>(gl: Object, target: GLenum, data: StaticArray<T>, usage: GLenum): void
-export declare function bufferSubData<T>(gl: Object, target: GLenum, offset: GLintptr, data: Array<T>): void
+export declare function bufferSubData<T>(
+	gl: WebGLRenderingContext,
+	target: GLenum,
+	offset: GLintptr,
+	data: Array<T>,
+): void
 
-export declare function checkFramebufferStatus(gl: Object, target: GLenum): GLenum
+export declare function checkFramebufferStatus(gl: WebGLRenderingContext, target: GLenum): GLenum
 
-export declare function clearDepth(gl: Object, depth: GLclampf): void
-export declare function clearStencil(gl: Object, s: GLint): void
+export declare function clearStencil(gl: WebGLRenderingContext, s: GLint): void
 
-export declare function colorMask(gl: Object, red: GLboolean, green: GLboolean, blue: GLboolean, alpha: GLboolean): void
-export declare function compileShader(gl: Object, shader: WebGLShader): void
+export declare function colorMask(
+	gl: WebGLRenderingContext,
+	red: GLboolean,
+	green: GLboolean,
+	blue: GLboolean,
+	alpha: GLboolean,
+): void
 
 export declare function compressedTexImage2D(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	target: GLenum,
 	level: GLint,
 	internalformat: GLenum,
@@ -535,7 +576,7 @@ export declare function compressedTexImage2D(
 	data: ArrayBufferView,
 ): void
 export declare function compressedTexSubImage2D(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	target: GLenum,
 	level: GLint,
 	xoffset: GLint,
@@ -547,7 +588,7 @@ export declare function compressedTexSubImage2D(
 ): void
 
 export declare function copyTexImage2D(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	target: GLenum,
 	level: GLint,
 	internalformat: GLenum,
@@ -558,7 +599,7 @@ export declare function copyTexImage2D(
 	border: GLint,
 ): void
 export declare function copyTexSubImage2D(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	target: GLenum,
 	level: GLint,
 	xoffset: GLint,
@@ -569,118 +610,116 @@ export declare function copyTexSubImage2D(
 	height: GLsizei,
 ): void
 
-export declare function createBuffer(gl: Object): WebGLBuffer
-export declare function createFramebuffer(gl: Object): WebGLFramebuffer
-export declare function createProgram(gl: Object): WebGLProgram
-export declare function createRenderbuffer(gl: Object): WebGLRenderbuffer
-// export declare function createShader(gl: Object, typ: GLenum): WebGLShader
-export declare function createTexture(gl: Object): WebGLTexture
+export declare function createFramebuffer(gl: WebGLRenderingContext): WebGLFramebuffer
+export declare function createRenderbuffer(gl: WebGLRenderingContext): WebGLRenderbuffer
+export declare function createTexture(gl: WebGLRenderingContext): WebGLTexture
 
-export declare function cullFace(gl: Object, mode: GLenum): void
+export declare function cullFace(gl: WebGLRenderingContext, mode: GLenum): void
 //...
 
-export declare function deleteBuffer(gl: Object, buffer: WebGLBuffer): void
-export declare function deleteFramebuffer(gl: Object, framebuffer: WebGLFramebuffer): void
-export declare function deleteProgram(gl: Object, program: WebGLProgram): void
-export declare function deleteRenderbuffer(gl: Object, renderbuffer: WebGLRenderbuffer): void
-export declare function deleteShader(gl: Object, shader: WebGLShader): void
-export declare function deleteTexture(gl: Object, texture: WebGLTexture): void
+export declare function deleteBuffer(gl: WebGLRenderingContext, buffer: WebGLBuffer): void
+export declare function deleteFramebuffer(gl: WebGLRenderingContext, framebuffer: WebGLFramebuffer): void
+export declare function deleteProgram(gl: WebGLRenderingContext, program: WebGLProgram): void
+export declare function deleteRenderbuffer(gl: WebGLRenderingContext, renderbuffer: WebGLRenderbuffer): void
+export declare function deleteShader(gl: WebGLRenderingContext, shader: WebGLShader): void
+export declare function deleteTexture(gl: WebGLRenderingContext, texture: WebGLTexture): void
 
-export declare function depthFunc(gl: Object, func: GLenum): void
-export declare function depthMask(gl: Object, flag: GLboolean): void
-export declare function depthRange(gl: Object, zNear: GLclampf, zFar: GLclampf): void
-export declare function detachShader(gl: Object, program: WebGLProgram, shader: WebGLShader): void
-export declare function disable(gl: Object, cap: GLenum): void
-export declare function disableVertexAttribArray(gl: Object, index: GLuint): void
-export declare function drawArrays(gl: Object, mode: GLenum, first: GLint, count: GLsizei): void
-export declare function drawElements(gl: Object, mode: GLenum, count: GLsizei, typ: GLenum, offset: GLintptr): void
+export declare function depthMask(gl: WebGLRenderingContext, flag: GLboolean): void
+export declare function depthRange(gl: WebGLRenderingContext, zNear: GLclampf, zFar: GLclampf): void
+export declare function detachShader(gl: WebGLRenderingContext, program: WebGLProgram, shader: WebGLShader): void
+export declare function disable(gl: WebGLRenderingContext, cap: GLenum): void
+export declare function disableVertexAttribArray(gl: WebGLRenderingContext, index: GLuint): void
+export declare function drawElements(
+	gl: WebGLRenderingContext,
+	mode: GLenum,
+	count: GLsizei,
+	typ: GLenum,
+	offset: GLintptr,
+): void
 
-export declare function enable(gl: Object, cap: GLenum): void
-export declare function enableVertexAttribArray(gl: Object, index: GLuint): void
-export declare function finish(gl: Object): void
-export declare function flush(gl: Object): void
+export declare function finish(gl: WebGLRenderingContext): void
+export declare function flush(gl: WebGLRenderingContext): void
 export declare function framebufferRenderbuffer(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	target: GLenum,
 	attachment: GLenum,
 	renderbuffertarget: GLenum,
 	renderbuffer: WebGLRenderbuffer,
 ): void
 export declare function framebufferTexture2D(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	target: GLenum,
 	attachment: GLenum,
 	textarget: GLenum,
 	texture: WebGLTexture,
 	level: GLint,
 ): void
-export declare function frontFace(gl: Object, mode: GLenum): void
+export declare function frontFace(gl: WebGLRenderingContext, mode: GLenum): void
 
-export declare function generateMipmap(gl: Object, target: GLenum): void
+export declare function generateMipmap(gl: WebGLRenderingContext, target: GLenum): void
 
 // export declare function getActiveAttrib(
-// 	gl: Object,
+// 	gl: WebGLRenderingContext,
 // 	program: WebGLProgram,
 // 	index: GLuint,
 // ): WebGLActiveInfo
 // export declare function getActiveUniform(
-// 	gl: Object,
+// 	gl: WebGLRenderingContext,
 // 	program: WebGLProgram,
 // 	index: GLuint,
 // ): WebGLActiveInfo
-// export declare function getAttachedShaders(gl: Object, program: WebGLProgram): WebGLShader[]
+// export declare function getAttachedShaders(gl: WebGLRenderingContext, program: WebGLProgram): WebGLShader[]
 
-export declare function getAttribLocation(gl: Object, program: WebGLProgram, name: string): GLint
+export declare function getBufferParameter(gl: WebGLRenderingContext, target: GLenum, pname: GLenum): externref // any
+export declare function getParameter(gl: WebGLRenderingContext, pname: GLenum): externref // any
 
-export declare function getBufferParameter(gl: Object, target: GLenum, pname: GLenum): externref // any
-export declare function getParameter(gl: Object, pname: GLenum): externref // any
-
-export declare function getError(gl: Object): GLenum
+export declare function getError(gl: WebGLRenderingContext): GLenum
 
 export declare function getFramebufferAttachmentParameter(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	target: GLenum,
 	attachment: GLenum,
 	pname: GLenum,
 ): externref // any
-export declare function getProgramParameter(gl: Object, program: WebGLProgram, pname: GLenum): bool // any
-export declare function getProgramInfoLog(gl: Object, program: WebGLProgram): DOMString
-export declare function getRenderbufferParameter(gl: Object, target: GLenum, pname: GLenum): externref // any
-export declare function getShaderParameter(gl: Object, shader: WebGLShader, pname: GLenum): bool // any
+export declare function getProgramParameter(gl: WebGLRenderingContext, program: WebGLProgram, pname: GLenum): bool // any
+export declare function getProgramInfoLog(gl: WebGLRenderingContext, program: WebGLProgram): DOMString
+export declare function getRenderbufferParameter(gl: WebGLRenderingContext, target: GLenum, pname: GLenum): externref // any
+export declare function getShaderParameter(gl: WebGLRenderingContext, shader: WebGLShader, pname: GLenum): bool // any
 // export declare function getShaderPrecisionFormat(
-// 	gl: Object,
+// 	gl: WebGLRenderingContext,
 // 	shadertype: GLenum,
 // 	precisiontype: GLenum,
 // ): WebGLShaderPrecisionFormat
-export declare function getShaderInfoLog(gl: Object, shader: WebGLShader): DOMString
+export declare function getShaderInfoLog(gl: WebGLRenderingContext, shader: WebGLShader): DOMString
 
-export declare function getShaderSource(gl: Object, shader: WebGLShader): DOMString
+export declare function getShaderSource(gl: WebGLRenderingContext, shader: WebGLShader): DOMString
 
-export declare function getTexParameter(gl: Object, target: GLenum, pname: GLenum): externref // any
+export declare function getTexParameter(gl: WebGLRenderingContext, target: GLenum, pname: GLenum): externref // any
 
-export declare function getUniform(gl: Object, program: WebGLProgram, location: WebGLUniformLocation): externref // any
+export declare function getUniform(
+	gl: WebGLRenderingContext,
+	program: WebGLProgram,
+	location: WebGLUniformLocation,
+): externref // any
 
-export declare function getUniformLocation(gl: Object, program: WebGLProgram, name: string): WebGLUniformLocation
+export declare function getVertexAttrib(gl: WebGLRenderingContext, index: GLuint, pname: GLenum): externref // any
 
-export declare function getVertexAttrib(gl: Object, index: GLuint, pname: GLenum): externref // any
+export declare function getVertexAttribOffset(gl: WebGLRenderingContext, index: GLuint, pname: GLenum): GLsizeiptr
 
-export declare function getVertexAttribOffset(gl: Object, index: GLuint, pname: GLenum): GLsizeiptr
-
-export declare function hint(gl: Object, target: GLenum, mode: GLenum): void
-export declare function isBuffer(gl: Object, buffer: WebGLBuffer): GLboolean
-export declare function isEnabled(gl: Object, cap: GLenum): GLboolean
-export declare function isFramebuffer(gl: Object, framebuffer: WebGLFramebuffer): GLboolean
-export declare function isProgram(gl: Object, program: WebGLProgram): GLboolean
-export declare function isRenderbuffer(gl: Object, renderbuffer: WebGLRenderbuffer): GLboolean
-export declare function isShader(gl: Object, shader: WebGLShader): GLboolean
-export declare function isTexture(gl: Object, texture: WebGLTexture): GLboolean
-export declare function lineWidth(gl: Object, width: GLfloat): void
-export declare function linkProgram(gl: Object, program: WebGLProgram): void
-export declare function pixelStorei(gl: Object, pname: GLenum, param: GLint): void
-export declare function polygonOffset(gl: Object, factor: GLfloat, units: GLfloat): void
+export declare function hint(gl: WebGLRenderingContext, target: GLenum, mode: GLenum): void
+export declare function isBuffer(gl: WebGLRenderingContext, buffer: WebGLBuffer): GLboolean
+export declare function isEnabled(gl: WebGLRenderingContext, cap: GLenum): GLboolean
+export declare function isFramebuffer(gl: WebGLRenderingContext, framebuffer: WebGLFramebuffer): GLboolean
+export declare function isProgram(gl: WebGLRenderingContext, program: WebGLProgram): GLboolean
+export declare function isRenderbuffer(gl: WebGLRenderingContext, renderbuffer: WebGLRenderbuffer): GLboolean
+export declare function isShader(gl: WebGLRenderingContext, shader: WebGLShader): GLboolean
+export declare function isTexture(gl: WebGLRenderingContext, texture: WebGLTexture): GLboolean
+export declare function lineWidth(gl: WebGLRenderingContext, width: GLfloat): void
+export declare function pixelStorei(gl: WebGLRenderingContext, pname: GLenum, param: GLint): void
+export declare function polygonOffset(gl: WebGLRenderingContext, factor: GLfloat, units: GLfloat): void
 
 export declare function readPixels(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	x: GLint,
 	y: GLint,
 	width: GLsizei,
@@ -691,26 +730,38 @@ export declare function readPixels(
 ): void
 
 export declare function renderbufferStorage(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	target: GLenum,
 	internalformat: GLenum,
 	width: GLsizei,
 	height: GLsizei,
 ): void
-export declare function sampleCoverage(gl: Object, value: GLclampf, invert: GLboolean): void
-export declare function scissor(gl: Object, x: GLint, y: GLint, width: GLsizei, height: GLsizei): void
+export declare function sampleCoverage(gl: WebGLRenderingContext, value: GLclampf, invert: GLboolean): void
+export declare function scissor(gl: WebGLRenderingContext, x: GLint, y: GLint, width: GLsizei, height: GLsizei): void
 
-// export declare function shaderSource(gl: Object, shader: WebGLShader, source: string): void
+// export declare function shaderSource(gl: WebGLRenderingContext, shader: WebGLShader, source: string): void
 
-export declare function stencilFunc(gl: Object, func: GLenum, ref: GLint, mask: GLuint): void
-export declare function stencilFuncSeparate(gl: Object, face: GLenum, func: GLenum, ref: GLint, mask: GLuint): void
-export declare function stencilMask(gl: Object, mask: GLuint): void
-export declare function stencilMaskSeparate(gl: Object, face: GLenum, mask: GLuint): void
-export declare function stencilOp(gl: Object, fail: GLenum, zfail: GLenum, zpass: GLenum): void
-export declare function stencilOpSeparate(gl: Object, face: GLenum, fail: GLenum, zfail: GLenum, zpass: GLenum): void
+export declare function stencilFunc(gl: WebGLRenderingContext, func: GLenum, ref: GLint, mask: GLuint): void
+export declare function stencilFuncSeparate(
+	gl: WebGLRenderingContext,
+	face: GLenum,
+	func: GLenum,
+	ref: GLint,
+	mask: GLuint,
+): void
+export declare function stencilMask(gl: WebGLRenderingContext, mask: GLuint): void
+export declare function stencilMaskSeparate(gl: WebGLRenderingContext, face: GLenum, mask: GLuint): void
+export declare function stencilOp(gl: WebGLRenderingContext, fail: GLenum, zfail: GLenum, zpass: GLenum): void
+export declare function stencilOpSeparate(
+	gl: WebGLRenderingContext,
+	face: GLenum,
+	fail: GLenum,
+	zfail: GLenum,
+	zpass: GLenum,
+): void
 
 export declare function texImage2D(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	target: GLenum,
 	level: GLint,
 	internalformat: GLenum,
@@ -719,11 +770,11 @@ export declare function texImage2D(
 	image: ImageData,
 ): void
 
-export declare function texParameterf(gl: Object, target: GLenum, pname: GLenum, param: GLfloat): void
-export declare function texParameteri(gl: Object, target: GLenum, pname: GLenum, param: GLint): void
+export declare function texParameterf(gl: WebGLRenderingContext, target: GLenum, pname: GLenum, param: GLfloat): void
+export declare function texParameteri(gl: WebGLRenderingContext, target: GLenum, pname: GLenum, param: GLint): void
 
 export declare function texSubImage2D(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	target: GLenum,
 	level: GLint,
 	xoffset: GLint,
@@ -733,50 +784,67 @@ export declare function texSubImage2D(
 	pixels: ImageData,
 ): void
 
-export declare function uniform1f(gl: Object, location: WebGLUniformLocation, x: GLfloat): void
+export declare function uniform1f(gl: WebGLRenderingContext, location: WebGLUniformLocation, x: GLfloat): void
 export declare function uniform1fv(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	location: WebGLUniformLocation,
 	v: StaticArray<GLfloat> /*Float32Array*/,
 ): void
 
-export declare function uniform1i(gl: Object, location: WebGLUniformLocation, x: GLint): void
+export declare function uniform1i(gl: WebGLRenderingContext, location: WebGLUniformLocation, x: GLint): void
 export declare function uniform1iv(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	location: WebGLUniformLocation,
 	v: StaticArray<GLint> /*Int32Array*/,
 ): void
 
-export declare function uniform2f(gl: Object, location: WebGLUniformLocation, x: GLfloat, y: GLfloat): void
+export declare function uniform2f(
+	gl: WebGLRenderingContext,
+	location: WebGLUniformLocation,
+	x: GLfloat,
+	y: GLfloat,
+): void
 export declare function uniform2fv(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	location: WebGLUniformLocation,
 	v: StaticArray<GLfloat> /*Float32Array*/,
 ): void
 
-export declare function uniform2i(gl: Object, location: WebGLUniformLocation, x: GLint, y: GLint): void
+export declare function uniform2i(gl: WebGLRenderingContext, location: WebGLUniformLocation, x: GLint, y: GLint): void
 export declare function uniform2iv(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	location: WebGLUniformLocation,
 	v: StaticArray<GLint> /*Int32Array*/,
 ): void
 
-export declare function uniform3f(gl: Object, location: WebGLUniformLocation, x: GLfloat, y: GLfloat, z: GLfloat): void
+export declare function uniform3f(
+	gl: WebGLRenderingContext,
+	location: WebGLUniformLocation,
+	x: GLfloat,
+	y: GLfloat,
+	z: GLfloat,
+): void
 export declare function uniform3fv(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	location: WebGLUniformLocation,
 	v: StaticArray<GLfloat> /*Float32Array*/,
 ): void
 
-export declare function uniform3i(gl: Object, location: WebGLUniformLocation, x: GLint, y: GLint, z: GLint): void
+export declare function uniform3i(
+	gl: WebGLRenderingContext,
+	location: WebGLUniformLocation,
+	x: GLint,
+	y: GLint,
+	z: GLint,
+): void
 export declare function uniform3iv(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	location: WebGLUniformLocation,
 	v: StaticArray<GLint> /*Int32Array*/,
 ): void
 
 export declare function uniform4f(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	location: WebGLUniformLocation,
 	x: GLfloat,
 	y: GLfloat,
@@ -784,13 +852,13 @@ export declare function uniform4f(
 	w: GLfloat,
 ): void
 export declare function uniform4fv(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	location: WebGLUniformLocation,
 	v: StaticArray<GLfloat> /*JSFloat32Array*/,
 ): void
 
 export declare function uniform4i(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	location: WebGLUniformLocation,
 	x: GLint,
 	y: GLint,
@@ -798,72 +866,64 @@ export declare function uniform4i(
 	w: GLint,
 ): void
 export declare function uniform4iv(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	location: WebGLUniformLocation,
 	v: StaticArray<GLint> /*JSInt32Array*/,
 ): void
 
 export declare function uniformMatrix2fv(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	location: WebGLUniformLocation,
 	transpose: GLboolean,
 	value: StaticArray<GLfloat>,
 ): void
 /*
-export declare function uniformMatrix2fv( gl: Object, location: WebGLUniformLocation, transpose: GLboolean,
+export declare function uniformMatrix2fv( gl: WebGLRenderingContext, location: WebGLUniformLocation, transpose: GLboolean,
 	value: sequence<GLfloat>): void;
 */
 export declare function uniformMatrix3fv(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	location: WebGLUniformLocation,
 	transpose: GLboolean,
 	value: StaticArray<GLfloat>,
 ): void
 /*
-export declare function uniformMatrix3fv( gl: Object, location: WebGLUniformLocation, transpose: GLboolean,
+export declare function uniformMatrix3fv( gl: WebGLRenderingContext, location: WebGLUniformLocation, transpose: GLboolean,
 	value: sequence<GLfloat>): void;
 */
-export declare function uniformMatrix4fv(
-	gl: Object,
-	location: WebGLUniformLocation,
-	transpose: GLboolean,
-	value: StaticArray<GLfloat>,
+export declare function validateProgram(gl: WebGLRenderingContext, program: WebGLProgram): void
+
+export declare function vertexAttrib1f(gl: WebGLRenderingContext, indx: GLuint, x: GLfloat): void
+export declare function vertexAttrib1fv(gl: WebGLRenderingContext, indx: GLuint, values: StaticArray<GLfloat>): void
+
+export declare function vertexAttrib2f(gl: WebGLRenderingContext, indx: GLuint, x: GLfloat, y: GLfloat): void
+export declare function vertexAttrib2fv(gl: WebGLRenderingContext, indx: GLuint, values: StaticArray<GLfloat>): void
+
+export declare function vertexAttrib3f(
+	gl: WebGLRenderingContext,
+	indx: GLuint,
+	x: GLfloat,
+	y: GLfloat,
+	z: GLfloat,
 ): void
-/*
-export declare function uniformMatrix4fv( gl: Object, location: WebGLUniformLocation, transpose: GLboolean,
-	value: sequence<GLfloat>): void;
-*/
-export declare function useProgram(gl: Object, program: WebGLProgram): void
-export declare function validateProgram(gl: Object, program: WebGLProgram): void
+export declare function vertexAttrib3fv(gl: WebGLRenderingContext, indx: GLuint, values: StaticArray<GLfloat>): void
 
-export declare function vertexAttrib1f(gl: Object, indx: GLuint, x: GLfloat): void
-export declare function vertexAttrib1fv(gl: Object, indx: GLuint, values: StaticArray<GLfloat>): void
-
-export declare function vertexAttrib2f(gl: Object, indx: GLuint, x: GLfloat, y: GLfloat): void
-export declare function vertexAttrib2fv(gl: Object, indx: GLuint, values: StaticArray<GLfloat>): void
-
-export declare function vertexAttrib3f(gl: Object, indx: GLuint, x: GLfloat, y: GLfloat, z: GLfloat): void
-export declare function vertexAttrib3fv(gl: Object, indx: GLuint, values: StaticArray<GLfloat>): void
-
-export declare function vertexAttrib4f(gl: Object, indx: GLuint, x: GLfloat, y: GLfloat, z: GLfloat, w: GLfloat): void
-export declare function vertexAttrib4fv(gl: Object, indx: GLuint, values: StaticArray<GLfloat>): void
-
-export declare function vertexAttribPointer(
-	gl: Object,
-	indx: GLint,
-	size: GLint,
-	typ: GLenum,
-	normalized: /*GLboolean*/ GLint,
-	stride: GLsizei,
-	offset: GLintptr,
+export declare function vertexAttrib4f(
+	gl: WebGLRenderingContext,
+	indx: GLuint,
+	x: GLfloat,
+	y: GLfloat,
+	z: GLfloat,
+	w: GLfloat,
 ): void
+export declare function vertexAttrib4fv(gl: WebGLRenderingContext, indx: GLuint, values: StaticArray<GLfloat>): void
 
-export declare function viewport(gl: Object, x: GLint, y: GLint, width: GLsizei, height: GLsizei): void
+export declare function viewport(gl: WebGLRenderingContext, x: GLint, y: GLint, width: GLsizei, height: GLsizei): void
 
 // ... WEBGL 2 ...
 /* Buffer objects */
 export declare function copyBufferSubData(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	readTarget: GLenum,
 	writeTarget: GLenum,
 	readOffset: GLintptr,
@@ -873,7 +933,7 @@ export declare function copyBufferSubData(
 
 // @ts-ignore
 export declare function getBufferSubData(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	target: GLenum,
 	srcByteOffset: GLintptr,
 	/*[AllowShared]*/ dstBuffer: ArrayBufferView,
@@ -883,7 +943,7 @@ export declare function getBufferSubData(
 
 /* Framebuffer objects */
 export declare function blitFramebuffer(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	srcX0: GLint,
 	srcY0: GLint,
 	srcX1: GLint,
@@ -896,16 +956,16 @@ export declare function blitFramebuffer(
 	filter: GLenum,
 ): void
 export declare function framebufferTextureLayer(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	target: GLenum,
 	attachment: GLenum,
 	texture: WebGLTexture,
 	level: GLint,
 	layer: GLint,
 ): void
-export declare function invalidateFramebuffer(gl: Object, target: GLenum, attachments: GLenum[]): void
+export declare function invalidateFramebuffer(gl: WebGLRenderingContext, target: GLenum, attachments: GLenum[]): void
 export declare function invalidateSubFramebuffer(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	target: GLenum,
 	attachments: GLenum[],
 	x: GLint,
@@ -913,17 +973,17 @@ export declare function invalidateSubFramebuffer(
 	width: GLsizei,
 	height: GLsizei,
 ): void
-export declare function readBuffer(gl: Object, src: GLenum): void
+export declare function readBuffer(gl: WebGLRenderingContext, src: GLenum): void
 
 /* Renderbuffer objects */
 export declare function getInternalformatParameter(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	target: GLenum,
 	internalformat: GLenum,
 	pname: GLenum,
 ): externref // any
 export declare function renderbufferStorageMultisample(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	target: GLenum,
 	samples: GLsizei,
 	internalformat: GLenum,
@@ -933,7 +993,7 @@ export declare function renderbufferStorageMultisample(
 
 /* Texture objects */
 export declare function texStorage2D(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	target: GLenum,
 	levels: GLsizei,
 	internalformat: GLenum,
@@ -941,7 +1001,7 @@ export declare function texStorage2D(
 	height: GLsizei,
 ): void
 export declare function texStorage3D(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	target: GLenum,
 	levels: GLsizei,
 	internalformat: GLenum,
@@ -951,7 +1011,7 @@ export declare function texStorage3D(
 ): void
 
 export declare function texImage3D(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	target: GLenum,
 	level: GLint,
 	internalformat: GLint,
@@ -965,7 +1025,7 @@ export declare function texImage3D(
 ): void
 
 export declare function texSubImage3D(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	target: GLenum,
 	level: GLint,
 	xoffset: GLint,
@@ -980,7 +1040,7 @@ export declare function texSubImage3D(
 ): void
 
 export declare function copyTexSubImage3D(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	target: GLenum,
 	level: GLint,
 	xoffset: GLint,
@@ -993,7 +1053,7 @@ export declare function copyTexSubImage3D(
 ): void
 
 export declare function compressedTexImage3D(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	target: GLenum,
 	level: GLint,
 	internalformat: GLenum,
@@ -1006,7 +1066,7 @@ export declare function compressedTexImage3D(
 ): void
 
 export declare function compressedTexSubImage3D(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	target: GLenum,
 	level: GLint,
 	xoffset: GLint,
@@ -1021,14 +1081,25 @@ export declare function compressedTexSubImage3D(
 ): void
 
 /* Programs and shaders */
-export declare function getFragDataLocation(gl: Object, program: WebGLProgram, name: DOMString): GLint
+export declare function getFragDataLocation(gl: WebGLRenderingContext, program: WebGLProgram, name: DOMString): GLint
 
 /* Uniforms */
-export declare function uniform1ui(gl: Object, location: WebGLUniformLocation, v0: GLuint): void
-export declare function uniform2ui(gl: Object, location: WebGLUniformLocation, v0: GLuint, v1: GLuint): void
-export declare function uniform3ui(gl: Object, location: WebGLUniformLocation, v0: GLuint, v1: GLuint, v2: GLuint): void
+export declare function uniform1ui(gl: WebGLRenderingContext, location: WebGLUniformLocation, v0: GLuint): void
+export declare function uniform2ui(
+	gl: WebGLRenderingContext,
+	location: WebGLUniformLocation,
+	v0: GLuint,
+	v1: GLuint,
+): void
+export declare function uniform3ui(
+	gl: WebGLRenderingContext,
+	location: WebGLUniformLocation,
+	v0: GLuint,
+	v1: GLuint,
+	v2: GLuint,
+): void
 export declare function uniform4ui(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	location: WebGLUniformLocation,
 	v0: GLuint,
 	v1: GLuint,
@@ -1038,7 +1109,7 @@ export declare function uniform4ui(
 
 // @ts-ignore
 export declare function uniform1uiv(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	location: WebGLUniformLocation,
 	data: Uint32List,
 	srcOffset: GLuint = 0,
@@ -1046,7 +1117,7 @@ export declare function uniform1uiv(
 ): void
 // @ts-ignore
 export declare function uniform2uiv(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	location: WebGLUniformLocation,
 	data: Uint32List,
 	srcOffset: GLuint = 0,
@@ -1054,7 +1125,7 @@ export declare function uniform2uiv(
 ): void
 // @ts-ignore
 export declare function uniform3uiv(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	location: WebGLUniformLocation,
 	data: Uint32List,
 	srcOffset: GLuint = 0,
@@ -1062,7 +1133,7 @@ export declare function uniform3uiv(
 ): void
 // @ts-ignore
 export declare function uniform4uiv(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	location: WebGLUniformLocation,
 	data: Uint32List,
 	srcOffset: GLuint = 0,
@@ -1070,7 +1141,7 @@ export declare function uniform4uiv(
 ): void
 // @ts-ignore
 export declare function uniformMatrix3x2fv(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	location: WebGLUniformLocation,
 	transpose: GLboolean,
 	data: Float32List,
@@ -1079,7 +1150,7 @@ export declare function uniformMatrix3x2fv(
 ): void
 // @ts-ignore
 export declare function uniformMatrix4x2fv(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	location: WebGLUniformLocation,
 	transpose: GLboolean,
 	data: Float32List,
@@ -1089,7 +1160,7 @@ export declare function uniformMatrix4x2fv(
 
 // @ts-ignore
 export declare function uniformMatrix2x3fv(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	location: WebGLUniformLocation,
 	transpose: GLboolean,
 	data: Float32List,
@@ -1098,7 +1169,7 @@ export declare function uniformMatrix2x3fv(
 ): void
 // @ts-ignore
 export declare function uniformMatrix4x3fv(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	location: WebGLUniformLocation,
 	transpose: GLboolean,
 	data: Float32List,
@@ -1108,7 +1179,7 @@ export declare function uniformMatrix4x3fv(
 
 // @ts-ignore
 export declare function uniformMatrix2x4fv(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	location: WebGLUniformLocation,
 	transpose: GLboolean,
 	data: Float32List,
@@ -1117,7 +1188,7 @@ export declare function uniformMatrix2x4fv(
 ): void
 // @ts-ignore
 export declare function uniformMatrix3x4fv(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	location: WebGLUniformLocation,
 	transpose: GLboolean,
 	data: Float32List,
@@ -1126,12 +1197,26 @@ export declare function uniformMatrix3x4fv(
 ): void
 
 /* Vertex attribs */
-export declare function vertexAttribI4i(gl: Object, index: GLuint, x: GLint, y: GLint, z: GLint, w: GLint): void
-export declare function vertexAttribI4iv(gl: Object, index: GLuint, values: Int32List): void
-export declare function vertexAttribI4ui(gl: Object, index: GLuint, x: GLuint, y: GLuint, z: GLuint, w: GLuint): void
-export declare function vertexAttribI4uiv(gl: Object, index: GLuint, values: Uint32List): void
+export declare function vertexAttribI4i(
+	gl: WebGLRenderingContext,
+	index: GLuint,
+	x: GLint,
+	y: GLint,
+	z: GLint,
+	w: GLint,
+): void
+export declare function vertexAttribI4iv(gl: WebGLRenderingContext, index: GLuint, values: Int32List): void
+export declare function vertexAttribI4ui(
+	gl: WebGLRenderingContext,
+	index: GLuint,
+	x: GLuint,
+	y: GLuint,
+	z: GLuint,
+	w: GLuint,
+): void
+export declare function vertexAttribI4uiv(gl: WebGLRenderingContext, index: GLuint, values: Uint32List): void
 export declare function vertexAttribIPointer(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	index: GLuint,
 	size: GLint,
 	typ: GLenum,
@@ -1140,16 +1225,16 @@ export declare function vertexAttribIPointer(
 ): void
 
 /* Writing to the drawing buffer */
-export declare function vertexAttribDivisor(gl: Object, index: GLuint, divisor: GLuint): void
+export declare function vertexAttribDivisor(gl: WebGLRenderingContext, index: GLuint, divisor: GLuint): void
 export declare function drawArraysInstanced(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	mode: GLenum,
 	first: GLint,
 	count: GLsizei,
 	instanceCount: GLsizei,
 ): void
 export declare function drawElementsInstanced(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	mode: GLenum,
 	count: GLsizei,
 	typ: GLenum,
@@ -1157,7 +1242,7 @@ export declare function drawElementsInstanced(
 	instanceCount: GLsizei,
 ): void
 export declare function drawRangeElements(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	mode: GLenum,
 	start: GLuint,
 	end: GLuint,
@@ -1167,11 +1252,11 @@ export declare function drawRangeElements(
 ): void
 
 /* Multiple Render Targets */
-export declare function drawBuffers(gl: Object, buffers: GLenum[]): void
+export declare function drawBuffers(gl: WebGLRenderingContext, buffers: GLenum[]): void
 
 // @ts-ignore
 export declare function clearBufferfv(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	buffer: GLenum,
 	drawbuffer: GLint,
 	values: Float32List,
@@ -1179,7 +1264,7 @@ export declare function clearBufferfv(
 ): void
 // @ts-ignore
 export declare function clearBufferiv(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	buffer: GLenum,
 	drawbuffer: GLint,
 	values: Int32List,
@@ -1187,7 +1272,7 @@ export declare function clearBufferiv(
 ): void
 // @ts-ignore
 export declare function clearBufferuiv(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	buffer: GLenum,
 	drawbuffer: GLint,
 	values: Uint32List,
@@ -1195,7 +1280,7 @@ export declare function clearBufferuiv(
 ): void
 
 export declare function clearBufferfi(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	buffer: GLenum,
 	drawbuffer: GLint,
 	depth: GLfloat,
@@ -1203,105 +1288,137 @@ export declare function clearBufferfi(
 ): void
 
 /* Query Objects */
-export declare function createQuery(gl: Object): WebGLQuery
-export declare function deleteQuery(gl: Object, query: WebGLQuery): void
+export declare function createQuery(gl: WebGLRenderingContext): WebGLQuery
+export declare function deleteQuery(gl: WebGLRenderingContext, query: WebGLQuery): void
 /*[WebGLHandlesContextLoss]*/
-export declare function isQuery(gl: Object, query: WebGLQuery): GLboolean
-export declare function beginQuery(gl: Object, target: GLenum, query: WebGLQuery): void
-export declare function endQuery(gl: Object, target: GLenum): void
-export declare function getQuery(gl: Object, target: GLenum, pname: GLenum): WebGLQuery
-export declare function getQueryParameter(gl: Object, query: WebGLQuery, pname: GLenum): externref // any
+export declare function isQuery(gl: WebGLRenderingContext, query: WebGLQuery): GLboolean
+export declare function beginQuery(gl: WebGLRenderingContext, target: GLenum, query: WebGLQuery): void
+export declare function endQuery(gl: WebGLRenderingContext, target: GLenum): void
+export declare function getQuery(gl: WebGLRenderingContext, target: GLenum, pname: GLenum): WebGLQuery
+export declare function getQueryParameter(gl: WebGLRenderingContext, query: WebGLQuery, pname: GLenum): externref // any
 
 /* Sampler Objects */
-export declare function createSampler(gl: Object): WebGLSampler
-export declare function deleteSampler(gl: Object, sampler: WebGLSampler): void
+export declare function createSampler(gl: WebGLRenderingContext): WebGLSampler
+export declare function deleteSampler(gl: WebGLRenderingContext, sampler: WebGLSampler): void
 /*[WebGLHandlesContextLoss]*/
-export declare function isSampler(gl: Object, sampler: WebGLSampler): GLboolean
-export declare function bindSampler(gl: Object, unit: GLuint, sampler: WebGLSampler): void
-export declare function samplerParameteri(gl: Object, sampler: WebGLSampler, pname: GLenum, param: GLint): void
-export declare function samplerParameterf(gl: Object, sampler: WebGLSampler, pname: GLenum, param: GLfloat): void
-export declare function getSamplerParameter(gl: Object, sampler: WebGLSampler, pname: GLenum): externref // any
+export declare function isSampler(gl: WebGLRenderingContext, sampler: WebGLSampler): GLboolean
+export declare function bindSampler(gl: WebGLRenderingContext, unit: GLuint, sampler: WebGLSampler): void
+export declare function samplerParameteri(
+	gl: WebGLRenderingContext,
+	sampler: WebGLSampler,
+	pname: GLenum,
+	param: GLint,
+): void
+export declare function samplerParameterf(
+	gl: WebGLRenderingContext,
+	sampler: WebGLSampler,
+	pname: GLenum,
+	param: GLfloat,
+): void
+export declare function getSamplerParameter(gl: WebGLRenderingContext, sampler: WebGLSampler, pname: GLenum): externref // any
 
 /* Sync objects */
-export declare function fenceSync(gl: Object, condition: GLenum, flags: GLbitfield): WebGLSync
+export declare function fenceSync(gl: WebGLRenderingContext, condition: GLenum, flags: GLbitfield): WebGLSync
 /*[WebGLHandlesContextLoss]*/
-export declare function isSync(gl: Object, sync: WebGLSync): GLboolean
-export declare function deleteSync(gl: Object, sync: WebGLSync): void
-export declare function clientWaitSync(gl: Object, sync: WebGLSync, flags: GLbitfield, timeout: GLuint64): GLenum
-export declare function waitSync(gl: Object, sync: WebGLSync, flags: GLbitfield, timeout: GLint64): void
-export declare function getSyncParameter(gl: Object, sync: WebGLSync, pname: GLenum): externref // any
+export declare function isSync(gl: WebGLRenderingContext, sync: WebGLSync): GLboolean
+export declare function deleteSync(gl: WebGLRenderingContext, sync: WebGLSync): void
+export declare function clientWaitSync(
+	gl: WebGLRenderingContext,
+	sync: WebGLSync,
+	flags: GLbitfield,
+	timeout: GLuint64,
+): GLenum
+export declare function waitSync(gl: WebGLRenderingContext, sync: WebGLSync, flags: GLbitfield, timeout: GLint64): void
+export declare function getSyncParameter(gl: WebGLRenderingContext, sync: WebGLSync, pname: GLenum): externref // any
 
 /* Transform Feedback */
-export declare function createTransformFeedback(gl: Object): WebGLTransformFeedback
-export declare function deleteTransformFeedback(gl: Object, tf: WebGLTransformFeedback): void
+export declare function createTransformFeedback(gl: WebGLRenderingContext): WebGLTransformFeedback
+export declare function deleteTransformFeedback(gl: WebGLRenderingContext, tf: WebGLTransformFeedback): void
 /*[WebGLHandlesContextLoss]*/
-export declare function isTransformFeedback(gl: Object, tf: WebGLTransformFeedback): GLboolean
-export declare function bindTransformFeedback(gl: Object, target: GLenum, tf: WebGLTransformFeedback): void
-export declare function beginTransformFeedback(gl: Object, primitiveMode: GLenum): void
-export declare function endTransformFeedback(gl: Object): void
+export declare function isTransformFeedback(gl: WebGLRenderingContext, tf: WebGLTransformFeedback): GLboolean
+export declare function bindTransformFeedback(
+	gl: WebGLRenderingContext,
+	target: GLenum,
+	tf: WebGLTransformFeedback,
+): void
+export declare function beginTransformFeedback(gl: WebGLRenderingContext, primitiveMode: GLenum): void
+export declare function endTransformFeedback(gl: WebGLRenderingContext): void
 export declare function transformFeedbackVaryings(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	program: WebGLProgram,
 	varyings: DOMString[],
 	bufferMode: GLenum,
 ): void
 // export declare function getTransformFeedbackVarying(
-// 	gl: Object,
+// 	gl: WebGLRenderingContext,
 // 	program: WebGLProgram,
 // 	index: GLuint,
 // ): WebGLActiveInfo
-export declare function pauseTransformFeedback(gl: Object): void
-export declare function resumeTransformFeedback(gl: Object): void
+export declare function pauseTransformFeedback(gl: WebGLRenderingContext): void
+export declare function resumeTransformFeedback(gl: WebGLRenderingContext): void
 
 /* Uniform Buffer Objects and Transform Feedback Buffers */
-export declare function bindBufferBase(gl: Object, target: GLenum, index: GLuint, buffer: WebGLBuffer): void
+export declare function bindBufferBase(
+	gl: WebGLRenderingContext,
+	target: GLenum,
+	index: GLuint,
+	buffer: WebGLBuffer,
+): void
 export declare function bindBufferRange(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	target: GLenum,
 	index: GLuint,
 	buffer: WebGLBuffer,
 	offset: GLintptr,
 	size: GLsizeiptr,
 ): void
-export declare function getIndexedParameter(gl: Object, target: GLenum, index: GLuint): externref // any
-export declare function getUniformIndices(gl: Object, program: WebGLProgram, uniformNames: DOMString[]): GLuint[]
+export declare function getIndexedParameter(gl: WebGLRenderingContext, target: GLenum, index: GLuint): externref // any
+export declare function getUniformIndices(
+	gl: WebGLRenderingContext,
+	program: WebGLProgram,
+	uniformNames: DOMString[],
+): GLuint[]
 export declare function getActiveUniforms(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	program: WebGLProgram,
 	uniformIndices: GLuint[],
 	pname: GLenum,
 ): externref // any
-export declare function getUniformBlockIndex(gl: Object, program: WebGLProgram, uniformBlockName: DOMString): GLuint
+export declare function getUniformBlockIndex(
+	gl: WebGLRenderingContext,
+	program: WebGLProgram,
+	uniformBlockName: DOMString,
+): GLuint
 export declare function getActiveUniformBlockParameter(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	program: WebGLProgram,
 	uniformBlockIndex: GLuint,
 	pname: GLenum,
 ): externref // any
 export declare function getActiveUniformBlockName(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	program: WebGLProgram,
 	uniformBlockIndex: GLuint,
 ): DOMString
 export declare function uniformBlockBinding(
-	gl: Object,
+	gl: WebGLRenderingContext,
 	program: WebGLProgram,
 	uniformBlockIndex: GLuint,
 	uniformBlockBinding: GLuint,
 ): void
 
 /* Vertex Array Objects */
-export declare function createVertexArray(gl: Object): WebGLVertexArrayObject
-export declare function deleteVertexArray(gl: Object, vertexArray: WebGLVertexArrayObject): void
+export declare function createVertexArray(gl: WebGLRenderingContext): WebGLVertexArrayObject
+export declare function deleteVertexArray(gl: WebGLRenderingContext, vertexArray: WebGLVertexArrayObject): void
 /*[WebGLHandlesContextLoss]*/
-export declare function isVertexArray(gl: Object, vertexArray: WebGLVertexArrayObject): GLboolean
-export declare function bindVertexArray(gl: Object, array: WebGLVertexArrayObject): void
+export declare function isVertexArray(gl: WebGLRenderingContext, vertexArray: WebGLVertexArrayObject): GLboolean
+export declare function bindVertexArray(gl: WebGLRenderingContext, array: WebGLVertexArrayObject): void
 
 // @final
 // @unmanaged
 export class WebGLRenderingContext extends Object {
 	// @inline
-	constructor() {
+	constructor(public canvas: HTMLCanvasElement) {
 		super()
 	}
 
@@ -2565,8 +2682,10 @@ export class WebGLRenderingContext extends Object {
 	@inline blendFuncSeparate(srcRGB: GLenum, dstRGB: GLenum, srcAlpha: GLenum, dstAlpha: GLenum): void {
 		blendFuncSeparate(this, srcRGB, dstRGB, srcAlpha, dstAlpha)
 	}
+	// TODO use TypedArray instead of StaticArray to match JS/TS APIs after this is fixed: https://github.com/AssemblyScript/assemblyscript/issues/2038
+	// TODO make implement the other signatures to match JS/TS. For now we just accept TypedArrays.
 	@inline bufferData<T>(target: GLenum, data: StaticArray<T>, usage: GLenum): void {
-		bufferData<T>(this, target, data, usage)
+		bufferData<T>(this, WebGLDataBufferTypes.ArrayBufferView, target, data, usage)
 	}
 	@inline bufferSubData<T>(target: GLenum, offset: GLintptr, data: Array<T>): void {
 		bufferSubData<T>(this, target, offset, data)
@@ -2645,7 +2764,9 @@ export class WebGLRenderingContext extends Object {
 	}
 
 	@inline createBuffer(): WebGLBuffer {
-		return createBuffer(this)
+		const result = new WebGLBuffer()
+		createBuffer(this, result)
+		return result
 	}
 
 	@inline createFramebuffer(): WebGLFramebuffer {
@@ -2653,13 +2774,17 @@ export class WebGLRenderingContext extends Object {
 	}
 
 	@inline createProgram(): WebGLProgram {
-		return createProgram(this)
+		const result = new WebGLProgram()
+		createProgram(this, result)
+		return result
 	}
 	@inline createRenderbuffer(): WebGLRenderbuffer {
 		return createRenderbuffer(this)
 	}
 	@inline createShader(type: GLenum): WebGLShader {
-		return createShader(this, type)
+		const result = new WebGLShader()
+		createShader(this, result, type)
+		return result
 	}
 
 	@inline createTexture(): WebGLTexture {
@@ -2718,8 +2843,8 @@ export class WebGLRenderingContext extends Object {
 		drawElements(this, mode, count, typ, offset)
 	}
 
-	@inline enable(cap: GLenum): void {
-		enable(this, cap)
+	@inline enable(capability: GLenum): void {
+		enable(this, capability)
 	}
 
 	@inline enableVertexAttribArray(index: GLuint): void {
@@ -2817,7 +2942,9 @@ export class WebGLRenderingContext extends Object {
 	}
 
 	@inline getUniformLocation(program: WebGLProgram, name: string): WebGLUniformLocation {
-		return getUniformLocation(this, program, name)
+		const result = new WebGLUniformLocation()
+		getUniformLocation(this, result, program, name)
+		return result
 	}
 
 	@inline getVertexAttrib(index: GLuint, pname: GLenum): externref {
@@ -2944,6 +3071,8 @@ export class WebGLRenderingContext extends Object {
 	@inline uniform1f(location: WebGLUniformLocation, x: GLfloat): void {
 		uniform1f(this, location, x)
 	}
+
+	// TODO use TypedArray instead of StaticArray after https://github.com/AssemblyScript/assemblyscript/issues/2038
 	@inline uniform1fv(location: WebGLUniformLocation, v: StaticArray<GLfloat>): void {
 		uniform1fv(this, location, v)
 	}
@@ -2951,6 +3080,7 @@ export class WebGLRenderingContext extends Object {
 	@inline uniform1i(location: WebGLUniformLocation, x: GLint): void {
 		uniform1i(this, location, x)
 	}
+	// TODO use TypedArray instead of StaticArray after https://github.com/AssemblyScript/assemblyscript/issues/2038
 	@inline uniform1iv(location: WebGLUniformLocation, v: StaticArray<GLint>): void {
 		uniform1iv(this, location, v)
 	}
@@ -2958,6 +3088,7 @@ export class WebGLRenderingContext extends Object {
 	@inline uniform2f(location: WebGLUniformLocation, x: GLfloat, y: GLfloat): void {
 		uniform2f(this, location, x, y)
 	}
+	// TODO use TypedArray instead of StaticArray after https://github.com/AssemblyScript/assemblyscript/issues/2038
 	@inline uniform2fv(location: WebGLUniformLocation, v: StaticArray<GLfloat>): void {
 		uniform2fv(this, location, v)
 	}
@@ -2965,6 +3096,7 @@ export class WebGLRenderingContext extends Object {
 	@inline uniform2i(location: WebGLUniformLocation, x: GLint, y: GLint): void {
 		uniform2i(this, location, x, y)
 	}
+	// TODO use TypedArray instead of StaticArray after https://github.com/AssemblyScript/assemblyscript/issues/2038
 	@inline uniform2iv(location: WebGLUniformLocation, v: StaticArray<GLint>): void {
 		uniform2iv(this, location, v)
 	}
@@ -2972,6 +3104,7 @@ export class WebGLRenderingContext extends Object {
 	@inline uniform3f(location: WebGLUniformLocation, x: GLfloat, y: GLfloat, z: GLfloat): void {
 		uniform3f(this, location, x, y, z)
 	}
+	// TODO use TypedArray instead of StaticArray after https://github.com/AssemblyScript/assemblyscript/issues/2038
 	@inline uniform3fv(location: WebGLUniformLocation, v: StaticArray<GLfloat>): void {
 		uniform3fv(this, location, v)
 	}
@@ -2979,6 +3112,7 @@ export class WebGLRenderingContext extends Object {
 	@inline uniform3i(location: WebGLUniformLocation, x: GLint, y: GLint, z: GLint): void {
 		uniform3i(this, location, x, y, z)
 	}
+	// TODO use TypedArray instead of StaticArray after https://github.com/AssemblyScript/assemblyscript/issues/2038
 	@inline uniform3iv(location: WebGLUniformLocation, v: StaticArray<GLint>): void {
 		uniform3iv(this, location, v)
 	}
@@ -2987,6 +3121,7 @@ export class WebGLRenderingContext extends Object {
 		uniform4f(this, location, x, y, z, w)
 	}
 
+	// TODO use TypedArray instead of StaticArray after https://github.com/AssemblyScript/assemblyscript/issues/2038
 	@inline uniform4fv(location: WebGLUniformLocation, v: StaticArray<GLfloat>): void {
 		uniform4fv(this, location, v)
 	}
@@ -2995,18 +3130,22 @@ export class WebGLRenderingContext extends Object {
 		uniform4i(this, location, x, y, z, w)
 	}
 
+	// TODO use TypedArray instead of StaticArray after https://github.com/AssemblyScript/assemblyscript/issues/2038
 	@inline uniform4iv(location: WebGLUniformLocation, v: StaticArray<GLint>): void {
 		uniform4iv(this, location, v)
 	}
 
+	// TODO use TypedArray instead of StaticArray after https://github.com/AssemblyScript/assemblyscript/issues/2038
 	@inline uniformMatrix2fv(location: WebGLUniformLocation, transpose: GLboolean, value: StaticArray<GLfloat>): void {
 		uniformMatrix2fv(this, location, transpose, value)
 	}
 
+	// TODO use TypedArray instead of StaticArray after https://github.com/AssemblyScript/assemblyscript/issues/2038
 	@inline uniformMatrix3fv(location: WebGLUniformLocation, transpose: GLboolean, value: StaticArray<GLfloat>): void {
 		uniformMatrix3fv(this, location, transpose, value)
 	}
 
+	// TODO use TypedArray instead of StaticArray after https://github.com/AssemblyScript/assemblyscript/issues/2038
 	@inline uniformMatrix4fv(location: WebGLUniformLocation, transpose: GLboolean, value: StaticArray<GLfloat>): void {
 		uniformMatrix4fv(this, location, transpose, value)
 	}
@@ -3050,12 +3189,12 @@ export class WebGLRenderingContext extends Object {
 	@inline vertexAttribPointer(
 		indx: GLint,
 		size: GLint,
-		typ: GLenum,
-		normalized: GLint,
+		type: GLenum,
+		normalized: GLboolean,
 		stride: GLsizei,
 		offset: GLintptr,
 	): void {
-		vertexAttribPointer(this, indx, size, typ, normalized, stride, offset)
+		vertexAttribPointer(this, indx, size, type, normalized, stride, offset)
 	}
 
 	@inline viewport(x: GLint, y: GLint, width: GLsizei, height: GLsizei): void {
@@ -3572,5 +3711,8 @@ export class WebGLRenderingContext extends Object {
 	}
 }
 
-//const gl: WebGLRenderingContext = canvas.getContext("webgl");
-//gl.compileShader(".....");
+export enum WebGLDataBufferTypes {
+	ArrayBufferView,
+	Uint8Array,
+	Float64Array,
+}

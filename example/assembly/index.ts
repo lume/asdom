@@ -19,6 +19,12 @@ import {
 	WebGLRenderingContext,
 	ANGLE_instanced_arrays,
 	GLenum,
+	WebGLShader,
+	WebGLProgram,
+	WebGLBuffer,
+	GLint,
+	WebGLUniformLocation,
+	GLfloat,
 } from '../node_modules/asdom/assembly/index'
 
 // TODO move these into asdom, because requestAnimationFrame is a DOM API.
@@ -358,283 +364,327 @@ requestAnimationFrame(
 	}),
 )
 
-const canvas = document.createElement('canvas') as HTMLCanvasElement
-document.body!.appendChild(canvas)
+testGl()
 
-// Get the WebGL rendering context.
-var gl = canvas.getContext<WebGLRenderingContext>('webgl')
+function testGl(): void {
+	const canvas = document.createElement('canvas') as HTMLCanvasElement
+	document.body!.appendChild(canvas)
 
-const ext = gl!.getExtension<ANGLE_instanced_arrays>('ANGLE_instanced_arrays')
+	// Get the WebGL rendering context.
+	var gl = canvas.getContext<WebGLRenderingContext>('webgl')
 
-log('HOONIGANS ' + changetype<usize>(ext!).toString())
+	if (!gl) throw new Error('No WebGL')
 
-// Set the clear color to a vibrant pink.
-gl!.clearColor(255 / 255, 20 / 255, 147 / 255, 1.0)
+	const ext = gl.getExtension<ANGLE_instanced_arrays>('ANGLE_instanced_arrays')
 
-// Clear the context with the newly set color. This is
-// the function call that actually does the drawing.
-gl!.clear(gl!.COLOR_BUFFER_BIT)
+	log('HOONIGANS ' + changetype<usize>(ext!).toString())
+
+	// Set the clear color to a vibrant pink.
+	gl.clearColor(255 / 255, 20 / 255, 147 / 255, 1.0)
+
+	// Clear the context with the newly set color. This is
+	// the function call that actually does the drawing.
+	gl.clear(gl.COLOR_BUFFER_BIT)
+
+	const buffers = initBuffers(gl)
+	log('buffer? ' + (buffers.position instanceof WebGLBuffer).toString())
+	log('buffer? ' + (buffers.color instanceof WebGLBuffer).toString())
+
+	// initShaderProgram(
+	// 	gl,
+	// 	/*glsl*/ `
+	// 	void main() {
+	// 		gl_Position = vec4(0, 0, 0, 1)
+	// 	}
+	// `,
+	// 	/*glsl*/ `
+	// 	void main() {
+	// 		gl_FragColor = vec4(0, 0, 0, 1)
+	// 	}
+	// `,
+	// )
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// webglExample()
+webglExample()
 
-// // Based on https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Tutorial/Using_shaders_to_apply_color_in_WebGL
-// function webglExample(): void {
-// 	const canvas = document.createElement('canvas') as HTMLCanvasElement
-// 	document.body!.appendChild(canvas)
-// 	const gl = canvas.getContext<WebGLRenderingContext>('webgl')!
+class AttribLocations {
+	vertexPosition: GLint
+	vertexColor: GLint
+}
 
-// 	// Vertex shader program
+class UniformLocations {
+	projectionMatrix: WebGLUniformLocation
+	modelViewMatrix: WebGLUniformLocation
+}
 
-// 	const vsSource = /*glsl*/ `
-// 		attribute vec4 aVertexPosition;
-// 		attribute vec4 aVertexColor;
+class ProgramInfo {
+	program: WebGLProgram
+	attribLocations: AttribLocations
+	uniformLocations: UniformLocations
+}
 
-// 		uniform mat4 uModelViewMatrix;
-// 		uniform mat4 uProjectionMatrix;
+// Based on https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Tutorial/Using_shaders_to_apply_color_in_WebGL
+function webglExample(): void {
+	const canvas = document.createElement('canvas') as HTMLCanvasElement
+	document.body!.appendChild(canvas)
+	const gl = canvas.getContext<WebGLRenderingContext>('webgl')!
 
-// 		varying lowp vec4 vColor;
+	// Vertex shader program
 
-// 		void main(void) {
-// 			gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
-// 			vColor = aVertexColor;
-// 		}
-// 	`
+	const vsSource = /*glsl*/ `
+		attribute vec4 aVertexPosition;
+		attribute vec4 aVertexColor;
 
-// 	// Fragment shader program
+		uniform mat4 uModelViewMatrix;
+		uniform mat4 uProjectionMatrix;
 
-// 	const fsSource = /*glsl*/ `
-// 		varying lowp vec4 vColor;
+		varying lowp vec4 vColor;
 
-// 		void main(void) {
-// 			gl_FragColor = vColor;
-// 		}
-// 	`
+		void main(void) {
+			gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
+			vColor = aVertexColor;
+		}
+	`
 
-// 	// Initialize a shader program; this is where all the lighting
-// 	// for the vertices and so forth is established.
-// 	const shaderProgram = initShaderProgram(gl, vsSource, fsSource)
+	// Fragment shader program
 
-// 	// Collect all the info needed to use the shader program.
-// 	// Look up which attributes our shader program is using
-// 	// for aVertexPosition, aVertexColor and also
-// 	// look up uniform locations.
-// 	const programInfo = {
-// 		program: shaderProgram,
-// 		attribLocations: {
-// 			vertexPosition: gl.getAttribLocation(shaderProgram, 'aVertexPosition'),
-// 			vertexColor: gl.getAttribLocation(shaderProgram, 'aVertexColor'),
-// 		},
-// 		uniformLocations: {
-// 			projectionMatrix: gl.getUniformLocation(shaderProgram, 'uProjectionMatrix'),
-// 			modelViewMatrix: gl.getUniformLocation(shaderProgram, 'uModelViewMatrix'),
-// 		},
-// 	}
+	const fsSource = /*glsl*/ `
+		varying lowp vec4 vColor;
 
-// 	// Here's where we call the routine that builds all the
-// 	// objects we'll be drawing.
-// 	const buffers = initBuffers(gl)
+		void main(void) {
+			gl_FragColor = vColor;
+		}
+	`
 
-// 	// Draw the scene
-// 	drawScene(gl, programInfo, buffers)
-// }
+	// Initialize a shader program; this is where all the lighting
+	// for the vertices and so forth is established.
+	const shaderProgram = initShaderProgram(gl, vsSource, fsSource)
 
-// //
-// // initBuffers
-// //
-// // Initialize the buffers we'll need. For this demo, we just
-// // have one object -- a simple two-dimensional square.
-// //
-// function initBuffers(gl) {
-// 	// Create a buffer for the square's positions.
+	// Collect all the info needed to use the shader program.
+	// Look up which attributes our shader program is using
+	// for aVertexPosition, aVertexColor and also
+	// look up uniform locations.
+	const programInfo = {
+		program: shaderProgram,
+		attribLocations: {
+			vertexPosition: gl.getAttribLocation(shaderProgram, 'aVertexPosition'),
+			vertexColor: gl.getAttribLocation(shaderProgram, 'aVertexColor'),
+		} as AttribLocations,
+		uniformLocations: {
+			projectionMatrix: gl.getUniformLocation(shaderProgram, 'uProjectionMatrix'),
+			modelViewMatrix: gl.getUniformLocation(shaderProgram, 'uModelViewMatrix'),
+		} as UniformLocations,
+	} as ProgramInfo
 
-// 	const positionBuffer = gl.createBuffer()
+	// Here's where we call the routine that builds all the
+	// objects we'll be drawing.
+	const buffers = initBuffers(gl)
 
-// 	// Select the positionBuffer as the one to apply buffer
-// 	// operations to from here out.
+	// Draw the scene
+	drawScene(gl, programInfo, buffers)
+}
 
-// 	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
+class Buffers {
+	position: WebGLBuffer
+	color: WebGLBuffer
+}
 
-// 	// Now create an array of positions for the square.
+function initBuffers(gl: WebGLRenderingContext): Buffers {
+	// Create a buffer for the square's positions.
 
-// 	const positions = [1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, -1.0]
+	const positionBuffer = gl.createBuffer()
 
-// 	// Now pass the list of positions into WebGL to build the
-// 	// shape. We do this by creating a Float32Array from the
-// 	// JavaScript array, then use it to fill the current buffer.
+	// Select the positionBuffer as the one to apply buffer
+	// operations to from here out.
 
-// 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW)
+	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
 
-// 	// Now set up the colors for the vertices
+	// Now create an array of positions for the square.
 
-// 	var colors = [
-// 		1.0,
-// 		1.0,
-// 		1.0,
-// 		1.0, // white
-// 		1.0,
-// 		0.0,
-// 		0.0,
-// 		1.0, // red
-// 		0.0,
-// 		1.0,
-// 		0.0,
-// 		1.0, // green
-// 		0.0,
-// 		0.0,
-// 		1.0,
-// 		1.0, // blue
-// 	]
+	// TODO use TypedArrays instead of StaticArray once this bug is fixed: https://github.com/AssemblyScript/assemblyscript/issues/2038 {{
 
-// 	const colorBuffer = gl.createBuffer()
-// 	gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer)
-// 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW)
+	// const _positions: Array<f32> = [1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, -1.0]
+	// const positions = new Float32Array(_positions.length)
+	// for (let i = 0, l = _positions.length; i < l; i++) positions[i] = _positions[i]
+	// gl.bufferData<f32>(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW)
 
-// 	return {
-// 		position: positionBuffer,
-// 		color: colorBuffer,
-// 	}
-// }
+	// }} Using StaticArray for now: {{
 
-// //
-// // Draw the scene.
-// //
-// function drawScene(gl, programInfo, buffers) {
-// 	gl.clearColor(0.0, 0.0, 0.0, 1.0) // Clear to black, fully opaque
-// 	gl.clearDepth(1.0) // Clear everything
-// 	gl.enable(gl.DEPTH_TEST) // Enable depth testing
-// 	gl.depthFunc(gl.LEQUAL) // Near things obscure far things
+	const positions: StaticArray<f32> = [1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, -1.0]
+	gl.bufferData<f32>(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW)
 
-// 	// Clear the canvas before we start drawing on it.
+	// }}
 
-// 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+	// Now set up the colors for the vertices
 
-// 	// Create a perspective matrix, a special matrix that is
-// 	// used to simulate the distortion of perspective in a camera.
-// 	// Our field of view is 45 degrees, with a width/height
-// 	// ratio that matches the display size of the canvas
-// 	// and we only want to see objects between 0.1 units
-// 	// and 100 units away from the camera.
+	// prettier-ignore
+	var _colors: StaticArray<f32> = [
+		1.0, 1.0, 1.0, 1.0, // white
+		1.0, 0.0, 0.0, 1.0, // red
+		0.0, 1.0, 0.0, 1.0, // green
+		0.0, 0.0, 1.0, 1.0, // blue
+	]
+	// const colors = new Float32Array(_colors.length)
+	// for (let i = 0, l = _colors.length; i < l; i++) positions[i] = _colors[i]
 
-// 	const fieldOfView = (45 * Math.PI) / 180 // in radians
-// 	const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight
-// 	const zNear = 0.1
-// 	const zFar = 100.0
-// 	const projectionMatrix = mat4.create()
+	const colorBuffer = gl.createBuffer()
+	gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer)
+	// gl.bufferData<f32>(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW)
+	gl.bufferData<f32>(gl.ARRAY_BUFFER, _colors, gl.STATIC_DRAW)
 
-// 	// note: glmatrix.js always has the first argument
-// 	// as the destination to receive the result.
-// 	mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar)
+	return {
+		position: positionBuffer,
+		color: colorBuffer,
+	} as Buffers
+}
 
-// 	// Set the drawing position to the "identity" point, which is
-// 	// the center of the scene.
-// 	const modelViewMatrix = mat4.create()
+function drawScene(gl: WebGLRenderingContext, programInfo: ProgramInfo, buffers: Buffers): void {
+	gl.clearColor(0.0, 0.0, 0.0, 1.0) // Clear to black, fully opaque
+	gl.clearDepth(1.0) // Clear everything
+	gl.enable(gl.DEPTH_TEST) // Enable depth testing
+	gl.depthFunc(gl.LEQUAL) // Near things obscure far things
 
-// 	// Now move the drawing position a bit to where we want to
-// 	// start drawing the square.
+	// Clear the canvas before we start drawing on it.
 
-// 	mat4.translate(
-// 		modelViewMatrix, // destination matrix
-// 		modelViewMatrix, // matrix to translate
-// 		[-0.0, 0.0, -6.0],
-// 	) // amount to translate
+	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
-// 	// Tell WebGL how to pull out the positions from the position
-// 	// buffer into the vertexPosition attribute
-// 	{
-// 		const numComponents = 2
-// 		const type = gl.FLOAT
-// 		const normalize = false
-// 		const stride = 0
-// 		const offset = 0
-// 		gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position)
-// 		gl.vertexAttribPointer(
-// 			programInfo.attribLocations.vertexPosition,
-// 			numComponents,
-// 			type,
-// 			normalize,
-// 			stride,
-// 			offset,
-// 		)
-// 		gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition)
-// 	}
+	// Create a perspective matrix, a special matrix that is
+	// used to simulate the distortion of perspective in a camera.
+	// Our field of view is 45 degrees, with a width/height
+	// ratio that matches the display size of the canvas
+	// and we only want to see objects between 0.1 units
+	// and 100 units away from the camera.
 
-// 	// Tell WebGL how to pull out the colors from the color buffer
-// 	// into the vertexColor attribute.
-// 	{
-// 		const numComponents = 4
-// 		const type = gl.FLOAT
-// 		const normalize = false
-// 		const stride = 0
-// 		const offset = 0
-// 		gl.bindBuffer(gl.ARRAY_BUFFER, buffers.color)
-// 		gl.vertexAttribPointer(programInfo.attribLocations.vertexColor, numComponents, type, normalize, stride, offset)
-// 		gl.enableVertexAttribArray(programInfo.attribLocations.vertexColor)
-// 	}
+	// prettier-ignore
+	const projectionMatrix: StaticArray<GLfloat> = [
+		1,0,0,0,
+		0,1,0,0,
+		0,0,1,0,
+		0,0,0,1,
+	]
 
-// 	// Tell WebGL to use our program when drawing
+	// const fieldOfView: f32 = (45 * Math.PI) / 180 // in radians
+	// const aspect: f32 = gl.canvas.clientWidth / gl.canvas.clientHeight
+	// const zNear = 0.1
+	// const zFar = 100.0
 
-// 	gl.useProgram(programInfo.program)
+	// const projectionMatrix = mat4.create()
 
-// 	// Set the shader uniforms
+	// // note: glmatrix.js always has the first argument
+	// // as the destination to receive the result.
+	// mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar)
 
-// 	gl.uniformMatrix4fv(programInfo.uniformLocations.projectionMatrix, false, projectionMatrix)
-// 	gl.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, modelViewMatrix)
+	// prettier-ignore
+	const modelViewMatrix: StaticArray<GLfloat> = [
+		1,0,0,0,
+		0,1,0,0,
+		0,0,1,0,
+		0,0,0,1,
+	]
 
-// 	{
-// 		const offset = 0
-// 		const vertexCount = 4
-// 		gl.drawArrays(gl.TRIANGLE_STRIP, offset, vertexCount)
-// 	}
-// }
+	// // Set the drawing position to the "identity" point, which is
+	// // the center of the scene.
+	// const modelViewMatrix = mat4.create()
 
-// //
-// // Initialize a shader program, so WebGL knows how to draw our data
-// //
-// function initShaderProgram(gl: WebGLRenderingContext, vsSource: string, fsSource: string) {
-// 	const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource)
-// 	const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource)
+	// // Now move the drawing position a bit to where we want to
+	// // start drawing the square.
 
-// 	// Create the shader program
+	// mat4.translate(
+	// 	modelViewMatrix, // destination matrix
+	// 	modelViewMatrix, // matrix to translate
+	// 	[-0.0, 0.0, -6.0],
+	// ) // amount to translate
 
-// 	const shaderProgram = gl.createProgram()
-// 	gl.attachShader(shaderProgram, vertexShader)
-// 	gl.attachShader(shaderProgram, fragmentShader)
-// 	gl.linkProgram(shaderProgram)
+	// Tell WebGL how to pull out the positions from the position
+	// buffer into the vertexPosition attribute
+	{
+		const numComponents = 2
+		const type = gl.FLOAT
+		const normalize = false
+		const stride = 0
+		const offset = 0
+		gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position)
+		gl.vertexAttribPointer(
+			programInfo.attribLocations.vertexPosition,
+			numComponents,
+			type,
+			normalize,
+			stride,
+			offset,
+		)
+		gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition)
+	}
 
-// 	// If creating the shader program failed, alert
+	// Tell WebGL how to pull out the colors from the color buffer
+	// into the vertexColor attribute.
+	{
+		const numComponents = 4
+		const type = gl.FLOAT
+		const normalize = false
+		const stride = 0
+		const offset = 0
+		gl.bindBuffer(gl.ARRAY_BUFFER, buffers.color)
+		gl.vertexAttribPointer(programInfo.attribLocations.vertexColor, numComponents, type, normalize, stride, offset)
+		gl.enableVertexAttribArray(programInfo.attribLocations.vertexColor)
+	}
 
-// 	if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-// 		alert('Unable to initialize the shader program: ' + gl.getProgramInfoLog(shaderProgram))
-// 		return null
-// 	}
+	// Tell WebGL to use our program when drawing
 
-// 	return shaderProgram
-// }
+	gl.useProgram(programInfo.program)
 
-// //
-// // creates a shader of the given type, uploads the source and
-// // compiles it.
-// //
-// function loadShader(gl: WebGLRenderingContext, type: GLenum, source: string) {
-// 	const shader = gl.createShader(type)
+	// Set the shader uniforms
 
-// 	// Send the source to the shader object
+	gl.uniformMatrix4fv(programInfo.uniformLocations.projectionMatrix, false, projectionMatrix)
+	gl.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, modelViewMatrix)
 
-// 	gl.shaderSource(shader, source)
+	{
+		const offset = 0
+		const vertexCount = 4
+		gl.drawArrays(gl.TRIANGLE_STRIP, offset, vertexCount)
+	}
+}
 
-// 	// Compile the shader program
+function initShaderProgram(gl: WebGLRenderingContext, vsSource: string, fsSource: string): WebGLProgram {
+	const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource)
+	const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource)
 
-// 	gl.compileShader(shader)
+	// Create the shader program
 
-// 	// See if it compiled successfully
+	const shaderProgram = gl.createProgram()
+	gl.attachShader(shaderProgram, vertexShader)
+	gl.attachShader(shaderProgram, fragmentShader)
+	gl.linkProgram(shaderProgram)
 
-// 	if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-// 		alert('An error occurred compiling the shaders: ' + gl.getShaderInfoLog(shader))
-// 		gl.deleteShader(shader)
-// 		return null
-// 	}
+	// If creating the shader program failed, alert
 
-// 	return shader
-// }
+	// if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+	// 	alert('Unable to initialize the shader program: ' + gl.getProgramInfoLog(shaderProgram))
+	// 	return null
+	// }
+
+	return shaderProgram
+}
+
+function loadShader(gl: WebGLRenderingContext, type: GLenum, source: string): WebGLShader {
+	const shader = gl.createShader(type)
+
+	// Send the source to the shader object
+
+	gl.shaderSource(shader, source)
+
+	// Compile the shader program
+
+	gl.compileShader(shader)
+
+	// See if it compiled successfully
+
+	// if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+	// 	// log('An error occurred compiling the shaders: ' + gl.getShaderInfoLog(shader))
+	// 	gl.deleteShader(shader)
+	// 	return null
+	// }
+
+	return shader
+}
