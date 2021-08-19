@@ -1,0 +1,36 @@
+{"frames": {
+
+"kaijunicorn1.png":
+{
+	"frame": {"x":1,"y":1,"w":42,"h":64},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":0,"w":42,"h":64},
+	"sourceSize": {"w":48,"h":64}
+},
+"kaijunicorn2.png":
+{
+	"frame": {"x":1,"y":133,"w":40,"h":64},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":0,"w":40,"h":64},
+	"sourceSize": {"w":48,"h":64}
+},
+"kaijunicorn3.png":
+{
+	"frame": {"x":1,"y":67,"w":41,"h":64},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":0,"w":41,"h":64},
+	"sourceSize": {"w":48,"h":64}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "kaijunicorn.png",
+	"format": "RGBA8888",
+	"size": {"w":44,"h":198},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:6e386e05493c1963607c61a7919b90cd:a86b0a5e232f296e9763f0871df228fb:0ddf5b54490cc1c036def6a03cfb8e4e$"
+}
+}

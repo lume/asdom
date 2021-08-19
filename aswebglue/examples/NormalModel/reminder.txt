@@ -1,0 +1,1 @@
+When you're exporting from Blender, don't forget to triangulate faces.

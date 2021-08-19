@@ -4,19 +4,19 @@ import {HTMLElement} from './HTMLElement'
 export class HTMLAudioElement extends HTMLElement {
 	constructor(src: string | null = null) {
 		super()
-		if (src) initAudio(this.__ptr__, src)
+		if (src) initAudio(this, src)
 	}
 	play(): void {
-		playAudio(this.__ptr__)
+		playAudio(this)
 	}
 	pause(): void {
-		pauseAudio(this.__ptr__)
+		pauseAudio(this)
 	}
 	set autoplay(toggle: boolean) {
-		setAutoplay(this.__ptr__, toggle)
+		setAutoplay(this, toggle)
 	}
 	get autoplay(): boolean {
-		return getAutoplay(this.__ptr__) ? true : false
+		return getAutoplay(this) ? true : false
 	}
 }
 

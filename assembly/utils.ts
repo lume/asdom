@@ -9,6 +9,7 @@ import {
 	HTMLAnchorElement,
 	HTMLScriptElement,
 	HTMLTemplateElement,
+	HTMLCanvasElement,
 	Audio,
 	Image,
 	HTMLHeadingElement,
@@ -45,6 +46,7 @@ export function makeObject(type: ObjectType): Object {
 	else if (type == ObjectType.h4) obj = new HTMLHeadingElement()
 	else if (type == ObjectType.h5) obj = new HTMLHeadingElement()
 	else if (type == ObjectType.h6) obj = new HTMLHeadingElement()
+	else if (type == ObjectType.canvas) obj = new HTMLCanvasElement()
 	else if (type === ObjectType.unknown) obj = new HTMLUnknownElement()
 	// Text nodes
 	else if (type === ObjectType.text) obj = new Text()
@@ -77,8 +79,7 @@ export function idToNullOrObject(id: i32): Object | null {
 		const obj = makeObject(-id)
 
 		// Associate the AS-side instance with the JS-side instance.
-		// TODO use this.ownerDocument.__ptr__ instead of document.__ptr__
-		trackNextRef(obj.__ptr__)
+		trackNextRef(obj)
 
 		return obj
 	}
@@ -97,3 +98,5 @@ export function idToNullOrObject(id: i32): Object | null {
 		return changetype<Object>(id) // It must be a Object. Use this function only for APIs that return Object or Object|null.
 	}
 }
+
+export const valueNotChanged = I32.MIN_VALUE

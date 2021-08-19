@@ -15,8 +15,10 @@ import {
 	remove,
 	getTagName,
 	attachShadow,
+	getClientWidth,
+	getClientHeight,
 } from '../imports'
-import {idToNullOrObject} from '../utils'
+import {idToNullOrObject, valueNotChanged} from '../utils'
 import {Node} from '../Node'
 import {HTMLCollection} from '../HTMLCollection'
 import {NodeList} from '../NodeList'
@@ -28,84 +30,109 @@ export abstract class Element extends Node {
 	}
 
 	get tagName(): string {
-		return getTagName(this.__ptr__)
+		return getTagName(this)
 	}
 
 	setAttribute(attr: string, value: string | null): void {
-		elSetAttribute(this.__ptr__, attr, value)
+		elSetAttribute(this, attr, value)
 	}
 	getAttribute(attr: string): string | null {
-		return elGetAttribute(this.__ptr__, attr)
+		return elGetAttribute(this, attr)
 	}
 
 	get innerHTML(): string {
-		return getInnerHTML(this.__ptr__)
+		return getInnerHTML(this)
 	}
 	set innerHTML(value: string | null) {
-		setInnerHTML(this.__ptr__, value)
+		setInnerHTML(this, value)
 	}
 
 	private __children: HTMLCollection | null = null
 
 	get children(): HTMLCollection {
-		let children = this.__children
-		if (!children) {
-			children = new HTMLCollection()
-			this.__children = children
+		let obj = this.__children
+
+		if (!obj) {
+			this.__children = obj = new HTMLCollection()
+			getChildren(this, obj)
 		}
-		getChildren(this.__ptr__, children.__ptr__)
-		return children
+
+		return obj
 	}
+
+	get clientWidth(): i32 {
+		return getClientWidth(this)
+	}
+
+	get clientHeight(): i32 {
+		return getClientHeight(this)
+	}
+
+	private __firstElementChild: Element | null = null
 
 	get firstElementChild(): Element | null {
-		const id: i32 = getFirstElementChild(this.__ptr__)
+		const id: i32 = getFirstElementChild(this)
 
-		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
-		// return idToNullOrObject(id) as Element | null
+		if (id == valueNotChanged) return this.__firstElementChild
+
+		// TODO update this once null issues fixed (see TODO NULL in Document)
 		const result = idToNullOrObject(id)
-		if (!result) return null
-		else return result as Element
+		if (result) this.__firstElementChild = result as Element
+		else this.__firstElementChild = null
+		return this.__firstElementChild
 	}
+
+	private __lastElementChild: Element | null = null
 
 	get lastElementChild(): Element | null {
-		const id: i32 = getLastElementChild(this.__ptr__)
+		const id: i32 = getLastElementChild(this)
 
-		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
-		// return idToNullOrObject(id) as Element | null
+		if (id == valueNotChanged) return this.__lastElementChild
+
+		// TODO update this once null issues fixed (see TODO NULL in Document)
 		const result = idToNullOrObject(id)
-		if (!result) return null
-		else return result as Element
+		if (result) this.__lastElementChild = result as Element
+		else this.__lastElementChild = null
+		return this.__lastElementChild
 	}
+
+	private __nextElementSibling: Element | null = null
 
 	get nextElementSibling(): Element | null {
-		const id: i32 = getNextElementSibling(this.__ptr__)
+		const id: i32 = getNextElementSibling(this)
 
-		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
-		// return idToNullOrObject(id) as Element | null
+		if (id == valueNotChanged) return this.__nextElementSibling
+
+		// TODO update this once null issues fixed (see TODO NULL in Document)
 		const result = idToNullOrObject(id)
-		if (!result) return null
-		else return result as Element
+		if (result) this.__nextElementSibling = result as Element
+		else this.__nextElementSibling = null
+		return this.__nextElementSibling
 	}
 
-	get previousElementSibling(): Element | null {
-		const id: i32 = getPreviousElementSibling(this.__ptr__)
+	private __previousElementSibling: Element | null = null
 
-		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
-		// return idToNullOrObject(id) as Element | null
+	get previousElementSibling(): Element | null {
+		const id: i32 = getPreviousElementSibling(this)
+
+		if (id == valueNotChanged) return this.__previousElementSibling
+
+		// TODO update this once null issues fixed (see TODO NULL in Document)
 		const result = idToNullOrObject(id)
-		if (!result) return null
-		else return result as Element
+		if (result) this.__previousElementSibling = result as Element
+		else this.__previousElementSibling = null
+		return this.__previousElementSibling
 	}
 
 	click(): void {
-		elClick(this.__ptr__)
+		elClick(this)
 	}
 
 	private __onclick: (() => void) | null = null
 
 	set onclick(cb: (() => void) | null) {
 		this.__onclick = cb
-		setOnclick(this.__ptr__, cb ? cb.index : -1) // -1 means "null"
+		setOnclick(this, cb ? cb.index : -1) // -1 means "null"
 	}
 
 	get onclick(): (() => void) | null {
@@ -118,21 +145,25 @@ export abstract class Element extends Node {
 	}
 
 	remove(): void {
-		remove(this.__ptr__)
+		remove(this)
 	}
 
-	querySelector(selectors: string): Element | null {
-		const id = querySelector(this.__ptr__, selectors)
+	private __querySelector: Element | null = null
 
-		// TODO restore after issue is fixed: https://github.com/AssemblyScript/assemblyscript/issues/1976
-		// return idToNullOrObject(id) as Element | null
+	querySelector(selectors: string): Element | null {
+		const id = querySelector(this, selectors)
+
+		if (id == valueNotChanged) return this.__querySelector
+
+		// TODO update this once null issues fixed (see TODO NULL in Document)
 		const result = idToNullOrObject(id)
-		if (!result) return null
-		else return result as Element
+		if (result) this.__querySelector = result as Element
+		else this.__querySelector = null
+		return this.__querySelector
 	}
 
 	querySelectorAll(selectors: string): NodeList<Element> {
-		const id = querySelectorAll(this.__ptr__, selectors)
+		const id = querySelectorAll(this, selectors)
 		return idToNullOrObject(id) as NodeList<Element>
 	}
 
@@ -144,7 +175,7 @@ export abstract class Element extends Node {
 
 	attachShadow(options: ShadowRootInit): ShadowRoot {
 		const root = new ShadowRoot()
-		attachShadow(this.__ptr__, root.__ptr__, options.mode)
+		attachShadow(this, root, options.mode)
 		if (options.mode == 'open') this.__shadowRoot = root
 		return root
 	}

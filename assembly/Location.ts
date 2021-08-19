@@ -23,76 +23,76 @@ import {Object} from './Object'
 
 export class Location extends Object {
 	set href(str: string) {
-		setHref(this.__ptr__, str)
+		setHref(this, str)
 	}
 	get href(): string {
-		return getHref(this.__ptr__)
+		return getHref(this)
 	}
 
 	set protocol(str: string) {
-		setProtocol(this.__ptr__, str)
+		setProtocol(this, str)
 	}
 	get protocol(): string {
-		return getProtocol(this.__ptr__)
+		return getProtocol(this)
 	}
 
 	set host(str: string) {
-		setHost(this.__ptr__, str)
+		setHost(this, str)
 	}
 	get host(): string {
-		return getHost(this.__ptr__)
+		return getHost(this)
 	}
 
 	set hostname(str: string) {
-		setHostname(this.__ptr__, str)
+		setHostname(this, str)
 	}
 	get hostname(): string {
-		return getHostname(this.__ptr__)
+		return getHostname(this)
 	}
 
 	set port(str: string) {
-		setPort(this.__ptr__, str)
+		setPort(this, str)
 	}
 	get port(): string {
-		return getPort(this.__ptr__)
+		return getPort(this)
 	}
 
 	set pathname(str: string) {
-		setPathname(this.__ptr__, str)
+		setPathname(this, str)
 	}
 	get pathname(): string {
-		return getPathname(this.__ptr__)
+		return getPathname(this)
 	}
 
 	set search(str: string) {
-		setSearch(this.__ptr__, str)
+		setSearch(this, str)
 	}
 	get search(): string {
-		return getSearch(this.__ptr__)
+		return getSearch(this)
 	}
 
 	set hash(str: string) {
-		setHash(this.__ptr__, str)
+		setHash(this, str)
 	}
 	get hash(): string {
-		return getHash(this.__ptr__)
+		return getHash(this)
 	}
 
 	get origin(): string {
-		return getOrigin(this.__ptr__)
+		return getOrigin(this)
 	}
 
 	assign(url: string): void {
 		// No need for additional bindings here because this is identical to what happens in the real DOM Location API.
-		setHref(this.__ptr__, url)
+		setHref(this, url)
 	}
 
 	reload(): void {
-		reload(this.__ptr__)
+		reload(this)
 	}
 
 	replace(url: string): void {
 		// No need for additional bindings here because this is identical to what happens in the real DOM Location API.
-		replace(this.__ptr__, url)
+		replace(this, url)
 	}
 }

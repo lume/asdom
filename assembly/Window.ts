@@ -21,7 +21,7 @@ export class Window extends EventTarget {
 
 		if (!obj) {
 			this.__document = obj = new Document()
-			getDocument(this.__ptr__, obj.__ptr__)
+			getDocument(this, obj)
 		}
 
 		return obj
@@ -34,7 +34,7 @@ export class Window extends EventTarget {
 
 		if (!obj) {
 			this.__customElements = obj = new CustomElementRegistry()
-			getCustomElements(this.__ptr__, obj.__ptr__)
+			getCustomElements(this, obj)
 		}
 
 		return obj
@@ -47,7 +47,7 @@ export class Window extends EventTarget {
 
 		if (!obj) {
 			this.__history = obj = new History()
-			getHistory(this.__ptr__, obj.__ptr__)
+			getHistory(this, obj)
 		}
 
 		return obj
@@ -60,7 +60,7 @@ export class Window extends EventTarget {
 
 		if (!obj) {
 			this.__location = obj = new Location()
-			getLocation(this.__ptr__, obj.__ptr__)
+			getLocation(this, obj)
 		}
 
 		return obj
@@ -74,7 +74,7 @@ export class Window extends EventTarget {
 
 	set onclick(cb: (() => void) | null) {
 		this.__onclick = cb
-		setOnclick(this.__ptr__, cb ? cb.index : -1) // -1 means "null"
+		setOnclick(this, cb ? cb.index : -1) // -1 means "null"
 	}
 
 	get onclick(): (() => void) | null {
@@ -90,7 +90,7 @@ export class Window extends EventTarget {
 
 	set onpopstate(cb: (() => void) | null) {
 		this.__onpopstate = cb
-		setOnpopstate(this.__ptr__, cb ? cb.index : -1) // -1 means "null"
+		setOnpopstate(this, cb ? cb.index : -1) // -1 means "null"
 	}
 
 	get onpopstate(): (() => void) | null {
@@ -104,7 +104,7 @@ export class Window extends EventTarget {
 }
 
 export const window = new Window()
-trackWindow(window.__ptr__)
+trackWindow(window)
 
 // export "globals"
 export const document = window.document
