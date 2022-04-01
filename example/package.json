@@ -8,7 +8,7 @@
 		"test": "node tests"
 	},
 	"dependencies": {
-		"@assemblyscript/loader": "^0.18.32",
+		"@assemblyscript/loader": "^0.19.5",
 		"asdom": "lume/asdom",
 		"ecmassembly": "^0.1.8"
 	},
