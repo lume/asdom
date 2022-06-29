@@ -257,7 +257,7 @@ const clickHandler: () => void = () => {
 
 document.body!.addEventListener('click', clickHandler)
 
-const audio = new Audio('../assets/audio2.mp3')
+const audio = new Audio('../assets/otherside - lena raine.ogg')
 
 audio.autoplay = true
 log('audio autoplay: ' + audio.autoplay.toString())
