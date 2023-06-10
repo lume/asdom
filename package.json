@@ -22,10 +22,10 @@
 		"release:major": "npm version major -m 'v%s' && npm publish && git push --follow-tags"
 	},
 	"dependencies": {
-		"@assemblyscript/loader": "^0.19.5"
+		"@assemblyscript/loader": "^0.27.5"
 	},
 	"devDependencies": {
-		"assemblyscript": "^0.19.5",
+		"assemblyscript": "^0.27.5",
 		"prettier": "^2.3.2",
 		"typescript": "^4.3.4"
 	},

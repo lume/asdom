@@ -15,7 +15,7 @@ import {
 	HTMLHeadingElement,
 	HTMLUnknownElement,
 	Text,
-	Object,
+	JSObject,
 	NodeList,
 	HTMLCollection,
 	Element,
@@ -27,8 +27,8 @@ export function logDebug(s: string): void {
 	if (DEBUG) log('AS DEBUG: ' + s)
 }
 
-export function makeObject(type: ObjectType): Object {
-	let obj: Object
+export function makeObject(type: ObjectType): JSObject {
+	let obj: JSObject
 
 	// Elements
 	if (type == ObjectType.body) obj = new HTMLBodyElement()
@@ -61,7 +61,7 @@ export function makeObject(type: ObjectType): Object {
 }
 
 // Use this only for APIs that return Object or Object|null!
-export function idToNullOrObject(id: i32): Object | null {
+export function idToNullOrObject(id: i32): JSObject | null {
 	logDebug('idToNullOrObject, ' + id.toString())
 
 	// if null, it means there is no element on the JS-side.
@@ -95,7 +95,7 @@ export function idToNullOrObject(id: i32): Object | null {
 	else {
 		logDebug('idToNullOrObject got reference ID: ' + id.toString())
 
-		return changetype<Object>(id) // It must be a Object. Use this function only for APIs that return Object or Object|null.
+		return changetype<JSObject>(id) // It must be a Object. Use this function only for APIs that return Object or Object|null.
 	}
 }
 

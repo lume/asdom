@@ -19,9 +19,9 @@ import {
 	setProtocol,
 	setSearch,
 } from './imports'
-import {Object} from './Object'
+import {JSObject} from './JSObject'
 
-export class Location extends Object {
+export class Location extends JSObject {
 	set href(str: string) {
 		setHref(this, str)
 	}

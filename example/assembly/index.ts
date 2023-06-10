@@ -60,14 +60,14 @@ if (document.firstElementChild!.tagName != 'HTML') throw new Error('document.fir
 if (document.lastElementChild!.tagName != 'HTML') throw new Error('document.lastElementChild should be <html>')
 
 let imgRotation: f32 = 0
-let img: HTMLImageElement
-let logoRotationLoop: () => void
+let img!: HTMLImageElement
+let logoRotationLoop!: () => void
 
 let firstClick: boolean = true
 
 // This is quick and dirty. It is quickly wanting to become a class (ideally a
 // re-usable <dot-burst> custom element once asdom supports custom elements).
-let explosionLoop: () => void
+let explosionLoop!: () => void
 const dotsLength: i32 = 10
 const dots: StaticArray<HTMLDivElement> = new StaticArray(dotsLength)
 const dotPositions: StaticArray<f32> = new StaticArray(dotsLength)
@@ -76,9 +76,9 @@ const dotPositionDeltas: StaticArray<f32> = new StaticArray(dotsLength)
 let dotScale: f32 = 1.0
 let explosionLoopFrame: i32 = -1
 
-let text2: Text
+let text2!: Text
 
-let container: HTMLElement
+let container!: HTMLElement
 
 const style = document.createElement('style')
 

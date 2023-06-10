@@ -1,23 +1,23 @@
-import {Object} from '../../../Object'
+import {JSObject} from '../../../JSObject'
 import {WebGLRenderingContext} from './webgl/WebGLRenderingContext'
 import {HTMLElement} from '../HTMLElement'
 import {getContext} from '../../../imports'
 
-class WebGL2RenderingContext extends Object {
+class WebGL2RenderingContext extends JSObject {
 	constructor(public canvas: HTMLCanvasElement) {
 		super()
 	}
 	// TODO
 }
 
-class CanvasRenderingContext2D extends Object {
+class CanvasRenderingContext2D extends JSObject {
 	constructor(public canvas: HTMLCanvasElement) {
 		super()
 	}
 	// TODO
 }
 
-class ImageBitmapRenderingContext extends Object {
+class ImageBitmapRenderingContext extends JSObject {
 	constructor(public canvas: HTMLCanvasElement) {
 		super()
 	}
@@ -26,7 +26,7 @@ class ImageBitmapRenderingContext extends Object {
 
 export class HTMLCanvasElement extends HTMLElement {
 	private __contextType: string | null = null
-	private __context: Object | null = null
+	private __context: JSObject | null = null
 
 	/**
 	 * Get a canvas rendering context. Given a particular `type` string, a particular `T` generic must be provided.
@@ -35,7 +35,7 @@ export class HTMLCanvasElement extends HTMLElement {
 	 * If `type` is `"2d"` then `T` must be `CanvasRenderingContext2D`.
 	 * If any other combination is given, there will be a compile error.
 	 */
-	@inline getContext<T extends Object>(type: string): T | null {
+	@inline getContext<T extends JSObject>(type: string): T | null {
 		const currentType = this.__contextType
 		if (currentType) {
 			if (currentType != type) return null

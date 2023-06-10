@@ -1,10 +1,10 @@
 import {getLength, item} from './imports'
 import {Node} from './Node'
-import {Object} from './Object'
+import {JSObject} from './JSObject'
 import {idToNullOrObject, valueNotChanged} from './utils'
 
 // TODO replace `Node` with a generic `T` type to allow other classes to specify more specific types in certain cases. For example, `querySelectorAll` can return `NodeList<Element>`.
-export class NodeList<T extends Node> extends Object {
+export class NodeList<T extends Node> extends JSObject {
 	get length(): i32 {
 		return getLength(this)
 	}

@@ -9,7 +9,7 @@ export * from './History'
 export * from './Location'
 export * from './Node'
 export * from './NodeList'
-export * from './Object'
+export * from './JSObject'
 export * from './Text'
 export * from './Window'
 

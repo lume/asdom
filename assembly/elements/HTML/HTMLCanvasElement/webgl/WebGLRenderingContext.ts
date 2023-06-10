@@ -23,7 +23,7 @@ import {
 	useProgram,
 	vertexAttribPointer,
 } from '../../../../imports'
-import {Object} from '../../../../Object'
+import {JSObject} from '../../../../JSObject'
 
 type WebGLContextAttributes = i32
 
@@ -44,7 +44,7 @@ export type GLclampf = f32
 export type GLuint64 = u32 //u64;
 export type GLint64 = i32 //i64;
 
-export class WebGLUniformLocation extends Object {}
+export class WebGLUniformLocation extends JSObject {}
 export type TexImageSource = i32
 export type Int32List = i32
 export type Uint32List = i32
@@ -491,7 +491,7 @@ export declare function isContextLost(gl: usize): bool
 
 export declare function getSupportedExtensions(gl: usize): string[]
 
-export class WebGLExtension extends Object {}
+export class WebGLExtension extends JSObject {}
 
 export class ANGLE_instanced_arrays extends WebGLExtension {
 	// TODO
@@ -501,22 +501,22 @@ export class EXT_blend_minmax extends WebGLExtension {
 	// TODO
 }
 
-export class WebGLProgram extends Object {}
+export class WebGLProgram extends JSObject {}
 
 let id = 1
 
-export class WebGLShader extends Object {}
+export class WebGLShader extends JSObject {}
 
-export class WebGLBuffer extends Object {
+export class WebGLBuffer extends JSObject {
 	// TODO
 }
-export class WebGLFramebuffer extends Object {
+export class WebGLFramebuffer extends JSObject {
 	// TODO
 }
-export class WebGLRenderbuffer extends Object {
+export class WebGLRenderbuffer extends JSObject {
 	// TODO
 }
-export class WebGLTexture extends Object {
+export class WebGLTexture extends JSObject {
 	// TODO
 }
 
@@ -1416,7 +1416,7 @@ export declare function bindVertexArray(gl: WebGLRenderingContext, array: WebGLV
 
 // @final
 // @unmanaged
-export class WebGLRenderingContext extends Object {
+export class WebGLRenderingContext extends JSObject {
 	// @inline
 	constructor(public canvas: HTMLCanvasElement) {
 		super()
