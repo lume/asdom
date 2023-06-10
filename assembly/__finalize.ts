@@ -1,16 +1,10 @@
 import {releaseObject} from './imports'
-import {Object} from './Object'
+import {JSObject} from './JSObject'
 
 // @ts-ignore
 @global
 function __finalize(ptr: usize): void {
-	if (
-		// prettier-ignore
-		// @ts-ignore, function exists
-		__instanceof(
-			ptr, idof<Object>()
-		)
-	) {
+	if (changetype<Object>(ptr) instanceof JSObject) {
 		releaseObject(ptr)
 	}
 }

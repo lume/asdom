@@ -5,11 +5,11 @@ import {
 	removeEventListenerCallback,
 	removeEventListenerObject,
 } from './imports'
-import {Object} from './Object'
+import {JSObject} from './JSObject'
 
 export type EventCallback = (/*TODO event: Event*/) => void
 
-export class EventTarget extends Object {
+export class EventTarget extends JSObject {
 	addEventListener<T>(eventName: string, listener: T): void {
 		// TODO how to check the function matches EventCallback?
 		if (isFunction<T>(listener)) addEventListenerCallback(this, eventName, listener.index)

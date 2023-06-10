@@ -1,9 +1,9 @@
 import {getLength, item} from './imports'
 import {Element} from './elements/Element'
-import {Object} from './Object'
+import {JSObject} from './JSObject'
 import {idToNullOrObject, valueNotChanged} from './utils'
 
-export class HTMLCollection extends Object {
+export class HTMLCollection extends JSObject {
 	get length(): i32 {
 		return getLength(this)
 	}
