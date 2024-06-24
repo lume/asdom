@@ -1,6 +1,6 @@
 import {HTMLElement} from './elements/HTML/HTMLElement'
 import {define} from './imports'
-import {Object} from './Object'
+import {JSObject} from './JSObject'
 
 /*
  * Custom elements are a bit too dynamic to easily map an interface to them
@@ -13,7 +13,7 @@ import {Object} from './Object'
  *   instance of your custom element class.
  */
 
-export class CustomElementRegistry extends Object {
+export class CustomElementRegistry extends JSObject {
 	private __defs: Map<string, () => HTMLElement> = new Map()
 
 	define(tag: string, factory: () => HTMLElement, attributes: string[]): void {
